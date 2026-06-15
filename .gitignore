@@ -1,0 +1,82 @@
+# --- uv / Python ---
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints/
+*.egg-info/
+build/
+dist/
+wheels/
+
+# --- Upstream clones (tracked via scripts/setup_upstream.sh, not committed) ---
+upstream/*/
+!upstream/.gitkeep
+
+# --- C kernel vendored dep installs (built from upstream/gsl + upstream/nlopt) ---
+bench/c_kernels/third_party_install/
+
+# --- Experiment outputs (bulk artifacts) ---
+experiments/*/outputs/
+experiments/*/checkpoints/
+experiments/*/wandb/
+experiments/*/mlruns/
+experiments/*/runs/
+experiments/*/_out/
+experiments/*/_cache/
+
+# --- legacy/ (archived experiments 001-007/010/011): mirror the bulk-artifact
+# rules above so moved run-outputs stay out of git. data/ and figs/ are NOT
+# ignored here — those hold previously-tracked files (003 dataset, 002 figs). ---
+legacy/*/outputs/
+legacy/*/checkpoints/
+legacy/*/wandb/
+legacy/*/mlruns/
+legacy/*/runs/
+legacy/*/logs/
+legacy/*/_out/
+
+# --- SLURM job logs (keep dir, ignore output files) ---
+logs/*.out
+logs/*.err
+experiments/*/logs/
+
+# --- Data: small fixtures are committed (feynman set, pop.bin, presets.json);
+#     bulk real snapshots (scp'd to A100) + generated synth populations are NOT ---
+data/workload/snapshots/
+data/workload/synth/
+results/
+*.h5
+*.hdf5
+*.npz
+*.npy
+*.pt
+*.pth
+*.ckpt
+
+# --- IDE / OS ---
+.vscode/*
+!.vscode/settings.json
+.idea/
+.DS_Store
+*.swp
+
+# --- Misc ---
+*.log
+*.zip
+# Reference papers stay local; track DOIs/URLs in notes instead.
+*.pdf
+
+# --- Claude Code local settings (permissions / session data, not shared) ---
+.claude/settings.local.json
+
+# --- Jupyter notebooks (keep .py source of truth, regenerate .ipynb as needed) ---
+# jupytext percent .py files are committed; their .ipynb siblings are derived
+# artifacts (large due to embedded outputs/figures) and regenerate via:
+#   uv run jupytext --to ipynb <file>.py
+#   uv run jupyter nbconvert --to notebook --execute --inplace <file>.ipynb
+*.ipynb
+
+legacy/bench_c_kernels/third_party_install/
+legacy/bench_c_kernels/build/
+legacy/bench_c_kernels/**/build/

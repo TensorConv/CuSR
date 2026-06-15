@@ -1,0 +1,31 @@
+{
+  "M_prob": 3,
+  "fixtures": [
+    {
+      "name": "sin_K0",
+      "K": 0,
+      "c_offset": 0,
+      "c_true": [],
+      "expect_status": 3
+    },
+    {
+      "name": "linear_K2",
+      "K": 2,
+      "c_offset": 0,
+      "c_true": [
+        1.5,
+        0.7
+      ],
+      "expect_status": 0
+    },
+    {
+      "name": "log_sub_K1",
+      "K": 1,
+      "c_offset": 2,
+      "c_true": [
+        1.7
+      ],
+      "expect_status": 2
+    }
+  ]
+}

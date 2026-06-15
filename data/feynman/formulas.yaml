@@ -1,0 +1,1247 @@
+source: AI Feynman FSRD v1 (Udrescu & Tegmark 2020)
+parameterization: "scheme C (literal\u2192c + leading-c=1 fallback)"
+filters: {r2: 16-op alphabet, r4prime: "K \u2264 16"}
+n_formulas: 98
+formulas:
+- id: I.6.2a
+  skeleton_expr: c0*sqrt(c1)*exp(c3*x0**2)/sqrt(c2)
+  variables: [x0]
+  constants: [c0, c1, c2, c3]
+  ground_truth_constants: [0.5, 2.0, 3.141592653589793, -0.5]
+  sampling_ranges:
+  - [1.0, 3.0]
+  physical_vars: x0=theta
+  n_samples: 1000
+  formula_original: exp(-theta**2/2)/sqrt(2*pi)
+- id: I.6.2
+  skeleton_expr: c0*sqrt(c1)*exp(c3*x1**2/x0**2)/(sqrt(c2)*x0)
+  variables: [x0, x1]
+  constants: [c0, c1, c2, c3]
+  ground_truth_constants: [0.5, 2.0, 3.141592653589793, -0.5]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  physical_vars: x0=sigma, x1=theta
+  n_samples: 1000
+  formula_original: exp(-(theta/sigma)**2/2)/(sqrt(2*pi)*sigma)
+- id: I.6.2b
+  skeleton_expr: c0*sqrt(c1)*exp(c3*(c4*x2 + x1)**2/x0**2)/(sqrt(c2)*x0)
+  variables: [x0, x1, x2]
+  constants: [c0, c1, c2, c3, c4]
+  ground_truth_constants: [0.5, 2.0, 3.141592653589793, -0.5, -1.0]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  physical_vars: x0=sigma, x1=theta0, x2=theta1
+  n_samples: 1000
+  formula_original: exp(-((theta0-theta1)/sigma)**2/2)/(sqrt(2*pi)*sigma)
+- id: I.8.14
+  skeleton_expr: sqrt((c0*x0 + x1)**2 + (c1*x2 + x3)**2)
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1]
+  ground_truth_constants: [-1.0, -1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=x1, x1=x2, x2=y1, x3=y2
+  n_samples: 1000
+  formula_original: sqrt((x2-x1)**2+(y2-y1)**2)
+- id: I.9.18
+  skeleton_expr: x0*x1*x2/((c0*x3 + x4)**2 + (c1*x5 + x6)**2 + (c2*x7 + x8)**2)
+  variables: [x0, x1, x2, x3, x4, x5, x6, x7, x8]
+  constants: [c0, c1, c2]
+  ground_truth_constants: [-1.0, -1.0, -1.0]
+  sampling_ranges:
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  - [3.0, 4.0]
+  - [1.0, 2.0]
+  - [3.0, 4.0]
+  - [1.0, 2.0]
+  - [3.0, 4.0]
+  - [1.0, 2.0]
+  physical_vars: x0=m1, x1=m2, x2=G, x3=x1, x4=x2, x5=y1, x6=y2, x7=z1, x8=z2
+  n_samples: 1000
+  formula_original: G*m1*m2/((x2-x1)**2+(y2-y1)**2+(z2-z1)**2)
+- id: I.10.7
+  skeleton_expr: x0/sqrt(c0 + c1*x1**2/x2**2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [1.0, -1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 2.0]
+  - [3.0, 10.0]
+  physical_vars: x0=m_0, x1=v, x2=c
+  n_samples: 1000
+  formula_original: m_0/sqrt(1-v**2/c**2)
+- id: I.11.19
+  skeleton_expr: c0*(x0*x3 + x1*x4 + x2*x5)
+  variables: [x0, x1, x2, x3, x4, x5]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=x1, x1=x2, x2=x3, x3=y1, x4=y2, x5=y3
+  n_samples: 1000
+  formula_original: x1*y1+x2*y2+x3*y3
+- id: I.12.1
+  skeleton_expr: c0*x0*x1
+  variables: [x0, x1]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=mu, x1=Nn
+  n_samples: 1000
+  formula_original: mu*Nn
+- id: I.12.2
+  skeleton_expr: c0*x0*x1/(c1*x2*x3**2)
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1]
+  ground_truth_constants: [0.25, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q1, x1=q2, x2=epsilon, x3=r
+  n_samples: 1000
+  formula_original: q1*q2*r/(4*pi*epsilon*r**3)
+- id: I.12.4
+  skeleton_expr: c0*x0/(c1*x1*x2**2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [0.25, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q1, x1=epsilon, x2=r
+  n_samples: 1000
+  formula_original: q1*r/(4*pi*epsilon*r**3)
+- id: I.12.5
+  skeleton_expr: c0*x0*x1
+  variables: [x0, x1]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q2, x1=Ef
+  n_samples: 1000
+  formula_original: q2*Ef
+- id: I.12.11
+  skeleton_expr: c0*x0*(x1 + x2*x3*sin(x4))
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q, x1=Ef, x2=B, x3=v, x4=theta
+  n_samples: 1000
+  formula_original: q*(Ef+B*v*sin(theta))
+- id: I.13.4
+  skeleton_expr: c0*x0*(x1**2 + x2**2 + x3**2)
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [0.5]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=m, x1=v, x2=u, x3=w
+  n_samples: 1000
+  formula_original: 1/2*m*(v**2+u**2+w**2)
+- id: I.13.12
+  skeleton_expr: x0*x1*x4*(c0/x2 + 1/x3)
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=m1, x1=m2, x2=r1, x3=r2, x4=G
+  n_samples: 1000
+  formula_original: G*m1*m2*(1/r2-1/r1)
+- id: I.14.3
+  skeleton_expr: c0*x0*x1*x2
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=m, x1=g, x2=z
+  n_samples: 1000
+  formula_original: m*g*z
+- id: I.14.4
+  skeleton_expr: c0*x0*x1**2
+  variables: [x0, x1]
+  constants: [c0]
+  ground_truth_constants: [0.5]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=k_spring, x1=x
+  n_samples: 1000
+  formula_original: 1/2*k_spring*x**2
+- id: I.15.3x
+  skeleton_expr: (c2*x1*x3 + x0)/sqrt(c0 + c1*x1**2/x2**2)
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1, c2]
+  ground_truth_constants: [1.0, -1.0, -1.0]
+  sampling_ranges:
+  - [5.0, 10.0]
+  - [1.0, 2.0]
+  - [3.0, 20.0]
+  - [1.0, 2.0]
+  physical_vars: x0=x, x1=u, x2=c, x3=t
+  n_samples: 1000
+  formula_original: (x-u*t)/sqrt(1-u**2/c**2)
+- id: I.15.3t
+  skeleton_expr: (c2*x0*x2/x1**2 + x3)/sqrt(c0 + c1*x2**2/x1**2)
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1, c2]
+  ground_truth_constants: [1.0, -1.0, -1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [3.0, 10.0]
+  - [1.0, 2.0]
+  - [1.0, 5.0]
+  physical_vars: x0=x, x1=c, x2=u, x3=t
+  n_samples: 1000
+  formula_original: (t-u*x/c**2)/sqrt(1-u**2/c**2)
+- id: I.15.1
+  skeleton_expr: x0*x1/sqrt(c0 + c1*x1**2/x2**2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [1.0, -1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 2.0]
+  - [3.0, 10.0]
+  physical_vars: x0=m_0, x1=v, x2=c
+  n_samples: 1000
+  formula_original: m_0*v/sqrt(1-v**2/c**2)
+- id: I.16.6
+  skeleton_expr: (x1 + x2)/(c0 + x1*x2/x0**2)
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=c, x1=v, x2=u
+  n_samples: 1000
+  formula_original: (u+v)/(1+u*v/c**2)
+- id: I.18.4
+  skeleton_expr: c0*(x0*x2 + x1*x3)/(x0 + x1)
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=m1, x1=m2, x2=r1, x3=r2
+  n_samples: 1000
+  formula_original: (m1*r1+m2*r2)/(m1+m2)
+- id: I.18.12
+  skeleton_expr: c0*x0*x1*sin(x2)
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [0.0, 5.0]
+  physical_vars: x0=r, x1=F, x2=theta
+  n_samples: 1000
+  formula_original: r*F*sin(theta)
+- id: I.18.14
+  skeleton_expr: c0*x0*x1*x2*sin(x3)
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=m, x1=r, x2=v, x3=theta
+  n_samples: 1000
+  formula_original: m*r*v*sin(theta)
+- id: I.24.6
+  skeleton_expr: c0*x0*x3**2*(x1**2 + x2**2)
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [0.25]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  physical_vars: x0=m, x1=omega_1, x2=omega_0, x3=x
+  n_samples: 1000
+  formula_original: 1/2*m*(omega_1**2+omega_0**2)*1/2*x**2
+- id: I.25.13
+  skeleton_expr: c0*x0/x1
+  variables: [x0, x1]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q, x1=C
+  n_samples: 1000
+  formula_original: q/C
+- id: I.27.6
+  skeleton_expr: c0/(x2/x1 + 1/x0)
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=d1, x1=d2, x2=n
+  n_samples: 1000
+  formula_original: 1/(1/d1+n/d2)
+- id: I.29.4
+  skeleton_expr: c0*x0/x1
+  variables: [x0, x1]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 10.0]
+  - [1.0, 10.0]
+  physical_vars: x0=omega, x1=c
+  n_samples: 1000
+  formula_original: omega/c
+- id: I.29.16
+  skeleton_expr: sqrt(c0*x0*x1*cos(c1*x3 + x2) + x0**2 + x1**2)
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1]
+  ground_truth_constants: [-2.0, -1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=x1, x1=x2, x2=theta1, x3=theta2
+  n_samples: 1000
+  formula_original: sqrt(x1**2+x2**2-2*x1*x2*cos(theta1-theta2))
+- id: I.30.3
+  skeleton_expr: x0*sin(c1*x1*x2)**2/sin(c0*x1)**2
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [0.5, 0.5]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=Int_0, x1=theta, x2=n
+  n_samples: 1000
+  formula_original: Int_0*sin(n*theta/2)**2/sin(theta/2)**2
+- id: I.32.5
+  skeleton_expr: c0*x0**2*x1**2/(c1*x2*x3**3)
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1]
+  ground_truth_constants: [0.16666666666666666, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q, x1=a, x2=epsilon, x3=c
+  n_samples: 1000
+  formula_original: q**2*a**2/(6*pi*epsilon*c**3)
+- id: I.32.17
+  skeleton_expr: c0*c1*x0*x1*x2**2*x3**2*x4**4/(c2*x5**2 + x4**2)**2
+  variables: [x0, x1, x2, x3, x4, x5]
+  constants: [c0, c1, c2]
+  ground_truth_constants: [1.3333333333333333, 3.141592653589793, -1.0]
+  sampling_ranges:
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  - [3.0, 5.0]
+  physical_vars: x0=epsilon, x1=c, x2=Ef, x3=r, x4=omega_1, x5=omega_0
+  n_samples: 1000
+  formula_original: (1/2*epsilon*c*Ef**2)*(8*pi*r**2/3)*(omega_1**4/(omega_1**2-omega_0**2)**2)
+- id: I.34.8
+  skeleton_expr: c0*x0*x1*x2/x3
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q, x1=v, x2=B, x3=p
+  n_samples: 1000
+  formula_original: q*v*B/p
+- id: I.34.1
+  skeleton_expr: x2/(c0 + c1*x1/x0)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [1.0, -1.0]
+  sampling_ranges:
+  - [3.0, 10.0]
+  - [1.0, 2.0]
+  - [1.0, 5.0]
+  physical_vars: x0=c, x1=v, x2=omega_0
+  n_samples: 1000
+  formula_original: omega_0/(1-v/c)
+- id: I.34.14
+  skeleton_expr: x2*(c2 + x1/x0)/sqrt(c0 + c1*x1**2/x0**2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1, c2]
+  ground_truth_constants: [1.0, -1.0, 1.0]
+  sampling_ranges:
+  - [3.0, 10.0]
+  - [1.0, 2.0]
+  - [1.0, 5.0]
+  physical_vars: x0=c, x1=v, x2=omega_0
+  n_samples: 1000
+  formula_original: (1+v/c)/sqrt(1-v**2/c**2)*omega_0
+- id: I.34.27
+  skeleton_expr: c0*x0*x1/c1
+  variables: [x0, x1]
+  constants: [c0, c1]
+  ground_truth_constants: [0.5, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=omega, x1=h
+  n_samples: 1000
+  formula_original: (h/(2*pi))*omega
+- id: I.37.4
+  skeleton_expr: c0*sqrt(x0*x1)*cos(x2) + x0 + x1
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [2.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=I1, x1=I2, x2=delta
+  n_samples: 1000
+  formula_original: I1+I2+2*sqrt(I1*I2)*cos(delta)
+- id: I.38.12
+  skeleton_expr: x2**2*x3/(c0*x0*x1**2)
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=m, x1=q, x2=h, x3=epsilon
+  n_samples: 1000
+  formula_original: 4*pi*epsilon*(h/(2*pi))**2/(m*q**2)
+- id: I.39.1
+  skeleton_expr: c0*x0*x1
+  variables: [x0, x1]
+  constants: [c0]
+  ground_truth_constants: [1.5]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=pr, x1=V
+  n_samples: 1000
+  formula_original: 3/2*pr*V
+- id: I.39.11
+  skeleton_expr: x1*x2/(c0 + x0)
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [2.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=gamma, x1=pr, x2=V
+  n_samples: 1000
+  formula_original: 1/(gamma-1)*pr*V
+- id: I.39.22
+  skeleton_expr: c0*x0*x1*x3/x2
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=n, x1=T, x2=V, x3=kb
+  n_samples: 1000
+  formula_original: n*kb*T/V
+- id: I.40.1
+  skeleton_expr: x0*exp(c0*x1*x2*x4/(x3*x5))
+  variables: [x0, x1, x2, x3, x4, x5]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=n_0, x1=m, x2=x, x3=T, x4=g, x5=kb
+  n_samples: 1000
+  formula_original: n_0*exp(-m*g*x/(kb*T))
+- id: I.41.16
+  skeleton_expr: c0*x0**3*x2/(c1**3*x4**2*(c2 + exp(c3*x0*x2/(c4*x1*x3))))
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0, c1, c2, c3, c4]
+  ground_truth_constants: [0.5, 3.141592653589793, -1.0, 0.5, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=omega, x1=T, x2=h, x3=kb, x4=c
+  n_samples: 1000
+  formula_original: h/(2*pi)*omega**3/(pi**2*c**2*(exp((h/(2*pi))*omega/(kb*T))-1))
+- id: I.43.16
+  skeleton_expr: c0*x0*x1*x2/x3
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=mu_drift, x1=q, x2=Volt, x3=d
+  n_samples: 1000
+  formula_original: mu_drift*q*Volt/d
+- id: I.43.31
+  skeleton_expr: c0*x0*x1*x2
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=mob, x1=T, x2=kb
+  n_samples: 1000
+  formula_original: mob*kb*T
+- id: I.43.43
+  skeleton_expr: x1*x3/(x2*(c0 + x0))
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [2.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=gamma, x1=kb, x2=A, x3=v
+  n_samples: 1000
+  formula_original: 1/(gamma-1)*kb*v/A
+- id: I.44.4
+  skeleton_expr: c0*x0*x1*x2*log(x4/x3)
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=n, x1=kb, x2=T, x3=V1, x4=V2
+  n_samples: 1000
+  formula_original: n*kb*T*ln(V2/V1)
+- id: I.47.23
+  skeleton_expr: c0*sqrt(x0*x1/x2)
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=gamma, x1=pr, x2=rho
+  n_samples: 1000
+  formula_original: sqrt(gamma*pr/rho)
+- id: I.48.2
+  skeleton_expr: x0*x2**2/sqrt(c0 + c1*x1**2/x2**2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [1.0, -1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 2.0]
+  - [3.0, 10.0]
+  physical_vars: x0=m, x1=v, x2=c
+  n_samples: 1000
+  formula_original: m*c**2/sqrt(1-v**2/c**2)
+- id: I.50.26
+  skeleton_expr: c0*x0*(x3*cos(x1*x2)**2 + cos(x1*x2))
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  physical_vars: x0=x1, x1=omega, x2=t, x3=alpha
+  n_samples: 1000
+  formula_original: x1*(cos(omega*t)+alpha*cos(omega*t)**2)
+- id: II.2.42
+  skeleton_expr: x0*x3*(c0*x1 + x2)/x4
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=kappa, x1=T1, x2=T2, x3=A, x4=d
+  n_samples: 1000
+  formula_original: kappa*(T2-T1)*A/d
+- id: II.3.24
+  skeleton_expr: c0*x0/(c1*x1**2)
+  variables: [x0, x1]
+  constants: [c0, c1]
+  ground_truth_constants: [0.25, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=Pwr, x1=r
+  n_samples: 1000
+  formula_original: Pwr/(4*pi*r**2)
+- id: II.4.23
+  skeleton_expr: c0*x0/(c1*x1*x2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [0.25, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q, x1=epsilon, x2=r
+  n_samples: 1000
+  formula_original: q/(4*pi*epsilon*r)
+- id: II.6.11
+  skeleton_expr: c0*x1*cos(x2)/(c1*x0*x3**2)
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1]
+  ground_truth_constants: [0.25, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  physical_vars: x0=epsilon, x1=p_d, x2=theta, x3=r
+  n_samples: 1000
+  formula_original: 1/(4*pi*epsilon)*p_d*cos(theta)/r**2
+- id: II.6.15a
+  skeleton_expr: c0*x1*x5*sqrt(x3**2 + x4**2)/(c1*x0*x2**5)
+  variables: [x0, x1, x2, x3, x4, x5]
+  constants: [c0, c1]
+  ground_truth_constants: [0.75, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  physical_vars: x0=epsilon, x1=p_d, x2=r, x3=x, x4=y, x5=z
+  n_samples: 1000
+  formula_original: p_d/(4*pi*epsilon)*3*z/r**5*sqrt(x**2+y**2)
+- id: II.6.15b
+  skeleton_expr: c0*x1*sin(x2)*cos(x2)/(c1*x0*x3**3)
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1]
+  ground_truth_constants: [0.75, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  physical_vars: x0=epsilon, x1=p_d, x2=theta, x3=r
+  n_samples: 1000
+  formula_original: p_d/(4*pi*epsilon)*3*cos(theta)*sin(theta)/r**3
+- id: II.8.7
+  skeleton_expr: c0*x0**2/(c1*x1*x2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [0.15, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q, x1=epsilon, x2=d
+  n_samples: 1000
+  formula_original: 3/5*q**2/(4*pi*epsilon*d)
+- id: II.8.31
+  skeleton_expr: c0*x0*x1**2
+  variables: [x0, x1]
+  constants: [c0]
+  ground_truth_constants: [0.5]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=epsilon, x1=Ef
+  n_samples: 1000
+  formula_original: epsilon*Ef**2/2
+- id: II.10.9
+  skeleton_expr: x0/(x1*(c0 + x2))
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=sigma_den, x1=epsilon, x2=chi
+  n_samples: 1000
+  formula_original: sigma_den/epsilon*1/(1+chi)
+- id: II.11.3
+  skeleton_expr: x0*x1/(x4*(c0*x3**2 + x2**2))
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [3.0, 5.0]
+  - [1.0, 2.0]
+  - [1.0, 3.0]
+  physical_vars: x0=q, x1=Ef, x2=omega_0, x3=omega_1, x4=m
+  n_samples: 1000
+  formula_original: q*Ef/(m*(omega_0**2-omega_1**2))
+- id: II.11.17
+  skeleton_expr: x0*(c0 + x4*x5*cos(x3)/(x1*x2))
+  variables: [x0, x1, x2, x3, x4, x5]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  physical_vars: x0=n_0, x1=kb, x2=T, x3=theta, x4=p_d, x5=Ef
+  n_samples: 1000
+  formula_original: n_0*(1+p_d*Ef*cos(theta)/(kb*T))
+- id: II.11.20
+  skeleton_expr: c0*x0*x1**2*x2/(x3*x4)
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0]
+  ground_truth_constants: [0.3333333333333333]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=n_rho, x1=p_d, x2=Ef, x3=kb, x4=T
+  n_samples: 1000
+  formula_original: n_rho*p_d**2*Ef/(3*kb*T)
+- id: II.11.27
+  skeleton_expr: x0*x1*x2*x3/(c0 + c1*x0*x1)
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1]
+  ground_truth_constants: [1.0, -0.3333333333333333]
+  sampling_ranges:
+  - [0.0, 1.0]
+  - [0.0, 1.0]
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  physical_vars: x0=n, x1=alpha, x2=epsilon, x3=Ef
+  n_samples: 1000
+  formula_original: n*alpha/(1-(n*alpha/3))*epsilon*Ef
+- id: II.11.28
+  skeleton_expr: c0 + x0*x1/(c1 + c2*x0*x1)
+  variables: [x0, x1]
+  constants: [c0, c1, c2]
+  ground_truth_constants: [1.0, 1.0, -0.3333333333333333]
+  sampling_ranges:
+  - [0.0, 1.0]
+  - [0.0, 1.0]
+  physical_vars: x0=n, x1=alpha
+  n_samples: 1000
+  formula_original: 1+n*alpha/(1-(n*alpha/3))
+- id: II.13.17
+  skeleton_expr: c0*x2/(c1*x0*x1**2*x3)
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1]
+  ground_truth_constants: [0.5, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=epsilon, x1=c, x2=I, x3=r
+  n_samples: 1000
+  formula_original: 1/(4*pi*epsilon*c**2)*2*I/r
+- id: II.13.23
+  skeleton_expr: x0/sqrt(c0 + c1*x1**2/x2**2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [1.0, -1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 2.0]
+  - [3.0, 10.0]
+  physical_vars: x0=rho_c_0, x1=v, x2=c
+  n_samples: 1000
+  formula_original: rho_c_0/sqrt(1-v**2/c**2)
+- id: II.13.34
+  skeleton_expr: x0*x1/sqrt(c0 + c1*x1**2/x2**2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [1.0, -1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 2.0]
+  - [3.0, 10.0]
+  physical_vars: x0=rho_c_0, x1=v, x2=c
+  n_samples: 1000
+  formula_original: rho_c_0*v/sqrt(1-v**2/c**2)
+- id: II.15.4
+  skeleton_expr: c0*x0*x1*cos(x2)
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=mom, x1=B, x2=theta
+  n_samples: 1000
+  formula_original: -mom*B*cos(theta)
+- id: II.15.5
+  skeleton_expr: c0*x0*x1*cos(x2)
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=p_d, x1=Ef, x2=theta
+  n_samples: 1000
+  formula_original: -p_d*Ef*cos(theta)
+- id: II.21.32
+  skeleton_expr: c0*x0/(c1*x1*x2*(c2 + c3*x3/x4))
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0, c1, c2, c3]
+  ground_truth_constants: [0.25, 3.141592653589793, 1.0, -1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 2.0]
+  - [3.0, 10.0]
+  physical_vars: x0=q, x1=epsilon, x2=r, x3=v, x4=c
+  n_samples: 1000
+  formula_original: q/(4*pi*epsilon*r*(1-v/c))
+- id: II.24.17
+  skeleton_expr: sqrt(c0*c1**2/x2**2 + x0**2/x1**2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [-1.0, 3.141592653589793]
+  sampling_ranges:
+  - [4.0, 6.0]
+  - [1.0, 2.0]
+  - [2.0, 4.0]
+  physical_vars: x0=omega, x1=c, x2=d
+  n_samples: 1000
+  formula_original: sqrt(omega**2/c**2-pi**2/d**2)
+- id: II.27.16
+  skeleton_expr: c0*x0*x1*x2**2
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=epsilon, x1=c, x2=Ef
+  n_samples: 1000
+  formula_original: epsilon*c*Ef**2
+- id: II.27.18
+  skeleton_expr: c0*x0*x1**2
+  variables: [x0, x1]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=epsilon, x1=Ef
+  n_samples: 1000
+  formula_original: epsilon*Ef**2
+- id: II.34.2a
+  skeleton_expr: c0*x0*x1/(c1*x2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [0.5, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q, x1=v, x2=r
+  n_samples: 1000
+  formula_original: q*v/(2*pi*r)
+- id: II.34.2
+  skeleton_expr: c0*x0*x1*x2
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [0.5]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q, x1=v, x2=r
+  n_samples: 1000
+  formula_original: q*v*r/2
+- id: II.34.11
+  skeleton_expr: c0*x0*x1*x2/x3
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [0.5]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=g_, x1=q, x2=B, x3=m
+  n_samples: 1000
+  formula_original: g_*q*B/(2*m)
+- id: II.34.29a
+  skeleton_expr: c0*x0*x1/(c1*x2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [0.25, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=q, x1=h, x2=m
+  n_samples: 1000
+  formula_original: q*h/(4*pi*m)
+- id: II.34.29b
+  skeleton_expr: c0*c1*x0*x2*x3*x4/x1
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0, c1]
+  ground_truth_constants: [2.0, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=g_, x1=h, x2=Jz, x3=mom, x4=B
+  n_samples: 1000
+  formula_original: g_*mom*B*Jz/(h/(2*pi))
+- id: II.35.18
+  skeleton_expr: x0/(exp(x3*x4/(x1*x2)) + exp(c0*x3*x4/(x1*x2)))
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  physical_vars: x0=n_0, x1=kb, x2=T, x3=mom, x4=B
+  n_samples: 1000
+  formula_original: n_0/(exp(mom*B/(kb*T))+exp(-mom*B/(kb*T)))
+- id: II.35.21
+  skeleton_expr: c0*x0*x1*tanh(x1*x2/(x3*x4))
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=n_rho, x1=mom, x2=B, x3=kb, x4=T
+  n_samples: 1000
+  formula_original: n_rho*mom*tanh(mom*B/(kb*T))
+- id: II.36.38
+  skeleton_expr: c0*(x0*x1/(x2*x3) + x0*x4*x7/(x2*x3*x5*x6**2))
+  variables: [x0, x1, x2, x3, x4, x5, x6, x7]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  physical_vars: x0=mom, x1=H, x2=kb, x3=T, x4=alpha, x5=epsilon, x6=c, x7=M
+  n_samples: 1000
+  formula_original: mom*H/(kb*T)+(mom*alpha)/(epsilon*c**2*kb*T)*M
+- id: II.37.1
+  skeleton_expr: x0*x1*(c0 + x2)
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=mom, x1=B, x2=chi
+  n_samples: 1000
+  formula_original: mom*(1+chi)*B
+- id: II.38.3
+  skeleton_expr: c0*x0*x1*x3/x2
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=Y, x1=A, x2=d, x3=x
+  n_samples: 1000
+  formula_original: Y*A*x/d
+- id: II.38.14
+  skeleton_expr: x0/(c0 + c1*x1)
+  variables: [x0, x1]
+  constants: [c0, c1]
+  ground_truth_constants: [2.0, 2.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=Y, x1=sigma
+  n_samples: 1000
+  formula_original: Y/(2*(1+sigma))
+- id: III.4.32
+  skeleton_expr: 1/(c0 + exp(c1*x0*x1/(c2*x2*x3)))
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1, c2]
+  ground_truth_constants: [-1.0, 0.5, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=h, x1=omega, x2=kb, x3=T
+  n_samples: 1000
+  formula_original: 1/(exp((h/(2*pi))*omega/(kb*T))-1)
+- id: III.4.33
+  skeleton_expr: c0*x0*x1/(c1*(c2 + exp(c3*x0*x1/(c4*x2*x3))))
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1, c2, c3, c4]
+  ground_truth_constants: [0.5, 3.141592653589793, -1.0, 0.5, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=h, x1=omega, x2=kb, x3=T
+  n_samples: 1000
+  formula_original: (h/(2*pi))*omega/(exp((h/(2*pi))*omega/(kb*T))-1)
+- id: III.7.38
+  skeleton_expr: c0*c1*x0*x1/x2
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [4.0, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=mom, x1=B, x2=h
+  n_samples: 1000
+  formula_original: 2*mom*B/(h/(2*pi))
+- id: III.8.54
+  skeleton_expr: sin(c0*c1*x0*x1/x2)**2
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [2.0, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  - [1.0, 4.0]
+  physical_vars: x0=E_n, x1=t, x2=h
+  n_samples: 1000
+  formula_original: sin(E_n*t/(h/(2*pi)))**2
+- id: III.9.52
+  skeleton_expr: c0*c1*x0*x1*sin(c3*x2*(c4*x5 + x4))**2/(x2*x3*(c2*x5 + x4)**2)
+  variables: [x0, x1, x2, x3, x4, x5]
+  constants: [c0, c1, c2, c3, c4]
+  ground_truth_constants: [8.0, 3.141592653589793, -1.0, 0.5, -1.0]
+  sampling_ranges:
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 3.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=p_d, x1=Ef, x2=t, x3=h, x4=omega_1, x5=omega_0
+  n_samples: 1000
+  formula_original: (p_d*Ef*t/(h/(2*pi)))*sin((omega_1-omega_0)*t/2)**2/((omega_1-omega_0)*t/2)**2
+- id: III.10.19
+  skeleton_expr: c0*x0*sqrt(x1**2 + x2**2 + x3**2)
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=mom, x1=Bx, x2=By, x3=Bz
+  n_samples: 1000
+  formula_original: mom*sqrt(Bx**2+By**2+Bz**2)
+- id: III.12.43
+  skeleton_expr: c0*x0*x1/c1
+  variables: [x0, x1]
+  constants: [c0, c1]
+  ground_truth_constants: [0.5, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=n, x1=h
+  n_samples: 1000
+  formula_original: n*(h/(2*pi))
+- id: III.13.18
+  skeleton_expr: c0*c1*x0*x1**2*x2/x3
+  variables: [x0, x1, x2, x3]
+  constants: [c0, c1]
+  ground_truth_constants: [4.0, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=E_n, x1=d, x2=k, x3=h
+  n_samples: 1000
+  formula_original: 2*E_n*d**2*k/(h/(2*pi))
+- id: III.14.14
+  skeleton_expr: x0*(c0 + exp(x1*x2/(x3*x4)))
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  - [1.0, 2.0]
+  physical_vars: x0=I_0, x1=q, x2=Volt, x3=kb, x4=T
+  n_samples: 1000
+  formula_original: I_0*(exp(q*Volt/(kb*T))-1)
+- id: III.15.12
+  skeleton_expr: c0*x0*(c1 + c2*cos(x1*x2))
+  variables: [x0, x1, x2]
+  constants: [c0, c1, c2]
+  ground_truth_constants: [2.0, 1.0, -1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=U, x1=k, x2=d
+  n_samples: 1000
+  formula_original: 2*U*(1-cos(k*d))
+- id: III.15.14
+  skeleton_expr: c0*x0**2/(c1**2*x1*x2**2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [0.125, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=h, x1=E_n, x2=d
+  n_samples: 1000
+  formula_original: (h/(2*pi))**2/(2*E_n*d**2)
+- id: III.15.27
+  skeleton_expr: c0*c1*x0/(x1*x2)
+  variables: [x0, x1, x2]
+  constants: [c0, c1]
+  ground_truth_constants: [2.0, 3.141592653589793]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=alpha, x1=n, x2=d
+  n_samples: 1000
+  formula_original: 2*pi*alpha/(n*d)
+- id: III.17.37
+  skeleton_expr: x0*(c0 + x1*cos(x2))
+  variables: [x0, x1, x2]
+  constants: [c0]
+  ground_truth_constants: [1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=beta, x1=alpha, x2=theta
+  n_samples: 1000
+  formula_original: beta*(1+alpha*cos(theta))
+- id: III.19.51
+  skeleton_expr: c0*x0*x1**4/(x2**2*x3**2*x4**2)
+  variables: [x0, x1, x2, x3, x4]
+  constants: [c0]
+  ground_truth_constants: [-0.125]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=m, x1=q, x2=h, x3=n, x4=epsilon
+  n_samples: 1000
+  formula_original: -m*q**4/(2*(4*pi*epsilon)**2*(h/(2*pi))**2)*(1/n**2)
+- id: III.21.20
+  skeleton_expr: c0*x0*x1*x2/x3
+  variables: [x0, x1, x2, x3]
+  constants: [c0]
+  ground_truth_constants: [-1.0]
+  sampling_ranges:
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  - [1.0, 5.0]
+  physical_vars: x0=rho_c_0, x1=q, x2=A_vec, x3=m
+  n_samples: 1000
+  formula_original: -rho_c_0*q*A_vec/m

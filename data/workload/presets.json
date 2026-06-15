@@ -1,0 +1,45 @@
+{
+  "_comment": "W4 定稿: E1/W7 的 6 个 workload preset. 路径相对本目录; sha1_16 用于复现校验 (runner 解析 preset: 时 mismatch 只警告不拦). real 三个由 harvest.py (seed 0) 复现, synth 三个由 gen_cmd 复现 (确定性生成). 选择依据见 characterization.md 的 Preset 推荐表.",
+  "early-gen": {
+    "kind": "real",
+    "file": "snapshots/I.18.12_pop4000_seed0/pop_gen0005.bin",
+    "sha1_16": "925dead4081c1106",
+    "stats": "feynman/I.18.12 gen5 pop4000: nodes m12.4 max32, K m2.77, K=0 10%, K>=2 70%, trig 30%",
+    "why": "选择压前期, 树小, 接近初始分布"
+  },
+  "late-gen-bloated": {
+    "kind": "real",
+    "file": "snapshots/I.12.1_pop4000_seed0/pop_gen0050.bin",
+    "sha1_16": "113d7e639b24e7cd",
+    "stats": "feynman/I.12.1 gen50 pop4000: nodes m26.6 max32, K m1.23, K=0 29%, K>=2 39%, trig 2%",
+    "why": "大树低 K regime, 压力在树 eval 不在 LM"
+  },
+  "inner-const-heavy": {
+    "kind": "real",
+    "file": "snapshots/I.6.2_pop4000_seed0/pop_gen0030.bin",
+    "sha1_16": "27bbbe62256018b0",
+    "stats": "feynman/I.6.2 gen30 pop4000: nodes m27.8 max32, K m6.88, K=0 1%, K>=2 97%, trig 39%",
+    "why": "大树高 K, 压力在 batched LM"
+  },
+  "synth-early-gen": {
+    "kind": "synth",
+    "file": "synth/synth_early-gen_M4000_N1000_seed0.bin",
+    "sha1_16": "1706766eaddeffdc",
+    "gen_cmd": "uv run python gen_synth.py --preset early-gen --M 4000 --N 1000 --seed 0",
+    "stats": "M4000 N1000: nodes m12.5, K m2.82, K=0 11%, K>=2 73%, trig 30% (可恢复问题: y=f(x;c_true)+1%噪声)"
+  },
+  "synth-late-gen-bloated": {
+    "kind": "synth",
+    "file": "synth/synth_late-gen-bloated_M4000_N1000_seed0.bin",
+    "sha1_16": "068dfe4e40a34b58",
+    "gen_cmd": "uv run python gen_synth.py --preset late-gen-bloated --M 4000 --N 1000 --seed 0",
+    "stats": "M4000 N1000: nodes m26.7, K m1.22, K=0 31%, K>=2 36%, trig 4%"
+  },
+  "synth-inner-const-heavy": {
+    "kind": "synth",
+    "file": "synth/synth_inner-const-heavy_M4000_N1000_seed0.bin",
+    "sha1_16": "a2dfe3b2ede185d9",
+    "gen_cmd": "uv run python gen_synth.py --preset inner-const-heavy --M 4000 --N 1000 --seed 0",
+    "stats": "M4000 N1000: nodes m27.9, K m6.86, K=0 1%, K>=2 99%, trig 39%"
+  }
+}

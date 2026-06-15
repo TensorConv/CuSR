@@ -1,0 +1,37 @@
+{
+  "M_prob": 3,
+  "total_c": 8,
+  "K_max": 3,
+  "max_stack": 3,
+  "fixtures": [
+    {
+      "name": "powerlaw_K2",
+      "K": 2,
+      "c_offset": 0,
+      "c_true": [
+        2.5,
+        1.3
+      ]
+    },
+    {
+      "name": "quadratic_K3",
+      "K": 3,
+      "c_offset": 2,
+      "c_true": [
+        0.5,
+        -1.2,
+        0.3
+      ]
+    },
+    {
+      "name": "expsat_K3",
+      "K": 3,
+      "c_offset": 5,
+      "c_true": [
+        3.0,
+        0.4,
+        0.7
+      ]
+    }
+  ]
+}

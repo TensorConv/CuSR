@@ -1,0 +1,7 @@
+dataset=feynman/I.18.12
+gen=20
+pop_requested=1000
+n_tfunc_skipped=0
+n_kover_skipped=0
+n_kept=1000
+seed=0

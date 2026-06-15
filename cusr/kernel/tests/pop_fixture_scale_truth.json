@@ -1,0 +1,190 @@
+{
+  "files": [
+    {
+      "scale": 1e-06,
+      "bin": "pop_fixture_scale_1e-6.bin",
+      "fixtures": [
+        {
+          "name": "exp_pure",
+          "tier": 1,
+          "K": 1,
+          "c_offset": 0,
+          "c_true": [
+            4e-07
+          ]
+        },
+        {
+          "name": "sin_pure",
+          "tier": 1,
+          "K": 1,
+          "c_offset": 1,
+          "c_true": [
+            2e-06
+          ]
+        },
+        {
+          "name": "expsat_mixed",
+          "tier": 2,
+          "K": 3,
+          "c_offset": 2,
+          "c_true": [
+            3.0,
+            4e-07,
+            0.7
+          ]
+        }
+      ]
+    },
+    {
+      "scale": 0.001,
+      "bin": "pop_fixture_scale_1e-3.bin",
+      "fixtures": [
+        {
+          "name": "exp_pure",
+          "tier": 1,
+          "K": 1,
+          "c_offset": 0,
+          "c_true": [
+            0.0004
+          ]
+        },
+        {
+          "name": "sin_pure",
+          "tier": 1,
+          "K": 1,
+          "c_offset": 1,
+          "c_true": [
+            0.002
+          ]
+        },
+        {
+          "name": "expsat_mixed",
+          "tier": 2,
+          "K": 3,
+          "c_offset": 2,
+          "c_true": [
+            3.0,
+            0.0004,
+            0.7
+          ]
+        }
+      ]
+    },
+    {
+      "scale": 1.0,
+      "bin": "pop_fixture_scale_1e0.bin",
+      "fixtures": [
+        {
+          "name": "exp_pure",
+          "tier": 1,
+          "K": 1,
+          "c_offset": 0,
+          "c_true": [
+            0.4
+          ]
+        },
+        {
+          "name": "sin_pure",
+          "tier": 1,
+          "K": 1,
+          "c_offset": 1,
+          "c_true": [
+            2.0
+          ]
+        },
+        {
+          "name": "expsat_mixed",
+          "tier": 2,
+          "K": 3,
+          "c_offset": 2,
+          "c_true": [
+            3.0,
+            0.4,
+            0.7
+          ]
+        },
+        {
+          "name": "zero_init_quad",
+          "tier": 1,
+          "K": 3,
+          "c_offset": 5,
+          "c_true": [
+            0.5,
+            -1.2,
+            0.3
+          ]
+        }
+      ]
+    },
+    {
+      "scale": 1000.0,
+      "bin": "pop_fixture_scale_1e3.bin",
+      "fixtures": [
+        {
+          "name": "exp_pure",
+          "tier": 1,
+          "K": 1,
+          "c_offset": 0,
+          "c_true": [
+            400.0
+          ]
+        },
+        {
+          "name": "sin_pure",
+          "tier": 1,
+          "K": 1,
+          "c_offset": 1,
+          "c_true": [
+            2000.0
+          ]
+        },
+        {
+          "name": "expsat_mixed",
+          "tier": 2,
+          "K": 3,
+          "c_offset": 2,
+          "c_true": [
+            3.0,
+            400.0,
+            0.7
+          ]
+        }
+      ]
+    },
+    {
+      "scale": 1000000.0,
+      "bin": "pop_fixture_scale_1e6.bin",
+      "fixtures": [
+        {
+          "name": "exp_pure",
+          "tier": 1,
+          "K": 1,
+          "c_offset": 0,
+          "c_true": [
+            400000.0
+          ]
+        },
+        {
+          "name": "sin_pure",
+          "tier": 1,
+          "K": 1,
+          "c_offset": 1,
+          "c_true": [
+            2000000.0
+          ]
+        },
+        {
+          "name": "expsat_mixed",
+          "tier": 2,
+          "K": 3,
+          "c_offset": 2,
+          "c_true": [
+            3.0,
+            400000.0,
+            0.7
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+# compiled binaries
+batch_lm
+batch_lm_devjac
+batch_lm_fusedfd
+inspect
+
+# test run outputs
+tests/_out/
+tests/_out_op/
+tests/_out_stress/
+tests/_out_scale/
+
+# Python
+__pycache__/
+*.pyc
+
+# Internal-only notes (detailed engineering README, host↔GPU dialog,
+# roadmap, etc.). Kept locally for our own reference, not shipped publicly.
+INTERNAL.md
+
+# Local learning walkthrough — incremental .cu ladder for understanding
+# batch_lm.cu step by step. Personal study material, not shipped publicly.
+/walkthrough/
+batch_lm_fusedfd_*
