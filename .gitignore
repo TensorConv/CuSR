@@ -17,6 +17,7 @@ upstream/*/
 bench/c_kernels/third_party_install/
 
 # --- Experiment outputs (bulk artifacts) ---
+/outputs/
 experiments/*/outputs/
 experiments/*/checkpoints/
 experiments/*/wandb/
@@ -45,7 +46,10 @@ experiments/*/logs/
 #     bulk real snapshots (scp'd to A100) + generated synth populations are NOT ---
 data/workload/snapshots/
 data/workload/synth/
-results/
+# results/ is TRACKED — structured experiment archive (report.html/json, csv, plots,
+# manifest, small logs). Keep bulk binaries OUT of it (raw pop.bin/npy live under data/).
+results/**/*.bin
+results/**/*.npy
 *.h5
 *.hdf5
 *.npz

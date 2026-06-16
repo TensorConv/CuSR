@@ -1,0 +1,11 @@
+===== STANDING GPU PRE-CHECK =====
+0, 0 %, 1077 MiB
+1, 0 %, 4 MiB
+2, 0 %, 4 MiB
+3, 0 %, 4 MiB
+4, 0 %, 4 MiB
+5, 0 %, 4 MiB
+6, 0 %, 4 MiB
+7, 0 %, 4 MiB
+BUSY: GPU-edfcab3f-c13a-a4cc-18d2-e8083ea70160, 1999408
+GPU-edfcab3f-c13a-a4cc-18d2-e8083ea70160, 1999407

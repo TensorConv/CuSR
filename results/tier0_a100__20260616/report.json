@@ -1,0 +1,86 @@
+{
+  "title": "Tier0 — A100 kernel baseline (throughput envelope, per-gen, parity, scale)",
+  "date": "2026-06-16",
+  "question": "Re-establish the kernel's core numbers on the real target hardware (8x A100-80GB): throughput vs batch size for all 3 variants, EvoGP per-gen wallclock (the CO-fraction denominator), fp32-vs-fp64 parity, and the magnitude-scan quality gate. fp32 throughout.",
+  "setup": "Single A100 per timed run, manually pinned (CUDA_VISIBLE_DEVICES), pool GPU2-7 (left 0,1 for the box owner's jobs). Throughput swept on one synthetic preset (early-gen) varying M, so per-tree cost is fixed and the curve isolates GPU-utilization scaling. N=7 timed repeats + 2 warmup discarded; device wall-time parsed from the binary. Clocks unlocked (no sudo) but boost to the 1410 MHz SM ceiling under sustained load.",
+  "env": {
+    "git_sha": "95c5b27 (chore/a100-server-bringup)",
+    "host": "ubuntu (shared, multi-user)",
+    "cpu": "AMD EPYC 7763 x2  (128c / 256t)",
+    "ram": "503 GiB",
+    "gpu": "NVIDIA A100-SXM4-80GB x8",
+    "driver": "570.124.06",
+    "cuda": "12.8 (driver) / 12.4 (nvcc, conda toolkit)",
+    "torch": "2.11.0+cu128",
+    "clock_policy": "UNLOCKED (no sudo); SM auto-boosts to 1410 MHz under load, sampled per-run",
+    "exclusivity": "manual pin + pre-check; pool GPU2-7 verified free at launch"
+  },
+  "params": {
+    "sweep": {
+      "variants": "batch_lm (baseline, host-FD), batch_lm_devjac (device Jacobian), batch_lm_fusedfd (fused FD)",
+      "M_list": "1000, 4000, 16000, 64000 (+256000 for devjac/fusedfd; baseline stops at 64k: host-FD too slow + saturated)",
+      "N_points": 1000,
+      "synth_preset": "early-gen",
+      "seed": 0,
+      "warmup_discarded": 2,
+      "timed_repeats": 7,
+      "metric": "trees/s = M / device_wall_time; report median + p10/p90",
+      "reference_point": "real data/fixtures/pop.bin (1000 real EvoGP trees) kept for cross-machine (laptop) comparison"
+    },
+    "kernel": {
+      "precision": "fp32 (design target: EvoGP + pop.bin data are fp32; no fp64 signal to recover)",
+      "arch": "sm_80 (A100 native, no PTX JIT)",
+      "build_flags": "-O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math",
+      "eps_fd": "1e-3 (relative finite-difference step, post-W0 fix)",
+      "timing_source": "clock_gettime(CLOCK_MONOTONIC) around the full solve (device wall, host orchestration included)",
+      "binary_sha256": "baseline 7fb1a516..., devjac 88ba369d..., fusedfd 8d4aa262..."
+    },
+    "synth_gen": {
+      "generator": "cusr/benchmark/workload/gen_synth.py (deterministic given preset,M,N,seed,noise)",
+      "early-gen_marginals": "mirrors real snapshot I.18.12_pop4000 gen5: nodes_mean 12.4, K_mean 2.77, trig 0.30 (calibrated to within +/-5%)",
+      "tree_structure": "size ~ lognormal(2.40,0.54) clipped 3-32 nodes; ops weighted by real opcode frequencies; leaves var/const by p_const",
+      "c_true": "U(0.5,3.0) x random sign  (|c| in [0.5,3])",
+      "c_init": "c_true * U(0.7,1.3) + N(0,0.02)  (constants perturbed ~+/-30%, mimics 'not yet tuned')",
+      "x_points": "U(0.5,2.5), shared across the whole population",
+      "noise": "y_obs = y + 1e-2 * rms(y) * N(0,1)  (1% relative)",
+      "rejection": "resample trees whose y is non-finite or |y| > 1e6 (DIV poles, tan asymptotes)",
+      "problem_type": "RECOVERABLE (CO can reach near c_true) -> performance + precision axis (NOT the quality-tier story)"
+    }
+  },
+  "findings": [
+    {"claim": "1000 trees badly underutilizes an A100", "evidence": "baseline @ M=1000 = 787 t/s, BELOW the laptop 5070Ti's 1319 t/s. The big GPU is latency/overhead-bound at this batch -> a fixed 1000-tree throughput is meaningless on A100; you must sweep M."},
+    {"claim": "The variant gap WIDENS at scale on A100 (opposite of the laptop-PCIe hypothesis)", "evidence": "At M=64k fusedfd 36551 vs baseline 1277 t/s (~29x); fusedfd reaches 50394 @256k still climbing. baseline's host-FD does H<->D round-trips every FD step -> a serial bottleneck that does NOT scale with the GPU, while devjac/fusedfd stay on-device. RERUN_A100.md predicted the gap would NARROW on A100; it widens."},
+    {"claim": "fusedfd has not saturated even at 256k; devjac plateaus ~24k; baseline flat ~1.3-1.5k", "evidence": "fusedfd 4884->17372->36551->50394 (4k->16k->64k->256k); devjac 21405->24383 (64k->256k); baseline peaks 1548 @4k then ~flat/declines."},
+    {"claim": "CO remains the absolute bottleneck of the GP loop", "evidence": "EvoGP per-gen evolution = 5.2ms (pop1000) / 5.3ms (pop4000) mean, while one full-population CO pass is hundreds of ms -> in-loop time is dominated by CO."},
+    {"claim": "fp32 quality is unchanged on A100 vs laptop", "evidence": "parity gate 3/3 PASS at 94.0 / 92.4 / 99.8 (loss-down / within-1.05x / within-10x), identical to the laptop baseline; magnitude scan tier1 11/11 + tier2 5/5 PASS for all 3 variants."},
+    {"claim": "Unlocked clocks are stable for timing", "evidence": "SM clock sampled at 1410 MHz (the A100 ceiling) across all sustained-load timed runs; no sudo needed to lock."}
+  ],
+  "tables": [
+    {"name": "Throughput (trees/s, median of N=7)", "columns": ["M", "baseline", "devjac", "fusedfd"],
+     "rows": [[1000,787,1294,1401],[4000,1548,4301,4884],[16000,1390,12790,17372],[64000,1277,21405,36551],[256000,"-",24383,50394]]},
+    {"name": "EvoGP per-gen wallclock (ms)", "columns": ["pop", "mean", "p50", "head10", "tail10"],
+     "rows": [[1000,5.2,4.6,5.9,3.9],[4000,5.3,3.4,4.1,2.9]]},
+    {"name": "Parity gate (A100, fp32 vs scipy fp64)", "columns": ["metric", "value", "threshold", "result"],
+     "rows": [["loss_down","94.0%","93.0%","PASS"],["within_1.05x","92.4%","90.0%","PASS"],["within_10x","99.8%","99.0%","PASS"]]}
+  ],
+  "plots": [
+    {"file": "plots/tier0_throughput.png", "caption": "CO throughput vs batch size M (log-log, fp32, N=7 median +/- range). x markers = laptop 5070Ti @ M=1000 reference. Wide-M points (64k-256k) are saturation/envelope probes, not a realistic-workload claim."}
+  ],
+  "caveats": [
+    "Synth = recoverable problem (performance + precision axis). Real GP snapshots (the quality-tier story) are a separate run, not included here.",
+    "The first sweep was DISCARDED: un-killed duplicate (pre-fix) processes co-tenanted GPU2-4 and contaminated timing + raced the output files. Numbers here are the clean single-process rerun (tp2_*).",
+    "baseline @ 256k skipped: host-FD ~160s/run x 9 is wasteful and it is already saturated by 4k.",
+    "M up to 256k is a saturation/envelope probe; the 'realistic operating point' is co-designed with kernel performance and decided later (not pinned to today's pop=4000).",
+    "Clocks unlocked (no sudo); they boost to 1410 MHz under load and are recorded per run, but not hard-pinned."
+  ],
+  "reproduce": [
+    "source scripts/env.sh",
+    "# generate synth inputs (deterministic):",
+    "uv run python cusr/benchmark/workload/gen_synth.py --preset early-gen --M <M> --N 1000 --seed 0",
+    "# build variants:",
+    "cd cusr/kernel && nvcc -O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math -o batch_lm_devjac batch_lm_devjac.cu loader.c && cd ../..",
+    "# throughput sweep (one variant per pinned GPU): python sweep.py --bin <bin> --gpu <id> --label <v> --out <f> --mlist 1000,4000,16000,64000,256000",
+    "# parity: CUDA_VISIBLE_DEVICES=<g> GATE_REPORT=docs/kernel/verify_report_a100.md uv run python cusr/kernel/tests/test_parity_gate.py",
+    "# scale: BATCH_LM=cusr/kernel/batch_lm_<v> uv run python cusr/kernel/tests/test_fixture_scale.py"
+  ]
+}

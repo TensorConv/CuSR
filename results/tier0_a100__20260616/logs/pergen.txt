@@ -1,0 +1,4 @@
+[bench] GPU=NVIDIA A100-SXM4-80GB  dataset=feynman/I.18.12  N=1000  gens=50 (+3 warmup)  seed=0
+
+pop=1000   per-gen: mean=5.2ms  p50=4.6ms  p90=8.7ms  head10=5.9ms  tail10=3.9ms  total(50gen)=0.26s
+pop=4000   per-gen: mean=5.3ms  p50=3.4ms  p90=6.4ms  head10=4.1ms  tail10=2.9ms  total(50gen)=0.26s

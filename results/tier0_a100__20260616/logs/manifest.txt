@@ -1,0 +1,14 @@
+===== SESSION MANIFEST =====
+timestamp: 20260616_210656
+git: 95c5b278021f137967f2492cf7fa5b70356b12c9 (chore/a100-server-bringup)
+host: ubuntu  CPU: AMD EPYC 7763 x2 (128c/256t)  RAM: 503Gi
+gpu: NVIDIA A100-SXM4-80GB x8
+driver: 570.124.06  CUDA: 12.8(driver)/12.4(nvcc)
+torch: 2.11.0+cu128
+clock_policy: UNLOCKED (no sudo) -> SM clock sampled per-run, N=7 repeats, median+p10/p90
+precision: fp32 (kernel), fp64 (scipy oracle, quality only)
+gpu_pool: 2,3,4,5,6,7 (leave 0,1 free)
+binaries:
+  batch_lm sha256=7fb1a51690d6d5fd765db867d57f39be
+  batch_lm_devjac sha256=88ba369dd180f0876a5e0499fdb436b1
+  batch_lm_fusedfd sha256=8d4aa2622a94ab11bf119e012e4076e3

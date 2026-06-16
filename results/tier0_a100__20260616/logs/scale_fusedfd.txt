@@ -1,0 +1,28 @@
+
+== scale=1e-06 (pop_fixture_scale_1e-6.bin) ==
+  [PASS] t1 exp_pure         status=CONVERGED     c_rel=5.937e-08  c_got=[4.e-07]
+  [PASS] t1 sin_pure         status=CONVERGED     c_rel=1.112e-07  c_got=[2.e-06]
+  [PASS] t2 expsat_mixed     status=CONVERGED     c_rel=5.937e-08  c_got=[3.e+00 4.e-07 7.e-01]
+
+== scale=1e-03 (pop_fixture_scale_1e-3.bin) ==
+  [PASS] t1 exp_pure         status=CONVERGED     c_rel=2.526e-08  c_got=[0.0004]
+  [PASS] t1 sin_pure         status=CONVERGED     c_rel=4.750e-08  c_got=[0.002]
+  [PASS] t2 expsat_mixed     status=CONVERGED     c_rel=7.947e-08  c_got=[3.e+00 4.e-04 7.e-01]
+
+== scale=1e+00 (pop_fixture_scale_1e0.bin) ==
+  [PASS] t1 exp_pure         status=CONVERGED     c_rel=5.960e-08  c_got=[0.4]
+  [PASS] t1 sin_pure         status=CONVERGED     c_rel=1.192e-07  c_got=[2.]
+  [PASS] t2 expsat_mixed     status=CONVERGED     c_rel=1.341e-07  c_got=[3.  0.4 0.7]
+  [PASS] t1 zero_init_quad   status=CONVERGED     c_rel=5.960e-08  c_got=[ 0.5 -1.2  0.3]
+
+== scale=1e+03 (pop_fixture_scale_1e3.bin) ==
+  [PASS] t1 exp_pure         status=CONVERGED     c_rel=7.629e-08  c_got=[400.]
+  [PASS] t1 sin_pure         status=CONVERGED     c_rel=6.104e-08  c_got=[2000.0001]
+  [PASS] t2 expsat_mixed     status=CONVERGED     c_rel=1.533e-07  c_got=[  3.  400.    0.7]
+
+== scale=1e+06 (pop_fixture_scale_1e6.bin) ==
+  [PASS] t1 exp_pure         status=CONVERGED     c_rel=0.000e+00  c_got=[400000.]
+  [PASS] t1 sin_pure         status=CONVERGED     c_rel=6.250e-08  c_got=[2000000.125]
+  [PASS] t2 expsat_mixed     status=CONVERGED     c_rel=7.947e-08  c_got=[3.e+00 4.e+05 7.e-01]
+
+result: tier1 11/11 PASS (hard assert), tier2 5/5 pass (diagnostic only)

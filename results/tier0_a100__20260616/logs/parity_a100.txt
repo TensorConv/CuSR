@@ -1,0 +1,12 @@
+[gate] running batch_lm on pop.bin ...
+[gate] [batch-lm] 总耗时 1.834 秒 (545 trees/s, M_prob=1000)
+[gate] scipy parity check (nproc=32) ...
+[verify] status: both_conv=409 only_gpu=23 only_sc=346 both_fail=62
+[verify] loss-down rate (K>0): 94.0%
+[verify] within scipy envelope: 1.05×=92.4%  2×=94.9%  10×=99.8%
+
+== parity gate (batch_lm) ==
+  [PASS] loss_down    94.0% (>= 93.0%)
+  [PASS] within_1p05  92.4% (>= 90.0%)
+  [PASS] within_10    99.8% (>= 99.0%)
+result: 3/3 PASS
