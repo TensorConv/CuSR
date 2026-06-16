@@ -1,0 +1,118 @@
+{
+  "harvest_date": "2026-06-17",
+  "git_sha": "762d193e078c5af8e735e7f15d41c7f5b5eae266",
+  "dataset": "feynman/I.18.12",
+  "problem": {
+    "skeleton_expr": "c0*x0*x1*sin(x2)",
+    "variables": [
+      "x0",
+      "x1",
+      "x2"
+    ],
+    "constants": [
+      "c0"
+    ],
+    "ground_truth_constants": [
+      1.0
+    ],
+    "sampling_ranges": [
+      [
+        1.0,
+        5.0
+      ],
+      [
+        1.0,
+        5.0
+      ],
+      [
+        0.0,
+        5.0
+      ]
+    ]
+  },
+  "N": 1000,
+  "noise": "none",
+  "seed": 0,
+  "pop": 4000,
+  "gens_run": 8,
+  "checkpoint_every": 4,
+  "evogp_config": {
+    "max_tree_len": 32,
+    "init_max_layer_cnt": 4,
+    "mutation_rate": 0.2,
+    "mutation_max_layer_cnt": 3,
+    "survival_rate": 0.3,
+    "elite_rate": 0.01,
+    "using_funcs": {
+      "+": 1.0,
+      "-": 1.0,
+      "*": 1.0,
+      "/": 1.0,
+      "sin": 0.5,
+      "cos": 0.5,
+      "tan": 0.5
+    },
+    "const_samples": [
+      0.0,
+      1.0,
+      -1.0,
+      2.0,
+      -2.0,
+      0.5
+    ]
+  },
+  "best_fitness": -3.4386634165106678e-12,
+  "snapshots": [
+    {
+      "gen": 0,
+      "file": "pop_gen0000.bin",
+      "M": 4000,
+      "total_nodes": 27819,
+      "total_c": 6859,
+      "N": 1000,
+      "n_vars": 3,
+      "K_max": 7,
+      "max_stack": 4,
+      "mean_K": 1.715,
+      "mean_nodes": 6.955,
+      "max_nodes": 15,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 16437328
+    },
+    {
+      "gen": 4,
+      "file": "pop_gen0004.bin",
+      "M": 4000,
+      "total_nodes": 39994,
+      "total_c": 9796,
+      "N": 1000,
+      "n_vars": 3,
+      "K_max": 10,
+      "max_stack": 9,
+      "mean_K": 2.449,
+      "mean_nodes": 9.998,
+      "max_nodes": 32,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 16595176
+    },
+    {
+      "gen": 8,
+      "file": "pop_gen0008.bin",
+      "M": 4000,
+      "total_nodes": 72384,
+      "total_c": 13455,
+      "N": 1000,
+      "n_vars": 3,
+      "K_max": 10,
+      "max_stack": 9,
+      "mean_K": 3.364,
+      "mean_nodes": 18.096,
+      "max_nodes": 32,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 16998492
+    }
+  ]
+}

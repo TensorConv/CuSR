@@ -25,7 +25,10 @@ CLI:
 from __future__ import annotations
 
 import argparse
+import datetime
+import json
 import struct
+import subprocess
 import sys
 from pathlib import Path
 
@@ -43,6 +46,19 @@ from evogp.tree.utils import Func, NType
 
 USING_FUNCS = {"+": 1.0, "-": 1.0, "*": 1.0, "/": 1.0, "sin": 0.5, "cos": 0.5, "tan": 0.5}
 CONST_SAMPLES = [0.0, 1.0, -1.0, 2.0, -2.0, 0.5]
+
+# EvoGP run config — single source of truth; recorded verbatim into each snapshot
+# manifest so a harvest is fully reproducible from the committed JSON alone.
+GP_CONFIG = {
+    "max_tree_len": 32,
+    "init_max_layer_cnt": 4,
+    "mutation_rate": 0.2,
+    "mutation_max_layer_cnt": 3,
+    "survival_rate": 0.3,
+    "elite_rate": 0.01,
+    "using_funcs": USING_FUNCS,
+    "const_samples": CONST_SAMPLES,
+}
 
 
 # 题目库 — Feynman Symbolic Regression Database 的子集 (Udrescu & Tegmark 2020).
@@ -209,16 +225,19 @@ def _extract_tree(tree, problem_n_vars: int) -> tuple | None:
 
 def _build_evogp(X_t: torch.Tensor, y_t: torch.Tensor, *, pop: int, n_vars: int, seed: int):
     desc = GenerateDescriptor(
-        max_tree_len=32, input_len=n_vars, output_len=1,
-        using_funcs=USING_FUNCS, max_layer_cnt=4, const_samples=CONST_SAMPLES,
+        max_tree_len=GP_CONFIG["max_tree_len"], input_len=n_vars, output_len=1,
+        using_funcs=USING_FUNCS, max_layer_cnt=GP_CONFIG["init_max_layer_cnt"],
+        const_samples=CONST_SAMPLES,
     )
     torch.manual_seed(seed); np.random.seed(seed)
     forest = Forest.random_generate(pop_size=pop, descriptor=desc)
     problem = SymbolicRegression(datapoints=X_t, labels=y_t)
     algo = GeneticProgramming(
         initial_forest=forest, crossover=DefaultCrossover(),
-        mutation=DefaultMutation(mutation_rate=0.2, descriptor=desc.update(max_layer_cnt=3)),
-        selection=DefaultSelection(survival_rate=0.3, elite_rate=0.01),
+        mutation=DefaultMutation(mutation_rate=GP_CONFIG["mutation_rate"],
+                                 descriptor=desc.update(max_layer_cnt=GP_CONFIG["mutation_max_layer_cnt"])),
+        selection=DefaultSelection(survival_rate=GP_CONFIG["survival_rate"],
+                                   elite_rate=GP_CONFIG["elite_rate"]),
     )
     pipeline = StandardPipeline(
         algorithm=algo, problem=problem,
@@ -331,11 +350,26 @@ def main(argv=None):
     # ---- EvoGP run ----
     algo, pipeline = _build_evogp(X_t, y_t, pop=args.pop, n_vars=n_vars, seed=args.seed)
 
+    snap_records = []  # per-snapshot workload stats -> manifest.json
+
+    def _snap_record(g, out_path, trees, n_tf, n_ko, stats):
+        Ks = np.array([len(t[3]) for t in trees], dtype=float)
+        Ns = np.array([len(t[0]) for t in trees], dtype=float)
+        return dict(gen=g, file=out_path.name, M=stats["M_prob"],
+                    total_nodes=stats["total_nodes"], total_c=stats["total_c"],
+                    N=stats["N"], n_vars=stats["n_vars"], K_max=stats["K_max"],
+                    max_stack=stats["max_stack"],
+                    mean_K=round(float(Ks.mean()), 3) if len(Ks) else 0.0,
+                    mean_nodes=round(float(Ns.mean()), 3) if len(Ns) else 0.0,
+                    max_nodes=int(Ns.max()) if len(Ns) else 0,
+                    n_tfunc_skip=n_tf, n_kover=n_ko, bytes=out_path.stat().st_size)
+
     def _checkpoint(g: int):
         """dump 当前 algo.forest 成 pop_gen{g:04d}.bin (g = 已完成代数)."""
         ck_out = args.out.parent / f"pop_gen{g:04d}.bin"
         ck_trees, ck_tf, ck_ko = _extract_forest(algo.forest, args.pop, n_vars)
         ck_stats = _write_pop_bin(ck_out, ck_trees, X_np, y_np)
+        snap_records.append(_snap_record(g, ck_out, ck_trees, ck_tf, ck_ko, ck_stats))
         print(f"[dump] checkpoint gen={g}: kept {len(ck_trees)}/{args.pop} "
               f"(TFUNC-skip {ck_tf}, K-over {ck_ko})  total_nodes={ck_stats['total_nodes']}  "
               f"K_max={ck_stats['K_max']}  -> {ck_out}", flush=True)
@@ -346,7 +380,8 @@ def main(argv=None):
         pipeline.step()
         if args.checkpoint_every > 0 and (gen + 1) % args.checkpoint_every == 0:
             _checkpoint(gen + 1)
-    print(f"[dump] EvoGP ran {args.gen} gens, best_fitness={float(pipeline.best_fitness):.4e}", flush=True)
+    best_fitness = float(pipeline.best_fitness)
+    print(f"[dump] EvoGP ran {args.gen} gens, best_fitness={best_fitness:.4e}", flush=True)
 
     # ---- per-tree extract ----
     trees, n_tfunc_skip, n_kover = _extract_forest(algo.forest, args.pop, n_vars)
@@ -360,6 +395,10 @@ def main(argv=None):
           f"total_c={stats['total_c']}  N={stats['N']}  n_vars={stats['n_vars']}  "
           f"K_max={stats['K_max']}  max_stack={stats['max_stack']}", flush=True)
 
+    # final pop.bin as its own snapshot record (unless it's already a checkpoint)
+    if args.checkpoint_every <= 0 or args.gen % args.checkpoint_every != 0:
+        snap_records.append(_snap_record(args.gen, args.out, trees, n_tfunc_skip, n_kover, stats))
+
     # sidecar: tfunc skip 计数 (inspect 不重跑 evogp, 它只看 .bin)
     sidecar = args.out.with_suffix(args.out.suffix + ".meta.txt")
     sidecar.write_text(
@@ -368,6 +407,26 @@ def main(argv=None):
         f"n_kept={len(trees)}\nseed={args.seed}\n"
     )
     print(f"[dump] sidecar: {sidecar}", flush=True)
+
+    # manifest.json — committed reproducibility record (the .bin files are gitignored).
+    try:
+        git_sha = subprocess.check_output(["git", "rev-parse", "HEAD"],
+                                          cwd=args.out.parent, text=True).strip()
+    except Exception:
+        git_sha = "unknown"
+    prob_rec = {k: prob[k] for k in
+                ("skeleton_expr", "variables", "constants",
+                 "ground_truth_constants", "sampling_ranges") if k in prob}
+    manifest = dict(
+        harvest_date=datetime.date.today().isoformat(), git_sha=git_sha,
+        dataset=args.dataset, problem=prob_rec, N=args.N, noise="none",
+        seed=args.seed, pop=args.pop, gens_run=args.gen,
+        checkpoint_every=args.checkpoint_every, evogp_config=GP_CONFIG,
+        best_fitness=best_fitness, snapshots=snap_records,
+    )
+    manifest_path = args.out.parent / "manifest.json"
+    manifest_path.write_text(json.dumps(manifest, indent=2))
+    print(f"[dump] manifest: {manifest_path}  ({len(snap_records)} snapshots)", flush=True)
 
     return 0
 

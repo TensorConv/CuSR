@@ -44,7 +44,11 @@ experiments/*/logs/
 
 # --- Data: small fixtures are committed (feynman set, pop.bin, presets.json);
 #     bulk real snapshots (scp'd to A100) + generated synth populations are NOT ---
-data/workload/snapshots/
+# bulk real GP snapshots: ignore the heavy binaries + sidecars, but TRACK
+# manifest.json (the committed, reproducible harvest record — .bin regenerates
+# from it via dump_evogp.py with the recorded dataset/seed/pop/config).
+data/workload/snapshots/**/*.bin
+data/workload/snapshots/**/*.meta.txt
 data/workload/synth/
 # results/ is TRACKED — structured experiment archive (report.html/json, csv, plots,
 # manifest, small logs). Keep bulk binaries OUT of it (raw pop.bin/npy live under data/).
