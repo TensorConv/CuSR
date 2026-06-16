@@ -1,0 +1,233 @@
+{
+  "harvest_date": "2026-06-17",
+  "git_sha": "4404f2773b3418c92eb0d64b7beca029b9f1debb",
+  "dataset": "feynman/I.6.2",
+  "problem": {
+    "skeleton_expr": "c0*sqrt(c1)*exp(c3*x1**2/x0**2)/(sqrt(c2)*x0)",
+    "variables": [
+      "x0",
+      "x1"
+    ],
+    "constants": [
+      "c0",
+      "c1",
+      "c2",
+      "c3"
+    ],
+    "ground_truth_constants": [
+      0.5,
+      2.0,
+      3.141592653589793,
+      -0.5
+    ],
+    "sampling_ranges": [
+      [
+        1.0,
+        3.0
+      ],
+      [
+        1.0,
+        3.0
+      ]
+    ]
+  },
+  "N": 1000,
+  "noise": 0.0,
+  "seed": 2,
+  "pop": 4000,
+  "gens_run": 100,
+  "max_tree_len": 32,
+  "checkpoint_gens": [
+    0,
+    1,
+    2,
+    4,
+    8,
+    16,
+    32,
+    64,
+    100
+  ],
+  "checkpoint_every": 0,
+  "evogp_config": {
+    "max_tree_len": 32,
+    "init_max_layer_cnt": 4,
+    "mutation_rate": 0.2,
+    "mutation_max_layer_cnt": 3,
+    "survival_rate": 0.3,
+    "elite_rate": 0.01,
+    "using_funcs": {
+      "+": 1.0,
+      "-": 1.0,
+      "*": 1.0,
+      "/": 1.0,
+      "sin": 0.5,
+      "cos": 0.5,
+      "tan": 0.5
+    },
+    "const_samples": [
+      0.0,
+      1.0,
+      -1.0,
+      2.0,
+      -2.0,
+      0.5
+    ]
+  },
+  "best_fitness": -1.5328732843045145e-05,
+  "snapshots": [
+    {
+      "gen": 0,
+      "file": "pop_gen0000.bin",
+      "M": 4000,
+      "total_nodes": 27689,
+      "total_c": 6980,
+      "N": 1000,
+      "n_vars": 2,
+      "K_max": 7,
+      "max_stack": 4,
+      "mean_K": 1.745,
+      "mean_nodes": 6.922,
+      "max_nodes": 15,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 16432252
+    },
+    {
+      "gen": 1,
+      "file": "pop_gen0001.bin",
+      "M": 4000,
+      "total_nodes": 27304,
+      "total_c": 7126,
+      "N": 1000,
+      "n_vars": 2,
+      "K_max": 9,
+      "max_stack": 6,
+      "mean_K": 1.782,
+      "mean_nodes": 6.826,
+      "max_nodes": 30,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 16428216
+    },
+    {
+      "gen": 2,
+      "file": "pop_gen0002.bin",
+      "M": 4000,
+      "total_nodes": 30490,
+      "total_c": 8653,
+      "N": 1000,
+      "n_vars": 2,
+      "K_max": 11,
+      "max_stack": 7,
+      "mean_K": 2.163,
+      "mean_nodes": 7.622,
+      "max_nodes": 32,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 16472556
+    },
+    {
+      "gen": 4,
+      "file": "pop_gen0004.bin",
+      "M": 4000,
+      "total_nodes": 42243,
+      "total_c": 12151,
+      "N": 1000,
+      "n_vars": 2,
+      "K_max": 12,
+      "max_stack": 8,
+      "mean_K": 3.038,
+      "mean_nodes": 10.561,
+      "max_nodes": 32,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 16627584
+    },
+    {
+      "gen": 8,
+      "file": "pop_gen0008.bin",
+      "M": 4000,
+      "total_nodes": 65060,
+      "total_c": 18215,
+      "N": 1000,
+      "n_vars": 2,
+      "K_max": 13,
+      "max_stack": 10,
+      "mean_K": 4.554,
+      "mean_nodes": 16.265,
+      "max_nodes": 32,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 16925644
+    },
+    {
+      "gen": 16,
+      "file": "pop_gen0016.bin",
+      "M": 4000,
+      "total_nodes": 89950,
+      "total_c": 26710,
+      "N": 1000,
+      "n_vars": 2,
+      "K_max": 14,
+      "max_stack": 10,
+      "mean_K": 6.678,
+      "mean_nodes": 22.488,
+      "max_nodes": 32,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 17258304
+    },
+    {
+      "gen": 32,
+      "file": "pop_gen0032.bin",
+      "M": 4000,
+      "total_nodes": 103909,
+      "total_c": 30742,
+      "N": 1000,
+      "n_vars": 2,
+      "K_max": 13,
+      "max_stack": 9,
+      "mean_K": 7.686,
+      "mean_nodes": 25.977,
+      "max_nodes": 32,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 17441940
+    },
+    {
+      "gen": 64,
+      "file": "pop_gen0064.bin",
+      "M": 4000,
+      "total_nodes": 106070,
+      "total_c": 25837,
+      "N": 1000,
+      "n_vars": 2,
+      "K_max": 11,
+      "max_stack": 6,
+      "mean_K": 6.459,
+      "mean_nodes": 26.517,
+      "max_nodes": 32,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 17448252
+    },
+    {
+      "gen": 100,
+      "file": "pop_gen0100.bin",
+      "M": 4000,
+      "total_nodes": 108568,
+      "total_c": 18036,
+      "N": 1000,
+      "n_vars": 2,
+      "K_max": 9,
+      "max_stack": 6,
+      "mean_K": 4.509,
+      "mean_nodes": 27.142,
+      "max_nodes": 32,
+      "n_tfunc_skip": 0,
+      "n_kover": 0,
+      "bytes": 17447024
+    }
+  ]
+}

@@ -1,0 +1,150 @@
+{
+  "title": "Phase 1 GP-snapshot harvest corpus — workload characterization / 真实负载语料",
+  "date": "2026-06-17",
+  "question": {
+    "zh": "用 evogp 真实跑出的 GP 种群(而非 synth)长什么样?常数数 K、树大小怎么随世代漂移?max_tree_len、噪声、题目怎么影响分布?CO kernel 在这些真实树上的收敛/失败画像如何?这是 Phase 1 语料的特征刻画,给后面正确性/端到端实验铺底。",
+    "en": "What do real evogp-evolved GP populations (vs synth) look like — how do constant count K and tree size drift across generations, and how do max_tree_len / noise / problem shape the distribution? And how does the CO kernel converge/fail on these real trees? This characterizes the Phase 1 corpus that the correctness / end-to-end experiments will build on."
+  },
+  "setup": {
+    "zh": "harvest.py 并行扫 17 题 × noise{无,1%} × cap{32,64} × seed{0,1,2} = 204 cell,每 cell 跑 evogp 100 代、在几何世代 {0,1,2,4,8,16,32,64,100} dump 整个种群(pop=4000, N=1000)→ 1836 个 snapshot。另在 3 个代表题 × {gen8,gen100} 直接采 pop=65536 的大 M 真实负载。每个 snapshot 的 manifest 记 dataset/noise/max_tree_len/seed/gen + K/size 统计。kernel 画像:在 cap64/无噪/seed0 的样本上跑 batch_lm_fusedfd,解析 converged/fail_cholesky。GPU 0–5 并行(留 6–7 给他人),204 cell 5.9 分钟跑完,0 失败。",
+    "en": "harvest.py sweeps 17 problems x noise{none,1%} x cap{32,64} x seed{0,1,2} = 204 cells in parallel; each runs evogp for 100 gens and dumps the whole population at geometric gens {0,1,2,4,8,16,32,64,100} (pop=4000, N=1000) -> 1836 snapshots. Plus 3 representative problems x {gen8,gen100} harvested directly at pop=65536 for large-M real workloads. Each snapshot manifest records dataset/noise/max_tree_len/seed/gen + K/size stats. Kernel profile: batch_lm_fusedfd on the cap64/noiseless/seed0 sample, parsing converged/fail_cholesky. GPUs 0-5 in parallel (6-7 left free); 204 cells in 5.9 min, 0 failures."
+  },
+  "env": {
+    "git_sha": "(this commit)",
+    "gpu": "8x A100-SXM4-80GB; harvest on GPUs 0-5 (6-7 left free per policy)",
+    "engine": "evogp (GPU GP-SR), GP_CONFIG single-sourced in dump_evogp.py",
+    "storage": "1836 pop4000 snapshots ~33GB + 6 pop65536 ~5GB; .bin gitignored, manifests committed",
+    "reproducible": "each snapshot regenerates from its committed manifest (dataset+seed+pop+config)"
+  },
+  "params": {
+    "matrix": {"problems": 17, "noise": "0.0, 0.01", "max_tree_len": "32, 64", "seeds": "0,1,2",
+               "gens": "0,1,2,4,8,16,32,64,100", "pop": 4000, "N": 1000, "cells": 204, "snapshots": 1836},
+    "large_M": {"pop": 65536, "problems": "I.18.12, I.6.2, nguyen/5", "gens": "8, 100", "cap": 64},
+    "problems": "4 Feynman (I.12.1/I.18.12/I.27.6/I.6.2) + 3 multivar Feynman (I.12.2/I.13.12/II.3.24) + Nguyen-1..10",
+    "kernel_sample": {"variant": "fusedfd", "cap": 64, "noise": 0.0, "seed": 0, "max_iter": 50}
+  },
+  "findings": [
+    {
+      "claim": {
+        "zh": "max_tree_len 是工作负载轻重的主导旋钮 —— cap=64 在 gen100 给出 mean_K=7.9 / 53 节点,是 cap=32(3.2 / 26.5)的 ~2.4× / 2×。",
+        "en": "max_tree_len is the dominant workload-weight lever — at gen100 cap=64 gives mean_K=7.9 / 53 nodes, ~2.4x / 2x the cap=32 values (3.2 / 26.5)."
+      },
+      "evidence": {
+        "zh": "cap=32 的 mean_nodes 在 gen32 饱和(撞 32 上限)、mean_K 甚至从 3.53 回落到 3.22(后期选择修剪冗余常数);cap=64 持续长到 53 节点 / K=7.9。K_max:cap32=13,cap64=24,都 < kernel 的 MAX_K=32 → 全语料 0 个 K-over 跳过,cap=64 安全。要更重的 fd_jacobian 压力样本就用 cap=64。",
+        "en": "cap=32 mean_nodes saturates by gen32 (hits the 32 cap) and mean_K even falls 3.53->3.22 (late selection prunes redundant constants); cap=64 keeps growing to 53 nodes / K=7.9. K_max: cap32=13, cap64=24, both < the kernel's MAX_K=32 -> 0 K-over skips across the whole corpus, so cap=64 is safe. Use cap=64 for the heavier fd_jacobian stress samples."
+      }
+    },
+    {
+      "claim": {
+        "zh": "真实树随世代显著 bloat,语料覆盖了从早代小树到晚代膨胀树的完整范围;synth 的 'early-gen' ≈ 真实 gen8。",
+        "en": "Real trees bloat substantially with generation; the corpus spans the full range from early small trees to late bloated trees; the synth 'early-gen' calibration ~ real gen8."
+      },
+      "evidence": {
+        "zh": "cap=64 下 mean_nodes 6.9(gen0)→15.6(gen8)→53(gen100),mean_K 1.7→2.8→7.9。之前 synth early-gen 标定的 mean_K~2.8 正好对应真实 gen8 —— 说明 synth 是合理的'早代'代表,但真实语料把工作区间向'更大/更高 K'大幅延展(打点已显示 fd_jacobian 占比随 K 上升)。",
+        "en": "At cap=64, mean_nodes 6.9(gen0)->15.6(gen8)->53(gen100), mean_K 1.7->2.8->7.9. The earlier synth early-gen calibration (mean_K~2.8) lands exactly at real gen8 — so synth is a fair 'early' proxy, but the real corpus extends the operating region far toward larger/higher-K (and the profiling already showed fd_jacobian's share rises with K)."
+      }
+    },
+    {
+      "claim": {
+        "zh": "题目间差异大,常数负载从 K≈5.5 到 K≈12;无常数的 Nguyen 目标反而让 GP 塞进最多常数。",
+        "en": "Wide per-problem variety: constant load spans K~5.5 to K~12 at gen100; constant-free Nguyen targets make the GP pack in the MOST constants."
+      },
+      "evidence": {
+        "zh": "gen100/cap64 各题 mean_K 范围 5.45–12.34。nguyen/5(sin(x²)cos(x)−1,GT 无常数)在 pop=65536 gen100 达到 mean_K=11.4,因为 GP 用一堆常数去逼近它够不到的结构。这给语料贡献了高 K 一端。",
+        "en": "Per-problem mean_K @gen100/cap64 spans 5.45-12.34. nguyen/5 (sin(x^2)cos(x)-1, constant-free GT) reaches mean_K=11.4 at pop=65536 gen100, because the GP uses many constants to approximate structure it cannot reach with its funcset. This contributes the high-K end of the corpus."
+      }
+    },
+    {
+      "claim": {
+        "zh": "在真实膨胀树上,秩亏 Cholesky 失败主导了尾部(gen100/cap64 高达 94%)—— 但这是全种群口径,不等于端到端缺陷。",
+        "en": "On real bloated trees, rank-deficient Cholesky failure dominates the tail (up to 94% at gen100/cap64) — but this is population-wide, NOT an end-to-end defect."
+      },
+      "evidence": {
+        "zh": "kernel 样本:fail_cholesky 从 gen0 的 ~10% 涨到 gen100 的 44%(I.6.2)/83%(I.13.12)/94%(I.18.12),收敛率随之跌到个位数。膨胀树带大量冗余/死常数 → 结构秩亏 → fp32 Cholesky 整步放弃。关键:GP 每代只选 top-x%,这些失败多在低适应度的 bloat 垃圾上;是否影响端到端要看选中部分(待端到端测),不能当缺陷 headline(对齐 64.8% 那条)。例外:nguyen/5 晚代反而健康(gen100 收敛 87% / fail_chol 4%),说明它的常数良态。这条同时是鲁棒性工作(正经 Levenberg trust-region 阻尼)的明确靶子。",
+        "en": "Kernel sample: fail_cholesky rises from ~10% (gen0) to 44% (I.6.2) / 83% (I.13.12) / 94% (I.18.12) at gen100, and converged% drops to single digits. Bloated trees carry many redundant/dead constants -> structural rank deficiency -> fp32 Cholesky abandons the step. Key: GP selects only the top-x% each generation, and these failures sit mostly on low-fitness bloat junk; whether it matters end-to-end depends on the selected fraction (to be measured end-to-end), so it should not be headlined as a defect (consistent with the 64.8% note). Exception: nguyen/5 is healthy late (gen100 converged 87% / fail_chol 4%) — well-conditioned constants. This is also a clear target for the robustness work (proper Levenberg trust-region damping)."
+      }
+    },
+    {
+      "claim": {
+        "zh": "语料完整、可复现、零失败:204 cell / 1836 snapshot + 6 个 pop=65536 大 M,manifest 全进 git。",
+        "en": "Corpus complete, reproducible, zero failures: 204 cells / 1836 snapshots + 6 pop=65536 large-M, all manifests committed."
+      },
+      "evidence": {
+        "zh": "harvest 204/204 OK、0 fail、5.9 分钟(GPU 0–5 并行,6–7 留空)。.bin(~38GB)gitignore;每个 snapshot 的 manifest(dataset+seed+pop+evogp 配置+git sha+逐 snapshot 统计)进 git,可从 manifest 完全重生 .bin。",
+        "en": "harvest 204/204 OK, 0 fail, 5.9 min (GPUs 0-5 parallel, 6-7 left free). .bin (~38GB) gitignored; each snapshot's manifest (dataset+seed+pop+evogp config+git sha+per-snapshot stats) is committed and the .bin fully regenerates from it."
+      }
+    }
+  ],
+  "tables": [
+    {
+      "name": "Workload drift (corpus avg over problems/seeds/noise, per cap)",
+      "columns": ["max_tree_len", "gen", "mean_K", "mean_nodes", "K_max", "max_nodes"],
+      "rows": [
+        [32, 0, "1.73", "6.93", 7, 15], [32, 8, "2.63", "14.47", 15, 32],
+        [32, 32, "3.53", "24.59", 13, 32], [32, 100, "3.22", "26.51", 12, 32],
+        [64, 0, "1.73", "6.93", 7, 15], [64, 8, "2.84", "15.57", 23, 64],
+        [64, 32, "7.13", "44.73", 24, 64], [64, 100, "7.87", "53.04", 23, 64]
+      ]
+    },
+    {
+      "name": "Kernel on real trees: converged% / fail_cholesky% vs gen (cap=64, noiseless, seed0)",
+      "columns": ["problem", "gen0", "gen4", "gen16", "gen64", "gen100"],
+      "rows": [
+        ["feynman/I.18.12", "60/10", "70/12", "48/30", "1/95", "3/94"],
+        ["feynman/I.6.2", "61/10", "33/53", "18/73", "15/71", "21/44"],
+        ["feynman/I.13.12", "62/10", "46/36", "20/70", "12/82", "10/83"],
+        ["nguyen/5", "59/10", "73/14", "21/70", "78/15", "87/4"]
+      ]
+    }
+  ],
+  "plots": [
+    {
+      "file": "plots/workload_drift.png",
+      "caption": {
+        "zh": "K 与树大小随世代漂移(语料对 17 题×3 seed×noise 取平均)。蓝=cap32(撞 32 上限饱和),红=cap64(持续 bloat 到 53 节点)。",
+        "en": "K and tree-size drift across generations (corpus avg over 17 problems x 3 seeds x noise). Blue=cap32 (saturates at the 32 cap), red=cap64 (keeps bloating to 53 nodes)."
+      }
+    },
+    {
+      "file": "plots/per_problem_K.png",
+      "caption": {
+        "zh": "各题 gen100/cap64 的平均常数负载 —— 语料的题目多样性(K≈5.5 到 12)。",
+        "en": "Per-problem mean constant load at gen100/cap64 — the corpus's problem variety (K~5.5 to 12)."
+      }
+    },
+    {
+      "file": "plots/kernel_vs_gen.png",
+      "caption": {
+        "zh": "kernel 在真实树上随世代的行为(cap64/无噪)。左=收敛率,右=fail_cholesky%(秩亏)。多数题随 bloat 秩亏飙升,nguyen/5 例外。全种群口径,见注意事项。",
+        "en": "Kernel behaviour on real trees vs generation (cap64/noiseless). Left=converged%, right=fail_cholesky% (rank-deficient). Most problems' rank-deficiency soars with bloat; nguyen/5 is the exception. Population-wide — see caveats."
+      }
+    }
+  ],
+  "caveats": [
+    {
+      "zh": "kernel 收敛/失败画像是**全种群**口径(含低适应度的 bloat 垃圾)。GP 每代只选 top-x%,所以高 fail_cholesky 未必影响端到端 SR 质量 —— 这要在选中部分上端到端测。不要把它当缺陷 headline。",
+      "en": "The kernel converged/fail profile is POPULATION-WIDE (includes low-fitness bloat junk). GP selects only the top-x% each generation, so a high fail_cholesky does not necessarily hurt end-to-end SR quality — that must be measured end-to-end on the selected fraction. Do not headline it as a defect."
+    },
+    {
+      "zh": "kernel 样本只取 cap=64 / 无噪 / seed0 的 4 个题(压力端);cap=32、加噪、其它题/seed 的失败率更低。max_iter=50。",
+      "en": "The kernel sample is only cap=64 / noiseless / seed0 over 4 problems (the stress end); cap=32, with-noise, and other problems/seeds fail less. max_iter=50."
+    },
+    {
+      "zh": "evogp funcset = {+,−,×,÷,sin,cos,tan};log/sqrt 目标(Nguyen-7/8、含 SQRT/EXP 的 Feynman)只能近似 —— skeleton 仅用于生成 y,不约束 GP。常数样本与算子集见 manifest 的 evogp_config。",
+      "en": "evogp funcset = {+,-,*,/,sin,cos,tan}; log/sqrt targets (Nguyen-7/8, SQRT/EXP Feynman) are only approximable — the skeleton only generates y, it does not constrain the GP. Const samples + operator set are in each manifest's evogp_config."
+    },
+    {
+      "zh": "数据生成无噪一半 / 1% RMS 相对噪声一半。pop=4000 是 GP 种群大小(决定树形分布),不是喂给 kernel 的 M;大 M 真实负载由 pop=65536 的 snapshot 提供。",
+      "en": "Data generation is half noiseless / half 1% RMS-relative noise. pop=4000 is the GP population size (sets the tree-shape distribution), not the kernel's M; large-M real workloads come from the pop=65536 snapshots."
+    }
+  ],
+  "reproduce": [
+    "# broad corpus (204 cells, GPUs 0-5):",
+    "uv run python cusr/benchmark/workload/harvest.py --gpus 0,1,2,3,4,5",
+    "# large-M (pop=65536):",
+    "uv run python cusr/benchmark/workload/harvest.py --pop 65536 --problems feynman/I.18.12,feynman/I.6.2,nguyen/5 --gens 8,100 --noises 0.0 --caps 64 --seeds 0 --gpus 0,1,2",
+    "# summary + kernel sample + plots:",
+    "uv run python results/harvest_corpus_a100__20260617/summarize.py --kernel-gpu 0",
+    "uv run python scripts/make_report.py results/harvest_corpus_a100__20260617/report.json"
+  ]
+}

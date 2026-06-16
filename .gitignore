@@ -49,6 +49,7 @@ experiments/*/logs/
 # from it via dump_evogp.py with the recorded dataset/seed/pop/config).
 data/workload/snapshots/**/*.bin
 data/workload/snapshots/**/*.meta.txt
+data/workload/snapshots/harvest_log.txt
 data/workload/synth/
 # results/ is TRACKED — structured experiment archive (report.html/json, csv, plots,
 # manifest, small logs). Keep bulk binaries OUT of it (raw pop.bin/npy live under data/).

@@ -1,0 +1,406 @@
+{
+  "drift": {
+    "32": {
+      "0": {
+        "mean_K": 1.7306666666666668,
+        "mean_nodes": 6.930666666666668,
+        "K_max": 7,
+        "max_nodes": 15
+      },
+      "1": {
+        "mean_K": 1.3741960784313727,
+        "mean_nodes": 5.590480392156862,
+        "K_max": 11,
+        "max_nodes": 31
+      },
+      "2": {
+        "mean_K": 1.3315196078431373,
+        "mean_nodes": 5.547147058823528,
+        "K_max": 13,
+        "max_nodes": 32
+      },
+      "4": {
+        "mean_K": 1.6960588235294118,
+        "mean_nodes": 7.841794117647059,
+        "K_max": 14,
+        "max_nodes": 32
+      },
+      "8": {
+        "mean_K": 2.6304509803921565,
+        "mean_nodes": 14.465676470588235,
+        "K_max": 15,
+        "max_nodes": 32
+      },
+      "16": {
+        "mean_K": 3.5609411764705876,
+        "mean_nodes": 22.316107843137253,
+        "K_max": 14,
+        "max_nodes": 32
+      },
+      "32": {
+        "mean_K": 3.5298235294117646,
+        "mean_nodes": 24.5904705882353,
+        "K_max": 13,
+        "max_nodes": 32
+      },
+      "64": {
+        "mean_K": 3.2612549019607844,
+        "mean_nodes": 26.167470588235293,
+        "K_max": 12,
+        "max_nodes": 32
+      },
+      "100": {
+        "mean_K": 3.2175294117647057,
+        "mean_nodes": 26.51034313725491,
+        "K_max": 12,
+        "max_nodes": 32
+      }
+    },
+    "64": {
+      "0": {
+        "mean_K": 1.7306666666666668,
+        "mean_nodes": 6.930666666666668,
+        "K_max": 7,
+        "max_nodes": 15
+      },
+      "1": {
+        "mean_K": 1.3742058823529413,
+        "mean_nodes": 5.590490196078432,
+        "K_max": 11,
+        "max_nodes": 33
+      },
+      "2": {
+        "mean_K": 1.3315588235294116,
+        "mean_nodes": 5.5475098039215665,
+        "K_max": 14,
+        "max_nodes": 45
+      },
+      "4": {
+        "mean_K": 1.7047156862745099,
+        "mean_nodes": 7.875235294117649,
+        "K_max": 17,
+        "max_nodes": 60
+      },
+      "8": {
+        "mean_K": 2.8419215686274506,
+        "mean_nodes": 15.571009803921568,
+        "K_max": 23,
+        "max_nodes": 64
+      },
+      "16": {
+        "mean_K": 6.017274509803921,
+        "mean_nodes": 36.05114705882353,
+        "K_max": 25,
+        "max_nodes": 64
+      },
+      "32": {
+        "mean_K": 7.126382352941175,
+        "mean_nodes": 44.72993137254902,
+        "K_max": 24,
+        "max_nodes": 64
+      },
+      "64": {
+        "mean_K": 7.703421568627451,
+        "mean_nodes": 50.62558823529411,
+        "K_max": 25,
+        "max_nodes": 64
+      },
+      "100": {
+        "mean_K": 7.873480392156864,
+        "mean_nodes": 53.03699019607844,
+        "K_max": 23,
+        "max_nodes": 64
+      }
+    }
+  },
+  "per_problem": {
+    "feynman/I.12.1": {
+      "mean_K": 7.431666666666666,
+      "mean_nodes": 42.881,
+      "K_max": 19
+    },
+    "feynman/I.12.2": {
+      "mean_K": 5.631,
+      "mean_nodes": 42.81366666666667,
+      "K_max": 16
+    },
+    "feynman/I.13.12": {
+      "mean_K": 7.438666666666666,
+      "mean_nodes": 51.48566666666667,
+      "K_max": 19
+    },
+    "feynman/I.18.12": {
+      "mean_K": 7.522666666666666,
+      "mean_nodes": 54.54,
+      "K_max": 17
+    },
+    "feynman/I.27.6": {
+      "mean_K": 6.498,
+      "mean_nodes": 42.03933333333333,
+      "K_max": 21
+    },
+    "feynman/I.6.2": {
+      "mean_K": 11.354333333333335,
+      "mean_nodes": 56.187000000000005,
+      "K_max": 20
+    },
+    "feynman/II.3.24": {
+      "mean_K": 8.681333333333335,
+      "mean_nodes": 48.52633333333333,
+      "K_max": 20
+    },
+    "nguyen/1": {
+      "mean_K": 7.986999999999999,
+      "mean_nodes": 50.593999999999994,
+      "K_max": 16
+    },
+    "nguyen/10": {
+      "mean_K": 8.667333333333334,
+      "mean_nodes": 54.23933333333334,
+      "K_max": 19
+    },
+    "nguyen/2": {
+      "mean_K": 5.454666666666667,
+      "mean_nodes": 47.42966666666667,
+      "K_max": 17
+    },
+    "nguyen/3": {
+      "mean_K": 8.162333333333335,
+      "mean_nodes": 48.446,
+      "K_max": 18
+    },
+    "nguyen/4": {
+      "mean_K": 6.449333333333333,
+      "mean_nodes": 54.547,
+      "K_max": 14
+    },
+    "nguyen/5": {
+      "mean_K": 7.0680000000000005,
+      "mean_nodes": 53.64533333333333,
+      "K_max": 15
+    },
+    "nguyen/6": {
+      "mean_K": 8.792333333333334,
+      "mean_nodes": 56.907000000000004,
+      "K_max": 16
+    },
+    "nguyen/7": {
+      "mean_K": 6.868666666666667,
+      "mean_nodes": 52.074666666666666,
+      "K_max": 15
+    },
+    "nguyen/8": {
+      "mean_K": 12.343333333333334,
+      "mean_nodes": 55.035333333333334,
+      "K_max": 19
+    },
+    "nguyen/9": {
+      "mean_K": 6.898333333333333,
+      "mean_nodes": 52.70033333333333,
+      "K_max": 14
+    }
+  },
+  "kover_total": 0,
+  "prof": [
+    {
+      "dataset": "feynman/I.18.12",
+      "gen": 0,
+      "conv_pct": 60.5,
+      "fail_chol": 395,
+      "fail_nan": 217,
+      "k0": 811,
+      "maxiter": 155,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.18.12",
+      "gen": 4,
+      "conv_pct": 69.5,
+      "fail_chol": 464,
+      "fail_nan": 74,
+      "k0": 420,
+      "maxiter": 263,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.18.12",
+      "gen": 16,
+      "conv_pct": 47.8,
+      "fail_chol": 1197,
+      "fail_nan": 45,
+      "k0": 96,
+      "maxiter": 751,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.18.12",
+      "gen": 64,
+      "conv_pct": 1.0,
+      "fail_chol": 3818,
+      "fail_nan": 104,
+      "k0": 36,
+      "maxiter": 2,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.18.12",
+      "gen": 100,
+      "conv_pct": 3.2,
+      "fail_chol": 3764,
+      "fail_nan": 63,
+      "k0": 25,
+      "maxiter": 20,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.6.2",
+      "gen": 0,
+      "conv_pct": 60.8,
+      "fail_chol": 401,
+      "fail_nan": 193,
+      "k0": 811,
+      "maxiter": 165,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.6.2",
+      "gen": 4,
+      "conv_pct": 32.9,
+      "fail_chol": 2128,
+      "fail_nan": 235,
+      "k0": 218,
+      "maxiter": 105,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.6.2",
+      "gen": 16,
+      "conv_pct": 17.9,
+      "fail_chol": 2916,
+      "fail_nan": 75,
+      "k0": 42,
+      "maxiter": 250,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.6.2",
+      "gen": 64,
+      "conv_pct": 14.8,
+      "fail_chol": 2822,
+      "fail_nan": 49,
+      "k0": 27,
+      "maxiter": 512,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.6.2",
+      "gen": 100,
+      "conv_pct": 21.4,
+      "fail_chol": 1754,
+      "fail_nan": 26,
+      "k0": 17,
+      "maxiter": 1346,
+      "M": 4000
+    },
+    {
+      "dataset": "nguyen/5",
+      "gen": 0,
+      "conv_pct": 59.4,
+      "fail_chol": 412,
+      "fail_nan": 235,
+      "k0": 811,
+      "maxiter": 166,
+      "M": 4000
+    },
+    {
+      "dataset": "nguyen/5",
+      "gen": 4,
+      "conv_pct": 73.2,
+      "fail_chol": 555,
+      "fail_nan": 79,
+      "k0": 297,
+      "maxiter": 142,
+      "M": 4000
+    },
+    {
+      "dataset": "nguyen/5",
+      "gen": 16,
+      "conv_pct": 21.3,
+      "fail_chol": 2815,
+      "fail_nan": 99,
+      "k0": 42,
+      "maxiter": 191,
+      "M": 4000
+    },
+    {
+      "dataset": "nguyen/5",
+      "gen": 64,
+      "conv_pct": 78.2,
+      "fail_chol": 596,
+      "fail_nan": 37,
+      "k0": 47,
+      "maxiter": 193,
+      "M": 4000
+    },
+    {
+      "dataset": "nguyen/5",
+      "gen": 100,
+      "conv_pct": 87.2,
+      "fail_chol": 163,
+      "fail_nan": 53,
+      "k0": 39,
+      "maxiter": 258,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.13.12",
+      "gen": 0,
+      "conv_pct": 61.5,
+      "fail_chol": 385,
+      "fail_nan": 204,
+      "k0": 811,
+      "maxiter": 142,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.13.12",
+      "gen": 4,
+      "conv_pct": 46.4,
+      "fail_chol": 1431,
+      "fail_nan": 164,
+      "k0": 371,
+      "maxiter": 180,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.13.12",
+      "gen": 16,
+      "conv_pct": 20.3,
+      "fail_chol": 2781,
+      "fail_nan": 89,
+      "k0": 138,
+      "maxiter": 180,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.13.12",
+      "gen": 64,
+      "conv_pct": 12.3,
+      "fail_chol": 3277,
+      "fail_nan": 65,
+      "k0": 34,
+      "maxiter": 132,
+      "M": 4000
+    },
+    {
+      "dataset": "feynman/I.13.12",
+      "gen": 100,
+      "conv_pct": 10.3,
+      "fail_chol": 3319,
+      "fail_nan": 109,
+      "k0": 67,
+      "maxiter": 94,
+      "M": 4000
+    }
+  ]
+}

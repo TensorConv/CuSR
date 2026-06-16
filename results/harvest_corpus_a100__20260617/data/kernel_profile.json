@@ -1,0 +1,202 @@
+[
+  {
+    "dataset": "feynman/I.18.12",
+    "gen": 0,
+    "conv_pct": 60.5,
+    "fail_chol": 395,
+    "fail_nan": 217,
+    "k0": 811,
+    "maxiter": 155,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.18.12",
+    "gen": 4,
+    "conv_pct": 69.5,
+    "fail_chol": 464,
+    "fail_nan": 74,
+    "k0": 420,
+    "maxiter": 263,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.18.12",
+    "gen": 16,
+    "conv_pct": 47.8,
+    "fail_chol": 1197,
+    "fail_nan": 45,
+    "k0": 96,
+    "maxiter": 751,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.18.12",
+    "gen": 64,
+    "conv_pct": 1.0,
+    "fail_chol": 3818,
+    "fail_nan": 104,
+    "k0": 36,
+    "maxiter": 2,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.18.12",
+    "gen": 100,
+    "conv_pct": 3.2,
+    "fail_chol": 3764,
+    "fail_nan": 63,
+    "k0": 25,
+    "maxiter": 20,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.6.2",
+    "gen": 0,
+    "conv_pct": 60.8,
+    "fail_chol": 401,
+    "fail_nan": 193,
+    "k0": 811,
+    "maxiter": 165,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.6.2",
+    "gen": 4,
+    "conv_pct": 32.9,
+    "fail_chol": 2128,
+    "fail_nan": 235,
+    "k0": 218,
+    "maxiter": 105,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.6.2",
+    "gen": 16,
+    "conv_pct": 17.9,
+    "fail_chol": 2916,
+    "fail_nan": 75,
+    "k0": 42,
+    "maxiter": 250,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.6.2",
+    "gen": 64,
+    "conv_pct": 14.8,
+    "fail_chol": 2822,
+    "fail_nan": 49,
+    "k0": 27,
+    "maxiter": 512,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.6.2",
+    "gen": 100,
+    "conv_pct": 21.4,
+    "fail_chol": 1754,
+    "fail_nan": 26,
+    "k0": 17,
+    "maxiter": 1346,
+    "M": 4000
+  },
+  {
+    "dataset": "nguyen/5",
+    "gen": 0,
+    "conv_pct": 59.4,
+    "fail_chol": 412,
+    "fail_nan": 235,
+    "k0": 811,
+    "maxiter": 166,
+    "M": 4000
+  },
+  {
+    "dataset": "nguyen/5",
+    "gen": 4,
+    "conv_pct": 73.2,
+    "fail_chol": 555,
+    "fail_nan": 79,
+    "k0": 297,
+    "maxiter": 142,
+    "M": 4000
+  },
+  {
+    "dataset": "nguyen/5",
+    "gen": 16,
+    "conv_pct": 21.3,
+    "fail_chol": 2815,
+    "fail_nan": 99,
+    "k0": 42,
+    "maxiter": 191,
+    "M": 4000
+  },
+  {
+    "dataset": "nguyen/5",
+    "gen": 64,
+    "conv_pct": 78.2,
+    "fail_chol": 596,
+    "fail_nan": 37,
+    "k0": 47,
+    "maxiter": 193,
+    "M": 4000
+  },
+  {
+    "dataset": "nguyen/5",
+    "gen": 100,
+    "conv_pct": 87.2,
+    "fail_chol": 163,
+    "fail_nan": 53,
+    "k0": 39,
+    "maxiter": 258,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.13.12",
+    "gen": 0,
+    "conv_pct": 61.5,
+    "fail_chol": 385,
+    "fail_nan": 204,
+    "k0": 811,
+    "maxiter": 142,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.13.12",
+    "gen": 4,
+    "conv_pct": 46.4,
+    "fail_chol": 1431,
+    "fail_nan": 164,
+    "k0": 371,
+    "maxiter": 180,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.13.12",
+    "gen": 16,
+    "conv_pct": 20.3,
+    "fail_chol": 2781,
+    "fail_nan": 89,
+    "k0": 138,
+    "maxiter": 180,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.13.12",
+    "gen": 64,
+    "conv_pct": 12.3,
+    "fail_chol": 3277,
+    "fail_nan": 65,
+    "k0": 34,
+    "maxiter": 132,
+    "M": 4000
+  },
+  {
+    "dataset": "feynman/I.13.12",
+    "gen": 100,
+    "conv_pct": 10.3,
+    "fail_chol": 3319,
+    "fail_nan": 109,
+    "k0": 67,
+    "maxiter": 94,
+    "M": 4000
+  }
+]
