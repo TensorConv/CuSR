@@ -1,8 +1,14 @@
 {
   "title": "Roofline (ANALYTICAL) — batch_lm_fusedfd on A100",
   "date": "2026-06-16",
-  "question": "Where does the fused-FD CO kernel sit relative to the A100 hardware ceilings — is it compute-bound, memory-bound, or far below the roofline (latency/occupancy/overhead-bound)? ncu (measured) is blocked by perf-counter permissions, so this is an analytical roofline.",
-  "setup": "Model FLOPs + DRAM bytes per the fusedfd algorithm (per LM iter, per tree), combine with the MEASURED end-to-end wall time from Tier0. Per-tree op histogram counted exactly from the synth early-gen M=16000 pop; mean iterations from the measured convergence curve. fp32. A100-SXM4-80GB peaks: 19.5 TFLOP/s fp32, 2039 GB/s HBM2e (ridge 9.56 FLOP/byte).",
+  "question": {
+    "zh": "fused-FD CO kernel 相对 A100 的硬件上限处在什么位置——是 compute-bound、memory-bound,还是远低于 roofline(受 latency/occupancy/overhead 约束)?ncu(实测)受 perf-counter 权限限制无法运行,因此这是一份 analytical roofline。",
+    "en": "Where does the fused-FD CO kernel sit relative to the A100 hardware ceilings — is it compute-bound, memory-bound, or far below the roofline (latency/occupancy/overhead-bound)? ncu (measured) is blocked by perf-counter permissions, so this is an analytical roofline."
+  },
+  "setup": {
+    "zh": "按 fusedfd 算法建模每次 LM iter、每棵树的 FLOPs 与 DRAM bytes,再与 Tier0 实测的端到端 wall time 结合。每棵树的 op 直方图从 synth early-gen M=16000 种群精确统计;平均迭代次数取自实测收敛曲线。fp32。A100-SXM4-80GB 峰值:fp32 19.5 TFLOP/s、HBM2e 2039 GB/s(ridge 9.56 FLOP/byte)。",
+    "en": "Model FLOPs + DRAM bytes per the fusedfd algorithm (per LM iter, per tree), combine with the MEASURED end-to-end wall time from Tier0. Per-tree op histogram counted exactly from the synth early-gen M=16000 pop; mean iterations from the measured convergence curve. fp32. A100-SXM4-80GB peaks: 19.5 TFLOP/s fp32, 2039 GB/s HBM2e (ridge 9.56 FLOP/byte)."
+  },
   "env": {
     "git_sha": "(this commit)",
     "gpu": "NVIDIA A100-SXM4-80GB",
@@ -26,10 +32,10 @@
     }
   },
   "findings": [
-    {"claim": "The kernel sits ~0.5-1% BELOW the A100 ceilings even when saturated — neither compute- nor BW-bound", "evidence": "Achieved 0.18% (M=16k) -> 0.38% (64k) -> 0.53% of fp32 peak (256k, saturated); 0.33% -> 0.96% of HBM peak. The BW-bound ceiling at AI=5.3 is ~10.8 TFLOP/s; achieved ~0.1 TFLOP/s is ~1% of even that. The binding constraint is execution efficiency / overhead, not the roofline."},
-    {"claim": "Likely bottlenecks (for the optimization work): interpreter divergence + redundancy + host round-trips", "evidence": "Divergent switch-dispatch tree interpreter; warp-per-tree (32 threads stride N, low ILP, serial stack deps); 1-thread-per-tree K x K Cholesky (terrible occupancy); host-orchestrated LM loop with per-iter H<->D copies + ~8 kernel launches. fd_jacobian re-evaluates the WHOLE tree for each of the K perturbed columns (K full evals/tree/iter) — large redundancy."},
-    {"claim": "If made efficient, the kernel would be (mildly) memory-bound on the J round-trip", "evidence": "Analytical AI = 5.3 FLOP/byte < ridge 9.56. The dominant modeled DRAM traffic is materializing J (K x N per tree) to global then reading it back in build_jtj. Fusing Jacobian -> JtJ accumulation (never materializing J) would raise AI and cut that traffic."},
-    {"claim": "Achieved fraction rises with utilization, consistent with the throughput sweep", "evidence": "0.18% -> 0.53% of peak as M goes 16k -> 256k: more trees fill the 108 SMs, amortizing launch/host overhead — same story as the trees/s-vs-M curve saturating."}
+    {"claim": {"zh": "即使在饱和时,kernel 也仅处于 A100 上限以下约 0.5-1% 处——既非 compute-bound 也非 BW-bound", "en": "The kernel sits ~0.5-1% BELOW the A100 ceilings even when saturated — neither compute- nor BW-bound"}, "evidence": {"zh": "达到 fp32 峰值的 0.18%(M=16k)-> 0.38%(64k)-> 0.53%(256k,饱和);HBM 峰值的 0.33% -> 0.96%。在 AI=5.3 处的 BW-bound 上限约为 10.8 TFLOP/s;实测约 0.1 TFLOP/s 仅为其约 1%。真正的约束是 execution efficiency / overhead,而非 roofline。", "en": "Achieved 0.18% (M=16k) -> 0.38% (64k) -> 0.53% of fp32 peak (256k, saturated); 0.33% -> 0.96% of HBM peak. The BW-bound ceiling at AI=5.3 is ~10.8 TFLOP/s; achieved ~0.1 TFLOP/s is ~1% of even that. The binding constraint is execution efficiency / overhead, not the roofline."}},
+    {"claim": {"zh": "可能的瓶颈(供优化工作参考):interpreter divergence + 冗余计算 + host round-trips", "en": "Likely bottlenecks (for the optimization work): interpreter divergence + redundancy + host round-trips"}, "evidence": {"zh": "发散的 switch-dispatch 树解释器;warp-per-tree(32 线程按 N 步进、低 ILP、串行 stack 依赖);1-thread-per-tree 的 K x K Cholesky(occupancy 极差);host 编排的 LM 循环每次迭代都有 H<->D 拷贝 + 约 8 次 kernel launch。fd_jacobian 对 K 个被扰动的列各自重新求值整棵树(每棵树每次迭代 K 次完整 eval)——存在大量冗余。", "en": "Divergent switch-dispatch tree interpreter; warp-per-tree (32 threads stride N, low ILP, serial stack deps); 1-thread-per-tree K x K Cholesky (terrible occupancy); host-orchestrated LM loop with per-iter H<->D copies + ~8 kernel launches. fd_jacobian re-evaluates the WHOLE tree for each of the K perturbed columns (K full evals/tree/iter) — large redundancy."}},
+    {"claim": {"zh": "若优化到位,kernel 会(轻微地)在 J round-trip 上 memory-bound", "en": "If made efficient, the kernel would be (mildly) memory-bound on the J round-trip"}, "evidence": {"zh": "解析 AI = 5.3 FLOP/byte < ridge 9.56。建模中占主导的 DRAM 流量是把 J(每棵树 K x N)materialize 到 global 再在 build_jtj 中读回。把 Jacobian -> JtJ 累加 fuse 起来(不再 materialize J)可提高 AI 并削减这部分流量。", "en": "Analytical AI = 5.3 FLOP/byte < ridge 9.56. The dominant modeled DRAM traffic is materializing J (K x N per tree) to global then reading it back in build_jtj. Fusing Jacobian -> JtJ accumulation (never materializing J) would raise AI and cut that traffic."}},
+    {"claim": {"zh": "达到的峰值占比随利用率上升,与 throughput sweep 一致", "en": "Achieved fraction rises with utilization, consistent with the throughput sweep"}, "evidence": {"zh": "当 M 从 16k 增至 256k 时占峰值比例从 0.18% -> 0.53%:更多树填满 108 个 SM,摊薄了 launch/host overhead——与 trees/s-vs-M 曲线趋于饱和是同一回事。", "en": "0.18% -> 0.53% of peak as M goes 16k -> 256k: more trees fill the 108 SMs, amortizing launch/host overhead — same story as the trees/s-vs-M curve saturating."}}
   ],
   "tables": [
     {"name": "Analytical roofline points (fusedfd, fp32)", "columns": ["M", "trees/s", "achieved GFLOP/s", "% fp32 peak", "eff BW GB/s", "% HBM peak"],
@@ -38,14 +44,14 @@
      "rows": [["mean nodes/tree","12.55"],["mean K/tree","2.84"],["FLOPs per single eval","23.5"],["mean LM iters","12.58"],["arithmetic intensity","5.29 FLOP/byte"],["A100 ridge","9.56 FLOP/byte"]]}
   ],
   "plots": [
-    {"file": "plots/roofline.png", "caption": "Analytical roofline. The 3 fusedfd points (at AI=5.3) sit ~2 orders of magnitude below both the flat compute ceiling and the slanted BW ceiling -> the kernel is bound by execution efficiency/overhead, not by the roofline. Gap = optimization headroom."}
+    {"file": "plots/roofline.png", "caption": {"zh": "Analytical roofline。3 个 fusedfd 点(位于 AI=5.3)比水平的 compute ceiling 和斜率的 BW ceiling 都低约 2 个数量级 -> kernel 受 execution efficiency/overhead 约束,而非 roofline。这段差距 = 优化空间(headroom)。", "en": "Analytical roofline. The 3 fusedfd points (at AI=5.3) sit ~2 orders of magnitude below both the flat compute ceiling and the slanted BW ceiling -> the kernel is bound by execution efficiency/overhead, not by the roofline. Gap = optimization headroom."}}
   ],
   "caveats": [
-    "ANALYTICAL, not ncu-measured. FLOPs use a disclosed op-FLOP table (arith=1, div/sqrt=4, transcendental=8); a different convention shifts AI and %-of-peak.",
-    "Achieved FLOP/s uses END-TO-END wall time, which includes host orchestration, per-iter H<->D copies, and kernel-launch latency — so it conflates GPU compute with overhead and UNDERSTATES per-kernel GPU efficiency. The 'far below roofline' gap is partly real GPU inefficiency, partly this overhead.",
-    "DRAM-byte model counts the J round-trip + y writes + bytecode and assumes xs/bytecode are largely L2-cached (amortized). Real DRAM traffic needs ncu.",
-    "mean_iters (12.58) estimated from a 5-iter-resolution convergence curve.",
-    "Per-tree distribution is synth early-gen (recoverable problem); late-bloated / inner-const-heavy differ (bigger trees, higher K)."
+    {"zh": "本报告为 ANALYTICAL(解析),非 ncu 实测。FLOPs 采用一张公开的 op-FLOP 等价表(arith=1、div/sqrt=4、transcendental=8);换一种约定会改变 AI 与 %-of-peak。", "en": "ANALYTICAL, not ncu-measured. FLOPs use a disclosed op-FLOP table (arith=1, div/sqrt=4, transcendental=8); a different convention shifts AI and %-of-peak."},
+    {"zh": "达到的 FLOP/s 用的是端到端 wall time,其中包含 host 编排、每次迭代的 H<->D 拷贝和 kernel-launch latency——因此它把 GPU compute 与 overhead 混在一起,会低估单 kernel 的 GPU 效率。'远低于 roofline' 的差距一部分是真实的 GPU 低效,一部分是这些 overhead。", "en": "Achieved FLOP/s uses END-TO-END wall time, which includes host orchestration, per-iter H<->D copies, and kernel-launch latency — so it conflates GPU compute with overhead and UNDERSTATES per-kernel GPU efficiency. The 'far below roofline' gap is partly real GPU inefficiency, partly this overhead."},
+    {"zh": "DRAM-byte 模型统计了 J round-trip + y 写入 + bytecode,并假设 xs/bytecode 基本被 L2 缓存(已摊销)。真实 DRAM 流量需要 ncu 才能确定。", "en": "DRAM-byte model counts the J round-trip + y writes + bytecode and assumes xs/bytecode are largely L2-cached (amortized). Real DRAM traffic needs ncu."},
+    {"zh": "mean_iters(12.58)是从分辨率为 5 次迭代的收敛曲线估计的。", "en": "mean_iters (12.58) estimated from a 5-iter-resolution convergence curve."},
+    {"zh": "每棵树的分布来自 synth early-gen(可恢复问题);late-bloated / inner-const-heavy 的分布不同(更大的树、更高的 K)。", "en": "Per-tree distribution is synth early-gen (recoverable problem); late-bloated / inner-const-heavy differ (bigger trees, higher K)."}
   ],
   "reproduce": [
     "# empirical inputs:",

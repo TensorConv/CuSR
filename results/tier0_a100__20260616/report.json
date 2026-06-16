@@ -1,8 +1,14 @@
 {
   "title": "Tier0 — A100 kernel baseline (throughput envelope, per-gen, parity, scale)",
   "date": "2026-06-16",
-  "question": "Re-establish the kernel's core numbers on the real target hardware (8x A100-80GB): throughput vs batch size for all 3 variants, EvoGP per-gen wallclock (the CO-fraction denominator), fp32-vs-fp64 parity, and the magnitude-scan quality gate. fp32 throughout.",
-  "setup": "Single A100 per timed run, manually pinned (CUDA_VISIBLE_DEVICES), pool GPU2-7 (left 0,1 for the box owner's jobs). Throughput swept on one synthetic preset (early-gen) varying M, so per-tree cost is fixed and the curve isolates GPU-utilization scaling. N=7 timed repeats + 2 warmup discarded; device wall-time parsed from the binary. Clocks unlocked (no sudo) but boost to the 1410 MHz SM ceiling under sustained load.",
+  "question": {
+    "zh": "在真实目标硬件(8x A100-80GB)上重新确立 kernel 的核心数据:3 个 variant 各自的 throughput vs batch size、EvoGP 每代 wallclock(CO-fraction 的分母)、fp32-vs-fp64 parity,以及 magnitude-scan 质量门禁。全程 fp32。",
+    "en": "Re-establish the kernel's core numbers on the real target hardware (8x A100-80GB): throughput vs batch size for all 3 variants, EvoGP per-gen wallclock (the CO-fraction denominator), fp32-vs-fp64 parity, and the magnitude-scan quality gate. fp32 throughout."
+  },
+  "setup": {
+    "zh": "每次计时只用单卡 A100,手动 pin(CUDA_VISIBLE_DEVICES),从 GPU2-7 池中选取(把 0、1 留给机器主人的作业)。throughput 在单个合成 preset(early-gen)上扫描、只变 M,因此每棵树的代价固定,曲线单独反映 GPU 利用率随规模的变化。N=7 次计时重复 + 丢弃 2 次 warmup;device wall-time 从二进制输出解析。时钟未锁(无 sudo),但在持续负载下会 boost 到 1410 MHz 的 SM 上限。",
+    "en": "Single A100 per timed run, manually pinned (CUDA_VISIBLE_DEVICES), pool GPU2-7 (left 0,1 for the box owner's jobs). Throughput swept on one synthetic preset (early-gen) varying M, so per-tree cost is fixed and the curve isolates GPU-utilization scaling. N=7 timed repeats + 2 warmup discarded; device wall-time parsed from the binary. Clocks unlocked (no sudo) but boost to the 1410 MHz SM ceiling under sustained load."
+  },
   "env": {
     "git_sha": "95c5b27 (chore/a100-server-bringup)",
     "host": "ubuntu (shared, multi-user)",
@@ -48,12 +54,12 @@
     }
   },
   "findings": [
-    {"claim": "1000 trees badly underutilizes an A100", "evidence": "baseline @ M=1000 = 787 t/s, BELOW the laptop 5070Ti's 1319 t/s. The big GPU is latency/overhead-bound at this batch -> a fixed 1000-tree throughput is meaningless on A100; you must sweep M."},
-    {"claim": "The variant gap WIDENS at scale on A100 (opposite of the laptop-PCIe hypothesis)", "evidence": "At M=64k fusedfd 36551 vs baseline 1277 t/s (~29x); fusedfd reaches 50394 @256k still climbing. baseline's host-FD does H<->D round-trips every FD step -> a serial bottleneck that does NOT scale with the GPU, while devjac/fusedfd stay on-device. RERUN_A100.md predicted the gap would NARROW on A100; it widens."},
-    {"claim": "fusedfd has not saturated even at 256k; devjac plateaus ~24k; baseline flat ~1.3-1.5k", "evidence": "fusedfd 4884->17372->36551->50394 (4k->16k->64k->256k); devjac 21405->24383 (64k->256k); baseline peaks 1548 @4k then ~flat/declines."},
-    {"claim": "CO remains the absolute bottleneck of the GP loop", "evidence": "EvoGP per-gen evolution = 5.2ms (pop1000) / 5.3ms (pop4000) mean, while one full-population CO pass is hundreds of ms -> in-loop time is dominated by CO."},
-    {"claim": "fp32 quality is unchanged on A100 vs laptop", "evidence": "parity gate 3/3 PASS at 94.0 / 92.4 / 99.8 (loss-down / within-1.05x / within-10x), identical to the laptop baseline; magnitude scan tier1 11/11 + tier2 5/5 PASS for all 3 variants."},
-    {"claim": "Unlocked clocks are stable for timing", "evidence": "SM clock sampled at 1410 MHz (the A100 ceiling) across all sustained-load timed runs; no sudo needed to lock."}
+    {"claim": {"zh": "1000 棵树严重未充分利用 A100", "en": "1000 trees badly underutilizes an A100"}, "evidence": {"zh": "baseline @ M=1000 = 787 t/s,低于笔记本 5070Ti 的 1319 t/s。在这个 batch 下大 GPU 是 latency/overhead-bound -> 在 A100 上固定 1000 棵树的 throughput 毫无意义;必须扫描 M。", "en": "baseline @ M=1000 = 787 t/s, BELOW the laptop 5070Ti's 1319 t/s. The big GPU is latency/overhead-bound at this batch -> a fixed 1000-tree throughput is meaningless on A100; you must sweep M."}},
+    {"claim": {"zh": "在 A100 上 variant 间的差距随规模 WIDENS(与 laptop-PCIe 假设相反)", "en": "The variant gap WIDENS at scale on A100 (opposite of the laptop-PCIe hypothesis)"}, "evidence": {"zh": "在 M=64k 时 fusedfd 36551 vs baseline 1277 t/s(约 29x);fusedfd 在 256k 达到 50394 且仍在上升。baseline 的 host-FD 每个 FD 步都做 H<->D round-trip -> 这是一个不随 GPU 扩展的串行瓶颈,而 devjac/fusedfd 全程留在 device 上。RERUN_A100.md 曾预测差距在 A100 上会 NARROW;实际却扩大了。", "en": "At M=64k fusedfd 36551 vs baseline 1277 t/s (~29x); fusedfd reaches 50394 @256k still climbing. baseline's host-FD does H<->D round-trips every FD step -> a serial bottleneck that does NOT scale with the GPU, while devjac/fusedfd stay on-device. RERUN_A100.md predicted the gap would NARROW on A100; it widens."}},
+    {"claim": {"zh": "fusedfd 即使到 256k 也未饱和;devjac 在约 24k 处平台;baseline 平在约 1.3-1.5k", "en": "fusedfd has not saturated even at 256k; devjac plateaus ~24k; baseline flat ~1.3-1.5k"}, "evidence": {"zh": "fusedfd 4884->17372->36551->50394(4k->16k->64k->256k);devjac 21405->24383(64k->256k);baseline 在 4k 处峰值 1548 后基本持平/下降。", "en": "fusedfd 4884->17372->36551->50394 (4k->16k->64k->256k); devjac 21405->24383 (64k->256k); baseline peaks 1548 @4k then ~flat/declines."}},
+    {"claim": {"zh": "CO 仍是整个 GP 循环的绝对瓶颈", "en": "CO remains the absolute bottleneck of the GP loop"}, "evidence": {"zh": "EvoGP 每代演化均值 = 5.2ms(pop1000)/ 5.3ms(pop4000),而一次全种群 CO pass 是数百 ms -> 循环内时间由 CO 主导。", "en": "EvoGP per-gen evolution = 5.2ms (pop1000) / 5.3ms (pop4000) mean, while one full-population CO pass is hundreds of ms -> in-loop time is dominated by CO."}},
+    {"claim": {"zh": "A100 上的 fp32 质量与笔记本一致,无变化", "en": "fp32 quality is unchanged on A100 vs laptop"}, "evidence": {"zh": "parity gate 3/3 PASS,数值为 94.0 / 92.4 / 99.8(loss-down / within-1.05x / within-10x),与笔记本 baseline 完全一致;magnitude scan tier1 11/11 + tier2 5/5 对 3 个 variant 全部 PASS。", "en": "parity gate 3/3 PASS at 94.0 / 92.4 / 99.8 (loss-down / within-1.05x / within-10x), identical to the laptop baseline; magnitude scan tier1 11/11 + tier2 5/5 PASS for all 3 variants."}},
+    {"claim": {"zh": "未锁的时钟在计时中是稳定的", "en": "Unlocked clocks are stable for timing"}, "evidence": {"zh": "在所有持续负载的计时运行中,SM clock 采样均为 1410 MHz(A100 上限);无需 sudo 即可锁定。", "en": "SM clock sampled at 1410 MHz (the A100 ceiling) across all sustained-load timed runs; no sudo needed to lock."}}
   ],
   "tables": [
     {"name": "Throughput (trees/s, median of N=7)", "columns": ["M", "baseline", "devjac", "fusedfd"],
@@ -64,14 +70,14 @@
      "rows": [["loss_down","94.0%","93.0%","PASS"],["within_1.05x","92.4%","90.0%","PASS"],["within_10x","99.8%","99.0%","PASS"]]}
   ],
   "plots": [
-    {"file": "plots/tier0_throughput.png", "caption": "CO throughput vs batch size M (log-log, fp32, N=7 median +/- range). x markers = laptop 5070Ti @ M=1000 reference. Wide-M points (64k-256k) are saturation/envelope probes, not a realistic-workload claim."}
+    {"file": "plots/tier0_throughput.png", "caption": {"zh": "CO throughput vs batch size M(log-log,fp32,N=7 中位数 +/- range)。x 标记 = 笔记本 5070Ti @ M=1000 参考点。大 M 的点(64k-256k)是 saturation/envelope 探测,并非对真实 workload 的断言。", "en": "CO throughput vs batch size M (log-log, fp32, N=7 median +/- range). x markers = laptop 5070Ti @ M=1000 reference. Wide-M points (64k-256k) are saturation/envelope probes, not a realistic-workload claim."}}
   ],
   "caveats": [
-    "Synth = recoverable problem (performance + precision axis). Real GP snapshots (the quality-tier story) are a separate run, not included here.",
-    "The first sweep was DISCARDED: un-killed duplicate (pre-fix) processes co-tenanted GPU2-4 and contaminated timing + raced the output files. Numbers here are the clean single-process rerun (tp2_*).",
-    "baseline @ 256k skipped: host-FD ~160s/run x 9 is wasteful and it is already saturated by 4k.",
-    "M up to 256k is a saturation/envelope probe; the 'realistic operating point' is co-designed with kernel performance and decided later (not pinned to today's pop=4000).",
-    "Clocks unlocked (no sudo); they boost to 1410 MHz under load and are recorded per run, but not hard-pinned."
+    {"zh": "Synth = 可恢复问题(性能 + 精度轴)。真实 GP snapshot(质量-tier 的故事)是单独的一次运行,不包含在此。", "en": "Synth = recoverable problem (performance + precision axis). Real GP snapshots (the quality-tier story) are a separate run, not included here."},
+    {"zh": "第一次 sweep 已 DISCARDED:未被 kill 的重复(修复前)进程与 GPU2-4 共租,污染了计时并与输出文件产生竞争。这里的数字来自干净的单进程 rerun(tp2_*)。", "en": "The first sweep was DISCARDED: un-killed duplicate (pre-fix) processes co-tenanted GPU2-4 and contaminated timing + raced the output files. Numbers here are the clean single-process rerun (tp2_*)."},
+    {"zh": "baseline @ 256k 跳过:host-FD 约 160s/run x 9 太浪费,而且它在 4k 时就已饱和。", "en": "baseline @ 256k skipped: host-FD ~160s/run x 9 is wasteful and it is already saturated by 4k."},
+    {"zh": "M 到 256k 是 saturation/envelope 探测;'真实工作点' 要与 kernel 性能协同设计、稍后再定(不绑定到当前的 pop=4000)。", "en": "M up to 256k is a saturation/envelope probe; the 'realistic operating point' is co-designed with kernel performance and decided later (not pinned to today's pop=4000)."},
+    {"zh": "时钟未锁(无 sudo);在负载下会 boost 到 1410 MHz 并按每次运行记录,但未做硬 pin。", "en": "Clocks unlocked (no sudo); they boost to 1410 MHz under load and are recorded per run, but not hard-pinned."}
   ],
   "reproduce": [
     "source scripts/env.sh",
