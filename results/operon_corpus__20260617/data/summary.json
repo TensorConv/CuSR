@@ -1,0 +1,699 @@
+{
+ "corpus_totals": {
+  "cells": 204,
+  "snapshots": 1836,
+  "trees_in": 7344000,
+  "trees_kept": 7344000,
+  "dropped_unsupported": 0,
+  "dropped_k_over": 0,
+  "dropped_bad_type": 0,
+  "dropped_nonfinite": 0,
+  "K_max_global": 32
+ },
+ "density": [
+  {
+   "problem": "feynman/I.12.1",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.193,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.12.1",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 6.667,
+   "evogp_meanK": 1.029,
+   "density_ratio": 6.48,
+   "operon_meannodes": 22.85,
+   "evogp_meannodes": 26.649
+  },
+  {
+   "problem": "feynman/I.18.12",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.193,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.18.12",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 10.172,
+   "evogp_meanK": 3.185,
+   "density_ratio": 3.19,
+   "operon_meannodes": 34.923,
+   "evogp_meannodes": 21.314
+  },
+  {
+   "problem": "feynman/I.27.6",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.193,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.27.6",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 10.548,
+   "evogp_meanK": 5.122,
+   "density_ratio": 2.06,
+   "operon_meannodes": 44.524,
+   "evogp_meannodes": 27.897
+  },
+  {
+   "problem": "feynman/I.6.2",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.193,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.6.2",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 9.778,
+   "evogp_meanK": 2.14,
+   "density_ratio": 4.57,
+   "operon_meannodes": 45.601,
+   "evogp_meannodes": 26.294
+  },
+  {
+   "problem": "feynman/I.12.2",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.193,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.12.2",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 11.253,
+   "evogp_meanK": 5.549,
+   "density_ratio": 2.03,
+   "operon_meannodes": 43.181,
+   "evogp_meannodes": 26.949
+  },
+  {
+   "problem": "feynman/I.13.12",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.193,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.13.12",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 10.459,
+   "evogp_meanK": 3.055,
+   "density_ratio": 3.42,
+   "operon_meannodes": 43.587,
+   "evogp_meannodes": 26.877
+  },
+  {
+   "problem": "feynman/II.3.24",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.193,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/II.3.24",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 10.405,
+   "evogp_meanK": 3.643,
+   "density_ratio": 2.86,
+   "operon_meannodes": 36.863,
+   "evogp_meannodes": 23.354
+  },
+  {
+   "problem": "nguyen/1",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.127,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/1",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 8.819,
+   "evogp_meanK": 3.805,
+   "density_ratio": 2.32,
+   "operon_meannodes": 38.276,
+   "evogp_meannodes": 22.971
+  },
+  {
+   "problem": "nguyen/2",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.127,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/2",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 9.037,
+   "evogp_meanK": 2.866,
+   "density_ratio": 3.15,
+   "operon_meannodes": 37.196,
+   "evogp_meannodes": 25.121
+  },
+  {
+   "problem": "nguyen/3",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.127,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/3",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 8.873,
+   "evogp_meanK": 1.977,
+   "density_ratio": 4.49,
+   "operon_meannodes": 38.682,
+   "evogp_meannodes": 25.198
+  },
+  {
+   "problem": "nguyen/4",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.127,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/4",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 8.505,
+   "evogp_meanK": 2.93,
+   "density_ratio": 2.9,
+   "operon_meannodes": 37.45,
+   "evogp_meannodes": 27.09
+  },
+  {
+   "problem": "nguyen/5",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.127,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/5",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 6.088,
+   "evogp_meanK": 5.734,
+   "density_ratio": 1.06,
+   "operon_meannodes": 35.732,
+   "evogp_meannodes": 26.342
+  },
+  {
+   "problem": "nguyen/6",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.127,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/6",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 11.337,
+   "evogp_meanK": 0.977,
+   "density_ratio": 11.6,
+   "operon_meannodes": 40.908,
+   "evogp_meannodes": 27.584
+  },
+  {
+   "problem": "nguyen/7",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.127,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/7",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 9.587,
+   "evogp_meanK": 1.75,
+   "density_ratio": 5.48,
+   "operon_meannodes": 44.623,
+   "evogp_meannodes": 26.889
+  },
+  {
+   "problem": "nguyen/8",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.127,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/8",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 9.681,
+   "evogp_meanK": 4.9,
+   "density_ratio": 1.98,
+   "operon_meannodes": 33.826,
+   "evogp_meannodes": 26.062
+  },
+  {
+   "problem": "nguyen/9",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.193,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/9",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 8.518,
+   "evogp_meanK": 0.147,
+   "density_ratio": 57.95,
+   "operon_meannodes": 40.7,
+   "evogp_meannodes": 26.822
+  },
+  {
+   "problem": "nguyen/10",
+   "cap": 32,
+   "gen": 0,
+   "operon_meanK": 6.505,
+   "evogp_meanK": 1.715,
+   "density_ratio": 3.79,
+   "operon_meannodes": 23.193,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/10",
+   "cap": 32,
+   "gen": 100,
+   "operon_meanK": 7.064,
+   "evogp_meanK": 2.857,
+   "density_ratio": 2.47,
+   "operon_meannodes": 33.413,
+   "evogp_meannodes": 25.798
+  },
+  {
+   "problem": "feynman/I.12.1",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.431,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.12.1",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 14.428,
+   "evogp_meanK": 7.776,
+   "density_ratio": 1.86,
+   "operon_meannodes": 54.579,
+   "evogp_meannodes": 47.803
+  },
+  {
+   "problem": "feynman/I.18.12",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.431,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.18.12",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 22.0,
+   "evogp_meanK": 6.838,
+   "density_ratio": 3.22,
+   "operon_meannodes": 85.084,
+   "evogp_meannodes": 58.228
+  },
+  {
+   "problem": "feynman/I.27.6",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.431,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.27.6",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 23.184,
+   "evogp_meanK": 4.921,
+   "density_ratio": 4.71,
+   "operon_meannodes": 88.339,
+   "evogp_meannodes": 40.019
+  },
+  {
+   "problem": "feynman/I.6.2",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.431,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.6.2",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 18.72,
+   "evogp_meanK": 10.133,
+   "density_ratio": 1.85,
+   "operon_meannodes": 80.735,
+   "evogp_meannodes": 55.314
+  },
+  {
+   "problem": "feynman/I.12.2",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.431,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.12.2",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 18.386,
+   "evogp_meanK": 5.994,
+   "density_ratio": 3.07,
+   "operon_meannodes": 67.719,
+   "evogp_meannodes": 40.285
+  },
+  {
+   "problem": "feynman/I.13.12",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.431,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/I.13.12",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 20.134,
+   "evogp_meanK": 7.858,
+   "density_ratio": 2.56,
+   "operon_meannodes": 70.226,
+   "evogp_meannodes": 46.569
+  },
+  {
+   "problem": "feynman/II.3.24",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.431,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "feynman/II.3.24",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 17.489,
+   "evogp_meanK": 9.297,
+   "density_ratio": 1.88,
+   "operon_meannodes": 63.002,
+   "evogp_meannodes": 47.288
+  },
+  {
+   "problem": "nguyen/1",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.392,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/1",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 10.596,
+   "evogp_meanK": 6.136,
+   "density_ratio": 1.73,
+   "operon_meannodes": 59.507,
+   "evogp_meannodes": 51.379
+  },
+  {
+   "problem": "nguyen/2",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.392,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/2",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 21.863,
+   "evogp_meanK": 3.867,
+   "density_ratio": 5.65,
+   "operon_meannodes": 76.207,
+   "evogp_meannodes": 44.738
+  },
+  {
+   "problem": "nguyen/3",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.392,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/3",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 20.334,
+   "evogp_meanK": 8.337,
+   "density_ratio": 2.44,
+   "operon_meannodes": 71.718,
+   "evogp_meannodes": 49.307
+  },
+  {
+   "problem": "nguyen/4",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.392,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/4",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 21.375,
+   "evogp_meanK": 7.989,
+   "density_ratio": 2.68,
+   "operon_meannodes": 70.781,
+   "evogp_meannodes": 54.815
+  },
+  {
+   "problem": "nguyen/5",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.392,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/5",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 15.979,
+   "evogp_meanK": 4.388,
+   "density_ratio": 3.64,
+   "operon_meannodes": 80.747,
+   "evogp_meannodes": 50.349
+  },
+  {
+   "problem": "nguyen/6",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.392,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/6",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 17.517,
+   "evogp_meanK": 7.26,
+   "density_ratio": 2.41,
+   "operon_meannodes": 67.757,
+   "evogp_meannodes": 56.9
+  },
+  {
+   "problem": "nguyen/7",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.392,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/7",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 17.406,
+   "evogp_meanK": 6.213,
+   "density_ratio": 2.8,
+   "operon_meannodes": 70.746,
+   "evogp_meannodes": 54.844
+  },
+  {
+   "problem": "nguyen/8",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.392,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/8",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 23.003,
+   "evogp_meanK": 9.91,
+   "density_ratio": 2.32,
+   "operon_meannodes": 82.489,
+   "evogp_meannodes": 55.084
+  },
+  {
+   "problem": "nguyen/9",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.431,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/9",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 15.843,
+   "evogp_meanK": 7.287,
+   "density_ratio": 2.17,
+   "operon_meannodes": 70.461,
+   "evogp_meannodes": 53.787
+  },
+  {
+   "problem": "nguyen/10",
+   "cap": 64,
+   "gen": 0,
+   "operon_meanK": 12.423,
+   "evogp_meanK": 1.715,
+   "density_ratio": 7.24,
+   "operon_meannodes": 45.431,
+   "evogp_meannodes": 6.955
+  },
+  {
+   "problem": "nguyen/10",
+   "cap": 64,
+   "gen": 100,
+   "operon_meanK": 13.489,
+   "evogp_meanK": 6.068,
+   "density_ratio": 2.22,
+   "operon_meannodes": 66.413,
+   "evogp_meannodes": 54.334
+  }
+ ],
+ "density_summary": {
+  "mean_density_ratio_gen100_cap64": 2.78,
+  "n": 17
+ }
+}

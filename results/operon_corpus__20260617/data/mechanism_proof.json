@@ -1,0 +1,42 @@
+{
+ "operon_xa*xb (2 weighted leaves, K=2, 7 nodes, ZERO bloat)": {
+  "K": 2,
+  "n_nodes": 7,
+  "rank_fp32": 1,
+  "fp32_full_rank": false,
+  "effectively_singular_fp32": true,
+  "smin": 4.1723127430886854e-05,
+  "smax": 71559.47695455975,
+  "cond": 1715103381.7658072
+ },
+ "evogp  c0*xa*xb (1 const, K=1, 5 nodes, minimal)": {
+  "K": 1,
+  "n_nodes": 5,
+  "rank_fp32": 1,
+  "fp32_full_rank": true,
+  "effectively_singular_fp32": false,
+  "smin": 32829.981949842564,
+  "smax": 32829.981949842564,
+  "cond": 1.0
+ },
+ "evogp  c0*c1*xa*xb (redundant consts via BLOAT, K=2, 7 nodes)": {
+  "K": 2,
+  "n_nodes": 7,
+  "rank_fp32": 1,
+  "fp32_full_rank": false,
+  "effectively_singular_fp32": true,
+  "smin": 1.897111531984649e-05,
+  "smax": 71559.88746328055,
+  "cond": 3772044302.973516
+ },
+ "operon w*x (1 weighted leaf, K=1, control)": {
+  "K": 1,
+  "n_nodes": 3,
+  "rank_fp32": 1,
+  "fp32_full_rank": true,
+  "effectively_singular_fp32": false,
+  "smin": 2899.2847633539163,
+  "smax": 2899.2847633539163,
+  "cond": 1.0
+ }
+}

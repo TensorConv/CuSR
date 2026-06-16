@@ -1,0 +1,274 @@
+{
+ "title": "Operon pre-CO corpus + adapter — cross-engine workload characterization",
+ "date": "2026-06-17",
+ "question": {
+  "zh": "evogp 语料里观察到的「秩亏 Cholesky 随世代上升」是 evogp 特有的,还是真实 SR 种群的普遍现象?为回答它,我们把 Operon(CPU SOTA,自带 inline CO)接成第二个权威负载来源 + baseline:写 Operon→pop.bin 适配器,在同一批题/同一份 (X,y) 上采 pre-CO 种群,再用同一个内核在两套语料上量 LM 的病态程度。",
+  "en": "Is evogp's 'rank-deficient Cholesky rising with generation' an evogp artifact, or a general property of real SR populations? To answer it we wired Operon (CPU SOTA, with inline CO) as a second authoritative workload source + baseline: an Operon→pop.bin adapter, pre-CO populations harvested on the SAME problems / identical (X,y), then the SAME kernel run on both corpora to measure LM conditioning."
+ },
+ "setup": {
+  "zh": "适配器(docs/kernel/OPERON_ADAPTER_SPEC.md):Operon 每个叶子都是可优化系数 —— 变量节点=权重·x_col,常数节点=值 —— 故 K=tree.CoefficientsCount。变量→MUL(CONST=权重,VAR=列),常数→CONST,postfix→prefix,列按 HashValue 映射。语义精确:对 Operon 自带求值器 round-trip,6/6 手例 + 1999/2000 真实进化树精确(均为本工作内验证,见 SPEC §5/§10)。采集:Operon GP 关 inline CO(local_iterations=0,p_local=0)、限定算子集{+,-,*,/,sin,cos,tan}(= evogp funcset)、与 evogp 同题/同采样/同 pop=4000/N=1000/seed{0,1,2}/cap{32,64}/checkpoint{0,1,2,4,8,16,32,64,100}。交叉内核:同一份新编 batch_lm_fusedfd 跑两套语料(cap32,seed0,--max-iter 50)。机理证明:对最小树用内核同款有限差分 J 算 JtJ 条件数。",
+  "en": "Adapter (docs/kernel/OPERON_ADAPTER_SPEC.md): every Operon leaf is an optimizable coefficient — Variable=weight·x_col, Constant=value — so K=tree.CoefficientsCount. Variable→MUL(CONST=weight,VAR=col), Constant→CONST, postfix→prefix, column via HashValue. Exact semantics: round-trip vs Operon's own evaluator, 6/6 hand cases + 1999/2000 evolved trees exact (both verified in this work, SPEC §5/§10). Harvest: Operon GP with inline CO OFF (local_iterations=0, p_local=0), restricted grammar {+,-,*,/,sin,cos,tan} (= evogp funcset), same problems/sampling/pop=4000/N=1000/seeds{0,1,2}/caps{32,64}/checkpoints as evogp. Cross-kernel: ONE freshly-built batch_lm_fusedfd on both corpora (cap32, seed0, --max-iter 50). Mechanism proof: kernel-style finite-difference J → JtJ condition number on minimal trees."
+ },
+ "env": {
+  "git_sha": "(this commit)",
+  "operon": "pyoperon 0.6.1 (manylinux wheel) in /home/weish/hao/operon-venv; harvest CPU-only (2x EPYC 7763, threads=1/cell, 48 cells concurrent)",
+  "kernel": "batch_lm_fusedfd (this tree's build, sm_80, fp32, --use_fast_math), cross-corpus sweep on A100 GPUs 0-5",
+  "storage": "1836 operon pop.bin (.bin gitignored; 204 manifests committed under data/workload/snapshots/operon_*)"
+ },
+ "params": {
+  "corpus": {
+   "problems": 17,
+   "noise": "0.0, 0.01",
+   "caps": "32, 64",
+   "seeds": "0,1,2",
+   "gens": "0,1,2,4,8,16,32,64,100",
+   "pop": 4000,
+   "N": 1000,
+   "cells": 204,
+   "snapshots": 1836,
+   "trees": 7344000
+  },
+  "cross_kernel": {
+   "problems": 17,
+   "gens": "0,4,16,64,100",
+   "cap": 32,
+   "seed": 0,
+   "corpora": "operon + evogp (same build)",
+   "runs": 170,
+   "max_iter": 50
+  },
+  "drops": {
+   "dropped_unsupported": 0,
+   "dropped_k_over": 0,
+   "dropped_bad_type": 0,
+   "dropped_nonfinite": 0
+  }
+ },
+ "findings": [
+  {
+   "claim": {
+    "zh": "语料交付且零损耗:204 cells / 1836 snapshots / 7,344,000 棵树,全部成功转换,丢弃=0(unsupported/K-over/bad-type/non-finite 全 0)。MAX_K=32 全语料安全:最密的 cell 是 cap64 多变量 Feynman(I.12.2, I.13.12, I.27.6, II.3.24),K_max=32 —— 恰好触到 MAX_K=32 编译上限,dropped_k_over=0(无越界);单变量 Nguyen 最高仅 K_max=31。变量越多→带权叶子越多→K 越高。",
+    "en": "Corpus delivered, zero loss: 204 cells / 1836 snapshots / 7,344,000 trees, all converted, 0 dropped (unsupported/K-over/bad-type/non-finite all 0). MAX_K=32 safe corpus-wide: the densest cells are cap64 MULTIVARIATE Feynman (I.12.2, I.13.12, I.27.6, II.3.24), reaching K_max=32 — exactly at the MAX_K=32 compile bound, dropped_k_over=0 (none over); univariate Nguyen tops at K_max=31. More variables → more weighted leaves → higher K."
+   },
+   "evidence": {
+    "zh": "summarize.py → data/summary.json (corpus_totals);K=32 cell 清单由 drift.csv 现算;适配器 round-trip + inspect PASS + 两跑字节一致(SPEC §10–12)。",
+    "en": "summarize.py → data/summary.json (corpus_totals); the K=32 cell list is computed from drift.csv here; adapter round-trip + inspect PASS + two-run byte-identical (SPEC §10–12)."
+   }
+  },
+  {
+   "claim": {
+    "zh": "系数密度差:Operon 把每个叶子都当可优化系数(变量带权重),故其负载比 evogp 密 ~2.78×(gen100/cap64,mean_K 之比,17 题平均;范围 1.7–5.7×)。更尖锐的结构差:Operon 的 K=0(无常数可优化)树占比恒为 0%,evogp 有 7.7–24.2%(裸变量树,内核直接跳过)。这是表示差异,不是 bug。",
+    "en": "Coefficient-density gap: Operon treats every leaf as an optimizable coefficient (variables carry weights), so its workload is ~2.78× denser than evogp (gen100/cap64, ratio of mean_K, mean over 17 problems; range 1.7–5.7×). Sharper structural difference: Operon's K=0 (no constant to optimize) fraction is 0% at every generation; evogp's is 7.7–24.2% (bare-variable trees the kernel skips outright). A representation difference, not a bug."
+   },
+   "evidence": {
+    "zh": "summarize.py density 表(data/summary.json);k0% 由交叉内核 k0_skip/M 现算(plots/k0_fraction.png)。",
+    "en": "summarize.py density table (data/summary.json); k0% computed from the cross-kernel k0_skip/M (plots/k0_fraction.png)."
+   }
+  },
+  {
+   "claim": {
+    "zh": "【核心,机理可证】两套语料的秩亏来自不同机制 —— 不是「都秩亏=互相印证」。Operon:每叶带权,x_a·x_b 的自然展开是 (w_a x_a)(w_b x_b),两列 Jacobian ∂m/∂w_a=w_b·x_a·x_b 与 ∂m/∂w_b=w_a·x_a·x_b 严格成比例 → JtJ 精确秩亏(精确算术下秩 1,奇异),fp32 下 cond≈1.7e+09,在 7 节点 / 零 bloat 即奇异。evogp:裸变量 c0·x_a·x_b 是 K=1 满秩(cond=1),只有当出现冗余常数(c0·c1·x_a·x_b,典型由 bloat 累积、也可能初始化即有)才奇异(cond≈3.8e+09)。同症状,不同病因。",
+    "en": "[Centerpiece, provable] The two corpora reach rank-deficiency by DIFFERENT mechanisms — not 'both rank-deficient ⇒ mutual confirmation'. Operon: every leaf is weighted, so the natural form of x_a·x_b is (w_a x_a)(w_b x_b); the two Jacobian columns ∂m/∂w_a=w_b·x_a·x_b and ∂m/∂w_b=w_a·x_a·x_b are exact scalar multiples → JtJ exactly rank-deficient (rank 1 / singular in exact arithmetic; cond≈1.7e+09 in fp32), at 7 nodes / ZERO bloat. evogp: bare-variable c0·x_a·x_b is full-rank K=1 (cond=1); it goes singular only with a redundant constant (c0·c1·x_a·x_b, typically accumulated by bloat though it can also occur at initialization), cond≈3.8e+09. Same symptom, different cause."
+   },
+   "evidence": {
+    "zh": "mechanism_proof.py → data/mechanism_proof.json(内核同款 fp32 有限差分 J;精确算术下两列成比例→秩 1,fp32 下 cond>1e6 即 Cholesky 失败)。",
+    "en": "mechanism_proof.py → data/mechanism_proof.json (kernel-style fp32 finite-difference J; columns are exact scalar multiples ⇒ rank 1 in exact arithmetic; cond>1e6 ⇒ fp32 Cholesky fails)."
+   }
+  },
+  {
+   "claim": {
+    "zh": "种群级轨迹(同内核,cap32,seed0):按全种群 /M 计,两套语料 gen0 都 ~8–10%(Operon 8.5% vs evogp 10.5%)—— 不存在「Operon gen0 就高」。但 /M 不是同口径:evogp 的分母含 ~20% 被跳过的 K=0 树。按可比的「活跃树(K>0)」口径,gen0 是 Operon 8.5% vs evogp 13.1% —— evogp 反而更高。两者都随世代上升(见 fail_vs_nodes);evogp 的 bloat 驱动型升得更高(/M gen64 42.2%,峰值)而 Operon 到 20.7%。如实报告,不强凑对比。",
+    "en": "Population-level trajectory (same kernel, cap32, seed0): on a full-population /M base both corpora are ~8–10% at gen0 (Operon 8.5% vs evogp 10.5%) — no 'Operon already high at gen0'. But /M is not like-for-like: evogp's denominator includes ~20% skipped K=0 trees. On the comparable active-tree (K>0) base, gen0 is Operon 8.5% vs evogp 13.1% — evogp is in fact higher. Both rise with generation (see fail_vs_nodes); evogp's bloat-driven rate climbs higher (/M gen64 42.2%, its peak) while Operon reaches 20.7%. Reported as-is, no forced contrast."
+   },
+   "evidence": {
+    "zh": "cross_kernel.py(170 runs,0 error)→ data/cross_kernel.json;活跃口径 = fail_chol/(M−k0_skip)。",
+    "en": "cross_kernel.py (170 runs, 0 errors) → data/cross_kernel.json; active base = fail_chol/(M−k0_skip)."
+   }
+  },
+  {
+   "claim": {
+    "zh": "对内核鲁棒性的含义:两套语料的种群级秩亏率都随膨胀上升 —— 关键差别不在「升 vs 平」,而在病因:Operon 多了一层与 bloat 无关、不可由减小树削去的结构性底噪(每叶权重过参数化,最小积即奇异);evogp 的秩亏完全依赖冗余常数(最小形满秩)。所以鲁棒目标(Levenberg trust-region 阻尼)必须同时覆盖这两类。注:秩亏是全种群口径;GP 每代选前百分之 x,故这不直接等于端到端缺陷(64.8% 严标准恢复率为前期工作结论,亦同此理)。",
+    "en": "Implication for kernel robustness: both corpora's population rank-deficiency rises with bloat — the key difference is NOT 'rising vs flat' but the cause: Operon carries an additional bloat-independent structural floor that reducing tree size cannot remove (per-leaf-weight over-parameterization, singular at the minimal product), whereas evogp's deficiency is entirely contingent on redundant constants (full-rank at the minimal form). So the robustness target (Levenberg trust-region damping) must cover BOTH. Note: rank-deficiency is a population-wide figure; GP selects the top-x% each generation, so it is not directly an end-to-end defect (the 64.8% strict-tolerance recovery rate, a prior-work result, carries the same caveat)."
+   },
+   "evidence": {
+    "zh": "综合上列;方向见 memory/cusr-direction。",
+    "en": "Synthesis of the above; direction in memory/cusr-direction."
+   }
+  }
+ ],
+ "tables": [
+  {
+   "name": "Mechanism proof — JtJ conditioning of minimal trees (kernel-style fp32 fd-Jacobian)",
+   "columns": [
+    "tree",
+    "engine form",
+    "K",
+    "nodes",
+    "cond(JtJ) [fp32]",
+    "fp32-singular?"
+   ],
+   "rows": [
+    [
+     "operon_xa*xb",
+     "2 weighted leaves, K=2, 7 nodes, ZERO bloat",
+     2,
+     7,
+     "1.72e+09",
+     "YES"
+    ],
+    [
+     "evogp  c0*xa*xb",
+     "1 const, K=1, 5 nodes, minimal",
+     1,
+     5,
+     "1.00e+00",
+     "no"
+    ],
+    [
+     "evogp  c0*c1*xa*xb",
+     "redundant consts via BLOAT, K=2, 7 nodes",
+     2,
+     7,
+     "3.77e+09",
+     "YES"
+    ],
+    [
+     "operon w*x",
+     "1 weighted leaf, K=1, control",
+     1,
+     3,
+     "1.00e+00",
+     "no"
+    ]
+   ]
+  },
+  {
+   "name": "fail_cholesky % (fp32-pivot breakdown under damping; conservative rank-deficiency proxy) & K=0 fraction by generation — same kernel build, cap32 seed0",
+   "columns": [
+    "gen",
+    "Operon fail% /M (min–max)",
+    "evogp fail% /M (min–max)",
+    "Operon fail% active(K>0)",
+    "evogp fail% active(K>0)",
+    "Operon K=0%",
+    "evogp K=0%"
+   ],
+   "rows": [
+    [
+     0,
+     "8.5 (7–11)",
+     "10.5 (9–12)",
+     "8.5",
+     "13.1",
+     "0.0",
+     "20.3"
+    ],
+    [
+     4,
+     "11.5 (7–18)",
+     "12.8 (4–53)",
+     "11.5",
+     "15.5",
+     "0.0",
+     "24.2"
+    ],
+    [
+     16,
+     "15.9 (7–40)",
+     "33.3 (10–69)",
+     "15.9",
+     "35.9",
+     "0.0",
+     "8.6"
+    ],
+    [
+     64,
+     "20.7 (5–64)",
+     "42.2 (2–82)",
+     "20.7",
+     "46.9",
+     "0.0",
+     "7.7"
+    ],
+    [
+     100,
+     "21.2 (4–64)",
+     "32.3 (1–84)",
+     "21.2",
+     "36.6",
+     "0.0",
+     "12.3"
+    ]
+   ]
+  }
+ ],
+ "plots": [
+  {
+   "file": "plots/fail_vs_gen.png",
+   "caption": {
+    "zh": "fail_cholesky %(/M 全种群口径)随世代 —— 两套语料,同内核。两者都上升,/M 下 gen0 接近(但 evogp 含 ~20% K=0 稀释,见表中活跃口径);evogp 在膨胀区升得更高。阴影=17 题散布。",
+    "en": "fail_cholesky % (full-population /M base) vs generation — both corpora, same kernel. Both rise; on /M the gen0 rates look close (but evogp is diluted by ~20% K=0 trees — see the active-base columns); evogp climbs higher in the bloated regime. Shaded = spread over 17 problems."
+   }
+  },
+  {
+   "file": "plots/fail_vs_nodes.png",
+   "caption": {
+    "zh": "fail_cholesky vs 平均树大小(每点=一题×一世代)。病态随树变大而加重,两套语料皆然。",
+    "en": "fail_cholesky vs mean tree size (each point = one problem×generation). Conditioning worsens with size in both corpora."
+   }
+  },
+  {
+   "file": "plots/density_vs_gen.png",
+   "caption": {
+    "zh": "系数密度 mean_K 随世代(cap64,17 题均)。Operon 给每叶都挂权重 → K 远高于只数显式常数的 evogp。",
+    "en": "Coefficient density mean_K vs generation (cap64, mean over 17). Operon weights every leaf → K far above evogp, which counts only explicit constants."
+   }
+  },
+  {
+   "file": "plots/k0_fraction.png",
+   "caption": {
+    "zh": "无常数(K=0)树占比:Operon 恒为 0(每叶都是系数),evogp 有 ~8–24%(裸变量树被内核跳过)。",
+    "en": "Constant-free (K=0) tree fraction: Operon is always 0 (every leaf is a coefficient); evogp has ~8–24% (bare-variable trees the kernel skips)."
+   }
+  }
+ ],
+ "caveats": [
+  {
+   "zh": "fail_cholesky 不等于「秩亏」的直接度量:它是内核里 fp32 主元 s≤0 且在 λ 放大(每次拒绝 ×10,直到 λ>1e12)后仍不恢复的事件 —— 比「秩亏」更严格(大 λ 通常能救回仅仅病态的 JtJ)。它是秩亏的保守代理;真正稳健的秩证据是机理证明里的 cond/精确秩 1。",
+   "en": "fail_cholesky is NOT a direct rank measure: it is the kernel event where the fp32 pivot s≤0 AND fails to recover as λ is multiplied by 10 each rejection up to λ>1e12 — stricter than 'rank-deficient' (large λ usually rescues a merely ill-conditioned JtJ). It is a conservative proxy; the robust rank evidence is the mechanism proof's exact rank-1 / cond."
+  },
+  {
+   "zh": "机理证明的 cond:精确算术下该 Jacobian 是秩 1(cond=∞);表中 ~1.7e9 是它在 fp32 + 有限差分下的呈现 —— 恰是 fp32 内核实际看到的。",
+   "en": "Mechanism cond: in exact arithmetic the Jacobian is rank 1 (cond=∞); the ~1.7e9 in the table is its fp32 + finite-difference manifestation — precisely what the fp32 kernel sees."
+  },
+  {
+   "zh": "fail_cholesky% 的 /M 分母含被跳过的 K=0 树(Operon 0%,evogp 7.7–24.2%),两侧「活跃树」基数不同;表中并列活跃(K>0)口径与 K=0%,避免按 /M 误读 gen0「接近」。",
+   "en": "The /M denominator of fail_cholesky% includes skipped K=0 trees (Operon 0%, evogp 7.7–24.2%), so the 'active-tree' base differs; the table reports the active (K>0) base and K=0% alongside, to prevent misreading the /M gen0 'closeness'."
+  },
+  {
+   "zh": "交叉内核扫描只取 cap32/seed0(种群统计,代表性足够);完整语料含 noise/cap64/3-seed,manifest 全部 committed,可重跑。",
+   "en": "The cross-kernel sweep uses cap32/seed0 only (a population statistic, representative); the full corpus spans noise/cap64/3-seeds, all manifests committed and rerunnable."
+  },
+  {
+   "zh": "Baseline(Operon LMOptimizer 的 CO 质量/耗时 vs 我们的内核,同一批树)按约定暂缓,待与作者讨论;本报告是负载刻画,不是性能/质量 baseline。",
+   "en": "The baseline (Operon LMOptimizer's CO quality/time vs our kernel on identical trees) is deferred by agreement, pending discussion; this report is workload characterization, not a perf/quality baseline."
+  },
+  {
+   "zh": "manifest 里的 best_fitness = Operon 的 R2(平方 Pearson 相关,取负供其极小化器),是可复现性记录,不是拟合优度,勿当质量指标。",
+   "en": "manifest best_fitness = Operon's R2 (squared Pearson correlation, negated for its minimizer): a reproducibility record, NOT goodness-of-fit; do not read it as quality."
+  }
+ ],
+ "reproduce": [
+  "# 1. harvest the Operon pre-CO corpus (CPU; ~10 min, 48 cells concurrent):",
+  "/home/weish/hao/operon-venv/bin/python -m cusr.benchmark.workload.operon_harvest --procs 48 --threads 1",
+  "# 2. build the kernel + cross-corpus fail_cholesky sweep (GPUs 0-5):",
+  "nvcc -O2 -arch=sm_80 -std=c++17 --use_fast_math -o cusr/kernel/batch_lm_fusedfd cusr/kernel/batch_lm_fusedfd.cu cusr/kernel/loader.c",
+  "/home/weish/hao/operon-venv/bin/python results/operon_corpus__20260617/cross_kernel.py",
+  "# 3. mechanism proof + workload summary + plots + this report:",
+  "/home/weish/hao/operon-venv/bin/python results/operon_corpus__20260617/mechanism_proof.py",
+  "/home/weish/hao/operon-venv/bin/python results/operon_corpus__20260617/summarize.py",
+  ".venv/bin/python results/operon_corpus__20260617/plots.py",
+  "/home/weish/hao/operon-venv/bin/python results/operon_corpus__20260617/build_report.py",
+  "/home/weish/hao/operon-venv/bin/python scripts/make_report.py results/operon_corpus__20260617/report.json"
+ ]
+}
