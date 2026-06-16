@@ -24,8 +24,26 @@ fi
 # sm_80 = A100. Add more if the hardware mix changes (e.g. "8.0;9.0" for H100).
 export TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST:-8.0}"
 
+# --- Julia for PySR's juliacall backend ---
+# Point juliapkg at a local Julia so it does NOT try to download one through
+# the throttled proxy (that hangs `import pysr`). pysr needs Julia >=1.10.3;
+# 1.12.x matches the cached/precompiled packages in ~/.julia (see SETUP.md).
+# Grab via: curl --noproxy '*' https://mirrors.tuna.tsinghua.edu.cn/julia-releases/bin/linux/x64/1.12/julia-1.12.6-linux-x86_64.tar.gz
+_SR_JULIA="$HOME/julias/julia-1.12.6/bin/julia"
+if [ -x "$_SR_JULIA" ]; then
+  export PYTHON_JULIAPKG_EXE="$_SR_JULIA"
+fi
+
 # --- Bypass local proxy for Chinese pip/conda mirrors (bulk downloads) ---
 # These are fast direct; paid proxy traffic is wasted on them.
 _SR_NO_PROXY_EXTRA="pypi.tuna.tsinghua.edu.cn,mirrors.tuna.tsinghua.edu.cn,mirrors.aliyun.com,mirrors.bfsu.edu.cn,mirrors.ustc.edu.cn"
 export no_proxy="${no_proxy:+$no_proxy,}$_SR_NO_PROXY_EXTRA"
 export NO_PROXY="$no_proxy"
+
+# --- Keep `uv run` from auto-syncing the venv ---
+# evogp is installed editable (uv pip install -e upstream/evogp) but is NOT in
+# uv.lock (by design — it's an optional upstream). A bare `uv sync` / the auto-
+# sync that `uv run` does would PRUNE evogp as "not in the lock", silently
+# breaking dump_evogp / the demonstrator. The venv is already fully provisioned,
+# so disable auto-sync; run an explicit `uv sync` yourself when deps change.
+export UV_NO_SYNC=1
