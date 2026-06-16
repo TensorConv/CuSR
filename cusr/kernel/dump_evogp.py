@@ -102,6 +102,71 @@ PROBLEMS = {
         "sampling_ranges": [(1.0, 3.0), (1.0, 3.0)],
         "_note": "I.6.2  Gaussian exp(-(theta/sigma)^2/2)/(sqrt(2pi)*sigma)  — K=4, SQRT+EXP+POW",
     },
+
+    # --- more multivariate Feynman (K=1, div/inv-heavy; different n_vars) ---
+    "feynman/I.12.2": {
+        # Coulomb F = q1*q2/(4π ε0 r²)
+        "skeleton_expr": "c0*x0*x1/x2**2",
+        "variables": ["x0", "x1", "x2"],
+        "constants": ["c0"],
+        "ground_truth_constants": [1.0],
+        "sampling_ranges": [(1.0, 5.0), (1.0, 5.0), (1.0, 5.0)],
+        "_note": "I.12.2  Coulomb q1*q2/(4pi eps r^2)  — 3 var, K=1, DIV+sq",
+    },
+    "feynman/I.13.12": {
+        # gravitational PE  U = G*m1*m2*(1/r2 - 1/r1)
+        "skeleton_expr": "c0*x0*x1*(1/x3 - 1/x2)",
+        "variables": ["x0", "x1", "x2", "x3"],
+        "constants": ["c0"],
+        "ground_truth_constants": [1.0],
+        "sampling_ranges": [(1.0, 5.0), (1.0, 5.0), (1.0, 5.0), (1.0, 5.0)],
+        "_note": "I.13.12  G*m1*m2*(1/r2-1/r1)  — 4 var, K=1, INV",
+    },
+    "feynman/II.3.24": {
+        # radiated flux  φ = P/(4π r²)
+        "skeleton_expr": "c0*x0/x1**2",
+        "variables": ["x0", "x1"],
+        "constants": ["c0"],
+        "ground_truth_constants": [1.0],
+        "sampling_ranges": [(1.0, 5.0), (1.0, 5.0)],
+        "_note": "II.3.24  flux P/(4pi r^2)  — 2 var, K=1, DIV+sq",
+    },
+
+    # --- Nguyen GP-SR benchmark (Uy et al. 2011). Targets are constant-free
+    # (K=0 in ground truth); the GP discovers constants, so harvested pops still
+    # have K>0 to optimize. GP funcset = {+,-,*,/,sin,cos,tan}; log/sqrt targets
+    # (N7/N8) are only approximable — kept for workload variety, same situation as
+    # the SQRT/EXP Feynman entries (skeleton only generates y, not a GP constraint). ---
+    "nguyen/1": {"skeleton_expr": "x0**3 + x0**2 + x0", "variables": ["x0"],
+                 "constants": [], "ground_truth_constants": [],
+                 "sampling_ranges": [(-1.0, 1.0)], "_note": "Nguyen-1  x^3+x^2+x"},
+    "nguyen/2": {"skeleton_expr": "x0**4 + x0**3 + x0**2 + x0", "variables": ["x0"],
+                 "constants": [], "ground_truth_constants": [],
+                 "sampling_ranges": [(-1.0, 1.0)], "_note": "Nguyen-2  x^4+..+x"},
+    "nguyen/3": {"skeleton_expr": "x0**5 + x0**4 + x0**3 + x0**2 + x0", "variables": ["x0"],
+                 "constants": [], "ground_truth_constants": [],
+                 "sampling_ranges": [(-1.0, 1.0)], "_note": "Nguyen-3  x^5+..+x"},
+    "nguyen/4": {"skeleton_expr": "x0**6 + x0**5 + x0**4 + x0**3 + x0**2 + x0", "variables": ["x0"],
+                 "constants": [], "ground_truth_constants": [],
+                 "sampling_ranges": [(-1.0, 1.0)], "_note": "Nguyen-4  x^6+..+x"},
+    "nguyen/5": {"skeleton_expr": "sin(x0**2)*cos(x0) - 1", "variables": ["x0"],
+                 "constants": [], "ground_truth_constants": [],
+                 "sampling_ranges": [(-1.0, 1.0)], "_note": "Nguyen-5  sin(x^2)cos(x)-1"},
+    "nguyen/6": {"skeleton_expr": "sin(x0) + sin(x0 + x0**2)", "variables": ["x0"],
+                 "constants": [], "ground_truth_constants": [],
+                 "sampling_ranges": [(-1.0, 1.0)], "_note": "Nguyen-6  sin(x)+sin(x+x^2)"},
+    "nguyen/7": {"skeleton_expr": "log(x0 + 1) + log(x0**2 + 1)", "variables": ["x0"],
+                 "constants": [], "ground_truth_constants": [],
+                 "sampling_ranges": [(0.0, 2.0)], "_note": "Nguyen-7  ln(x+1)+ln(x^2+1) (approx)"},
+    "nguyen/8": {"skeleton_expr": "sqrt(x0)", "variables": ["x0"],
+                 "constants": [], "ground_truth_constants": [],
+                 "sampling_ranges": [(0.0, 4.0)], "_note": "Nguyen-8  sqrt(x) (approx)"},
+    "nguyen/9": {"skeleton_expr": "sin(x0) + sin(x1**2)", "variables": ["x0", "x1"],
+                 "constants": [], "ground_truth_constants": [],
+                 "sampling_ranges": [(0.0, 1.0), (0.0, 1.0)], "_note": "Nguyen-9  sin(x)+sin(y^2)"},
+    "nguyen/10": {"skeleton_expr": "2*sin(x0)*cos(x1)", "variables": ["x0", "x1"],
+                  "constants": [], "ground_truth_constants": [],
+                  "sampling_ranges": [(0.0, 1.0), (0.0, 1.0)], "_note": "Nguyen-10  2sin(x)cos(y)"},
 }
 
 
@@ -130,8 +195,8 @@ def _load_feynman_problem(dataset_id: str) -> dict:
     return PROBLEMS[dataset_id]
 
 
-def _sample_xy(prob: dict, N: int, seed: int) -> tuple[np.ndarray, np.ndarray]:
-    """uniform sample N 个数据点, y = skeleton(c_true, X)."""
+def _sample_xy(prob: dict, N: int, seed: int, noise: float = 0.0) -> tuple[np.ndarray, np.ndarray]:
+    """uniform sample N 个数据点, y = skeleton(c_true, X). noise>0: 加 RMS 相对高斯噪声."""
     import sympy as sp
     rng = np.random.default_rng(seed)
     n_vars = len(prob["variables"])
@@ -148,6 +213,9 @@ def _sample_xy(prob: dict, N: int, seed: int) -> tuple[np.ndarray, np.ndarray]:
     y = np.asarray(f(*X.T), dtype=np.float64).reshape(-1)
     if not np.all(np.isfinite(y)):
         raise ValueError("sampled y has non-finite — check ranges")
+    if noise > 0.0:
+        sigma = noise * float(np.sqrt(np.mean(y ** 2)))  # RMS-relative Gaussian noise
+        y = y + rng.normal(0.0, sigma, size=y.shape)
     return X.astype(np.float32), y.astype(np.float32)
 
 
@@ -223,9 +291,11 @@ def _extract_tree(tree, problem_n_vars: int) -> tuple | None:
     return nt, nv, ci, c_init_arr
 
 
-def _build_evogp(X_t: torch.Tensor, y_t: torch.Tensor, *, pop: int, n_vars: int, seed: int):
+def _build_evogp(X_t: torch.Tensor, y_t: torch.Tensor, *, pop: int, n_vars: int, seed: int,
+                 max_tree_len: int | None = None):
+    max_tree_len = max_tree_len or GP_CONFIG["max_tree_len"]
     desc = GenerateDescriptor(
-        max_tree_len=GP_CONFIG["max_tree_len"], input_len=n_vars, output_len=1,
+        max_tree_len=max_tree_len, input_len=n_vars, output_len=1,
         using_funcs=USING_FUNCS, max_layer_cnt=GP_CONFIG["init_max_layer_cnt"],
         const_samples=CONST_SAMPLES,
     )
@@ -336,19 +406,32 @@ def main(argv=None):
     ap.add_argument("--checkpoint-every", type=int, default=0, metavar="G",
                     help="每 G 代额外 dump 一份 pop_gen{g:04d}.bin 到 --out 同目录 "
                          "(含 gen 0 初始种群); 0=关 (默认, 只 dump 末代)")
+    ap.add_argument("--checkpoint-gens", default="", metavar="LIST",
+                    help="显式 checkpoint 世代列表 (逗号分隔, e.g. 0,1,2,4,8,16,32,64,100); "
+                         "给了就覆盖 --checkpoint-every, 并跑到列表最大世代")
+    ap.add_argument("--noise", type=float, default=0.0, metavar="REL",
+                    help="加 RMS 相对高斯噪声 (e.g. 0.01 = 1%%); 0=无噪 (默认)")
+    ap.add_argument("--max-tree-len", type=int, default=0, metavar="N",
+                    help="覆盖 GP_CONFIG.max_tree_len (节点上限); 0=用默认")
     args = ap.parse_args(argv)
 
-    print(f"[dump] dataset={args.dataset}  gen={args.gen}  pop={args.pop}  N={args.N}  seed={args.seed}", flush=True)
+    ckpt_gens = sorted({int(x) for x in args.checkpoint_gens.split(",") if x.strip()}) or None
+    total_gens = max(ckpt_gens) if ckpt_gens else args.gen
+    max_tree_len = args.max_tree_len or GP_CONFIG["max_tree_len"]
+    print(f"[dump] dataset={args.dataset}  gens={total_gens}  pop={args.pop}  N={args.N}  "
+          f"seed={args.seed}  noise={args.noise}  max_tree_len={max_tree_len}  "
+          f"ckpt={ckpt_gens if ckpt_gens else ('every %d' % args.checkpoint_every)}", flush=True)
 
     # ---- data ----
     prob = _load_feynman_problem(args.dataset)
     n_vars = len(prob["variables"])
-    X_np, y_np = _sample_xy(prob, args.N, args.seed)
+    X_np, y_np = _sample_xy(prob, args.N, args.seed, noise=args.noise)
     X_t = torch.from_numpy(np.ascontiguousarray(X_np)).cuda()
     y_t = torch.from_numpy(np.ascontiguousarray(y_np.reshape(-1, 1))).cuda()
 
     # ---- EvoGP run ----
-    algo, pipeline = _build_evogp(X_t, y_t, pop=args.pop, n_vars=n_vars, seed=args.seed)
+    algo, pipeline = _build_evogp(X_t, y_t, pop=args.pop, n_vars=n_vars, seed=args.seed,
+                                  max_tree_len=max_tree_len)
 
     snap_records = []  # per-snapshot workload stats -> manifest.json
 
@@ -374,14 +457,18 @@ def main(argv=None):
               f"(TFUNC-skip {ck_tf}, K-over {ck_ko})  total_nodes={ck_stats['total_nodes']}  "
               f"K_max={ck_stats['K_max']}  -> {ck_out}", flush=True)
 
-    if args.checkpoint_every > 0:
+    def want_ckpt(g):
+        return (g in ckpt_gens) if ckpt_gens else (
+            args.checkpoint_every > 0 and (g == 0 or g % args.checkpoint_every == 0))
+
+    if want_ckpt(0):
         _checkpoint(0)  # 初始种群
-    for gen in range(args.gen):
+    for gen in range(total_gens):
         pipeline.step()
-        if args.checkpoint_every > 0 and (gen + 1) % args.checkpoint_every == 0:
+        if want_ckpt(gen + 1):
             _checkpoint(gen + 1)
     best_fitness = float(pipeline.best_fitness)
-    print(f"[dump] EvoGP ran {args.gen} gens, best_fitness={best_fitness:.4e}", flush=True)
+    print(f"[dump] EvoGP ran {total_gens} gens, best_fitness={best_fitness:.4e}", flush=True)
 
     # ---- per-tree extract ----
     trees, n_tfunc_skip, n_kover = _extract_forest(algo.forest, args.pop, n_vars)
@@ -396,13 +483,13 @@ def main(argv=None):
           f"K_max={stats['K_max']}  max_stack={stats['max_stack']}", flush=True)
 
     # final pop.bin as its own snapshot record (unless it's already a checkpoint)
-    if args.checkpoint_every <= 0 or args.gen % args.checkpoint_every != 0:
-        snap_records.append(_snap_record(args.gen, args.out, trees, n_tfunc_skip, n_kover, stats))
+    if not want_ckpt(total_gens):
+        snap_records.append(_snap_record(total_gens, args.out, trees, n_tfunc_skip, n_kover, stats))
 
     # sidecar: tfunc skip 计数 (inspect 不重跑 evogp, 它只看 .bin)
     sidecar = args.out.with_suffix(args.out.suffix + ".meta.txt")
     sidecar.write_text(
-        f"dataset={args.dataset}\ngen={args.gen}\npop_requested={args.pop}\n"
+        f"dataset={args.dataset}\ngen={total_gens}\npop_requested={args.pop}\n"
         f"n_tfunc_skipped={n_tfunc_skip}\nn_kover_skipped={n_kover}\n"
         f"n_kept={len(trees)}\nseed={args.seed}\n"
     )
@@ -417,12 +504,13 @@ def main(argv=None):
     prob_rec = {k: prob[k] for k in
                 ("skeleton_expr", "variables", "constants",
                  "ground_truth_constants", "sampling_ranges") if k in prob}
+    evogp_cfg = dict(GP_CONFIG); evogp_cfg["max_tree_len"] = max_tree_len
     manifest = dict(
         harvest_date=datetime.date.today().isoformat(), git_sha=git_sha,
-        dataset=args.dataset, problem=prob_rec, N=args.N, noise="none",
-        seed=args.seed, pop=args.pop, gens_run=args.gen,
-        checkpoint_every=args.checkpoint_every, evogp_config=GP_CONFIG,
-        best_fitness=best_fitness, snapshots=snap_records,
+        dataset=args.dataset, problem=prob_rec, N=args.N, noise=args.noise,
+        seed=args.seed, pop=args.pop, gens_run=total_gens, max_tree_len=max_tree_len,
+        checkpoint_gens=ckpt_gens, checkpoint_every=args.checkpoint_every,
+        evogp_config=evogp_cfg, best_fitness=best_fitness, snapshots=snap_records,
     )
     manifest_path = args.out.parent / "manifest.json"
     manifest_path.write_text(json.dumps(manifest, indent=2))
