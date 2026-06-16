@@ -1,0 +1,43 @@
+{
+  "pop": "data/workload/synth/synth_early-gen_M16000_N1000_seed0.bin",
+  "stats": {
+    "N": 1000,
+    "mean_nodes": 12.547,
+    "mean_K": 2.8380625,
+    "mean_Feval": 23.5093125,
+    "mean_iters": 12.5755625,
+    "flops_per_tree": 2053231.617913608,
+    "bytes_per_tree": 388029.217445375
+  },
+  "arithmetic_intensity": 5.291,
+  "A100_ridge": 9.56,
+  "bound_if_efficient": "memory",
+  "points": [
+    {
+      "M": 16000,
+      "trees_per_s": 17372.0,
+      "achieved_TFLOPs": 0.035668739666395194,
+      "pct_fp32_peak": 0.1829166136738215,
+      "eff_BW_GBps": 6.740843565461055,
+      "pct_HBM_peak": 0.3305955647602283
+    },
+    {
+      "M": 64000,
+      "trees_per_s": 36551.0,
+      "achieved_TFLOPs": 0.07504766886636029,
+      "pct_fp32_peak": 0.3848598403403092,
+      "eff_BW_GBps": 14.182855926845901,
+      "pct_HBM_peak": 0.6955790057305493
+    },
+    {
+      "M": 256000,
+      "trees_per_s": 50394.0,
+      "achieved_TFLOPs": 0.10347055415313837,
+      "pct_fp32_peak": 0.5306182264263506,
+      "eff_BW_GBps": 19.554344383942226,
+      "pct_HBM_peak": 0.9590163994086428
+    }
+  ],
+  "peak_fp32_TFLOPs": 19.5,
+  "peak_BW_GBps": 2039.0
+}

@@ -1,0 +1,61 @@
+{
+  "title": "Roofline (ANALYTICAL) — batch_lm_fusedfd on A100",
+  "date": "2026-06-16",
+  "question": "Where does the fused-FD CO kernel sit relative to the A100 hardware ceilings — is it compute-bound, memory-bound, or far below the roofline (latency/occupancy/overhead-bound)? ncu (measured) is blocked by perf-counter permissions, so this is an analytical roofline.",
+  "setup": "Model FLOPs + DRAM bytes per the fusedfd algorithm (per LM iter, per tree), combine with the MEASURED end-to-end wall time from Tier0. Per-tree op histogram counted exactly from the synth early-gen M=16000 pop; mean iterations from the measured convergence curve. fp32. A100-SXM4-80GB peaks: 19.5 TFLOP/s fp32, 2039 GB/s HBM2e (ridge 9.56 FLOP/byte).",
+  "env": {
+    "git_sha": "(this commit)",
+    "gpu": "NVIDIA A100-SXM4-80GB",
+    "ncu": "present (/usr/local/cuda/bin/ncu 2024.3.0) but ERR_NVGPUCTRPERM — perf counters admin-locked (RmProfilingAdminOnly=1), no sudo",
+    "method": "ANALYTICAL (modeled FLOP/byte + measured wall); NOT ncu-measured"
+  },
+  "params": {
+    "flop_convention": {
+      "note": "DISCLOSED op-FLOP-equivalent table; ncu would measure real SASS FP instructions",
+      "arithmetic_ADD_SUB_MUL": 1, "DIV_INV_SQRT": 4, "transcendental_sin_cos_tan_exp_log": 8
+    },
+    "model": {
+      "flops_per_iter_per_tree": "N*(Feval*(K+2) + 2K diff + 2K + K(K+1) build + 6) + K^3/3",
+      "dram_bytes_per_iter_per_tree": "J write 4*K*N + J read 4*K*N + y writes 8*N + bytecode 12*n + xs(amortized)",
+      "peaks": "fp32 19.5 TFLOP/s, HBM 2039 GB/s, ridge 9.56 FLOP/byte"
+    },
+    "empirical": {
+      "pop": "synth early-gen M=16000 N=1000 (recoverable problem)",
+      "mean_nodes": 12.55, "mean_K": 2.84, "mean_Feval_flops": 23.5, "mean_iters": 12.58,
+      "measured_throughput_points": "fusedfd (Tier0 clean): 16k=17372, 64k=36551, 256k=50394 trees/s"
+    }
+  },
+  "findings": [
+    {"claim": "The kernel sits ~0.5-1% BELOW the A100 ceilings even when saturated — neither compute- nor BW-bound", "evidence": "Achieved 0.18% (M=16k) -> 0.38% (64k) -> 0.53% of fp32 peak (256k, saturated); 0.33% -> 0.96% of HBM peak. The BW-bound ceiling at AI=5.3 is ~10.8 TFLOP/s; achieved ~0.1 TFLOP/s is ~1% of even that. The binding constraint is execution efficiency / overhead, not the roofline."},
+    {"claim": "Likely bottlenecks (for the optimization work): interpreter divergence + redundancy + host round-trips", "evidence": "Divergent switch-dispatch tree interpreter; warp-per-tree (32 threads stride N, low ILP, serial stack deps); 1-thread-per-tree K x K Cholesky (terrible occupancy); host-orchestrated LM loop with per-iter H<->D copies + ~8 kernel launches. fd_jacobian re-evaluates the WHOLE tree for each of the K perturbed columns (K full evals/tree/iter) — large redundancy."},
+    {"claim": "If made efficient, the kernel would be (mildly) memory-bound on the J round-trip", "evidence": "Analytical AI = 5.3 FLOP/byte < ridge 9.56. The dominant modeled DRAM traffic is materializing J (K x N per tree) to global then reading it back in build_jtj. Fusing Jacobian -> JtJ accumulation (never materializing J) would raise AI and cut that traffic."},
+    {"claim": "Achieved fraction rises with utilization, consistent with the throughput sweep", "evidence": "0.18% -> 0.53% of peak as M goes 16k -> 256k: more trees fill the 108 SMs, amortizing launch/host overhead — same story as the trees/s-vs-M curve saturating."}
+  ],
+  "tables": [
+    {"name": "Analytical roofline points (fusedfd, fp32)", "columns": ["M", "trees/s", "achieved GFLOP/s", "% fp32 peak", "eff BW GB/s", "% HBM peak"],
+     "rows": [[16000,17372,"35.7","0.18%","6.74","0.33%"],[64000,36551,"75.0","0.38%","14.2","0.70%"],[256000,50394,"103.5","0.53%","19.6","0.96%"]]},
+    {"name": "Model inputs", "columns": ["quantity", "value"],
+     "rows": [["mean nodes/tree","12.55"],["mean K/tree","2.84"],["FLOPs per single eval","23.5"],["mean LM iters","12.58"],["arithmetic intensity","5.29 FLOP/byte"],["A100 ridge","9.56 FLOP/byte"]]}
+  ],
+  "plots": [
+    {"file": "plots/roofline.png", "caption": "Analytical roofline. The 3 fusedfd points (at AI=5.3) sit ~2 orders of magnitude below both the flat compute ceiling and the slanted BW ceiling -> the kernel is bound by execution efficiency/overhead, not by the roofline. Gap = optimization headroom."}
+  ],
+  "caveats": [
+    "ANALYTICAL, not ncu-measured. FLOPs use a disclosed op-FLOP table (arith=1, div/sqrt=4, transcendental=8); a different convention shifts AI and %-of-peak.",
+    "Achieved FLOP/s uses END-TO-END wall time, which includes host orchestration, per-iter H<->D copies, and kernel-launch latency — so it conflates GPU compute with overhead and UNDERSTATES per-kernel GPU efficiency. The 'far below roofline' gap is partly real GPU inefficiency, partly this overhead.",
+    "DRAM-byte model counts the J round-trip + y writes + bytecode and assumes xs/bytecode are largely L2-cached (amortized). Real DRAM traffic needs ncu.",
+    "mean_iters (12.58) estimated from a 5-iter-resolution convergence curve.",
+    "Per-tree distribution is synth early-gen (recoverable problem); late-bloated / inner-const-heavy differ (bigger trees, higher K)."
+  ],
+  "reproduce": [
+    "# empirical inputs:",
+    "source scripts/env.sh && source scripts/gpu_guard.sh; G=$(pick_free_gpus 1)",
+    "CUDA_VISIBLE_DEVICES=$G cusr/kernel/batch_lm_fusedfd data/workload/synth/synth_early-gen_M16000_N1000_seed0.bin /tmp/rf  # convergence curve",
+    "# model + plot:",
+    "uv run python results/roofline_a100__20260616/roofline_model.py results/roofline_a100__20260616",
+    "",
+    "# TODO (needs admin / root): enable ncu for a MEASURED roofline:",
+    "#   echo 'options nvidia NVreg_RestrictProfilingToAdminUsers=0' | sudo tee /etc/modprobe.d/nvidia-profiling.conf",
+    "#   sudo update-initramfs -u && reboot   (then: ncu --set roofline ...)"
+  ]
+}
