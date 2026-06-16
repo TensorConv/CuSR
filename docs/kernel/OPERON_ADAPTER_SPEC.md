@@ -261,3 +261,74 @@ silently map. (If the grammar is later widened: Exp→22, Log→20, Sqrt→27, P
 - pop.bin tooling: `cusr/kernel/{pop_format.h, loader.c, inspect.c, dump_evogp.py}`.
 - Operon `.bin` are gitignored (like evogp's); commit the per-cell `manifest.json` and the
   results archive. Snapshots root mirrors evogp: `data/workload/snapshots/operon_*`.
+
+## 12. Harvest GP recipe (PROVEN — adapter validated against it: 1999/2000 evolved trees exact)
+
+The harvest runs one Operon GP per cell with **no inline CO** + restricted grammar, snapshots
+the population at checkpoint generations, and dumps each via the adapter. Two extra
+empirically-confirmed gotchas beyond §7:
+
+- **`op.Dataset` MUST be Fortran-ordered AND include the target column**, else
+  `EvaluateTrees`/the evaluator SEGFAULTS:
+  `ds = op.Dataset(np.asfortranarray(np.column_stack([X, y]).astype(np.float64)))`. Columns
+  auto-name `X1..Xn` (1-indexed); the last column is the target.
+- `write_operon_pop_bin` takes Operon **`Tree`** objects — pass
+  `[ind.Genotype for ind in list(gp.Individuals)[:population_size]]` (the first
+  `population_size` are the population; the rest are the offspring pool).
+
+Proven construction (hold EVERY operator in a named var — §7 lifetime):
+
+```python
+X, y = sample_xy(problem_id, N=1000, seed=seed, noise=noise)        # sr_problems
+ds = op.Dataset(np.asfortranarray(np.column_stack([X, y]).astype(np.float64)))
+V = ds.Variables; inputs = [v.Hash for v in V[:n_vars]]
+pr = op.Problem(ds); pr.TrainingRange = op.Range(0, N); pr.TestRange = op.Range(0, N)
+pr.Target = V[n_vars]; pr.InputHashes = inputs
+NT = op.NodeType
+pr.ConfigurePrimitiveSet(int(NT.Add)|int(NT.Sub)|int(NT.Mul)|int(NT.Div)
+                         |int(NT.Sin)|int(NT.Cos)|int(NT.Tan)|int(NT.Constant)|int(NT.Variable))
+ps = pr.PrimitiveSet
+cf = op.GeneticAlgorithmConfig(generations=G, max_evaluations=2**31-1, local_iterations=0,
+        population_size=pop, pool_size=pop, p_crossover=1.0, p_mutation=0.25, p_local=0.0, seed=seed)
+cr  = op.BalancedTreeCreator(ps, inputs, 0.0)
+ti  = op.UniformLengthTreeInitializer(cr); ti.ParameterizeDistribution(1, cap); ti.MaxDepth=1000; ti.MinDepth=1
+ci  = op.NormalCoefficientInitializer(); ci.ParameterizeDistribution(0.0, 1.0)
+dt  = op.DispatchTable(); ev = op.Evaluator(pr, dt, op.R2(), True); ev.Budget = 2**31-1
+lm  = op.LMOptimizer(dt, pr, max_iter=10); co = op.CoefficientOptimizer(lm)   # held but not used (p_local=0)
+cx  = op.SubtreeCrossover(0.9, 1000, cap)
+mu1=op.NormalOnePointMutation(); mu2=op.ChangeVariableMutation(inputs)
+mu3=op.ChangeFunctionMutation(ps); mu4=op.ReplaceSubtreeMutation(cr, ci, 1000, cap)
+mm = op.MultiMutation()
+for m in (mu1,mu2,mu3,mu4): mm.Add(m, 1.0)         # sub-mutations MUST be named vars (not a temp list)
+sel = op.TournamentSelector(0); sel.TournamentSize = 5
+g   = op.BasicOffspringGenerator(ev, cx, mm, sel, sel, co)
+ri  = op.ReplaceWorstReinserter(0)
+gp  = op.GeneticProgrammingAlgorithm(cf, pr, ti, ci, g, ri)
+
+snaps = {}
+def cb():                                          # MUST be callable; None segfaults
+    gg = gp.Generation                             # property
+    if gg in CKPT_GENS and gg not in snaps:
+        snaps[gg] = [ind.Genotype for ind in list(gp.Individuals)[:pop]]
+gp.Run(op.RandomGenerator(seed), cb, threads=1)    # threads pinned for determinism
+# gen 0 (initial pop) needs handling too — Generation may start at the first post-init value;
+# the dumper must verify which generations the callback actually observes and capture gen 0
+# explicitly if the callback never fires at 0 (run a probe; do NOT assume).
+```
+
+Harvest requirements (mirror `dump_evogp.py` + `harvest.py` conventions):
+- Per-cell runner `operon_dump.py` (analogue of `dump_evogp.py`): one (problem, pop, N, seed,
+  noise, cap, checkpoint-gens) → pop.bin per checkpoint + a committed `manifest.json` with the
+  SAME schema as the evogp manifest **plus** an `operon_config` block (grammar, p_crossover,
+  p_mutation, tournament size, coeff-init dist, max_iter, threads) and the adapter filter counts
+  per snapshot (`n_in/n_kept/dropped_*`). `engine: "operon"`, `inline_co: false`.
+- Driver `operon_harvest.py` (analogue of `harvest.py`): shard cells across **processes**
+  (Operon is CPU — no GPU guard needed), resumable (skip cells whose manifest exists),
+  subprocess-per-cell for crash isolation, append a log. **Pin/disclose thread count** (the box
+  is 2×EPYC 7763 = 256 threads; do NOT oversubscribe — cap concurrent processes × threads).
+- **Determinism test**: same (problem, seed, cap, threads) → identical pop.bin bytes across two
+  runs. If threads>1 breaks determinism, pin threads=1 for the corpus and disclose.
+- Honesty: every snapshot's manifest records the drop counts; the run logs total dropped; report
+  K-over count stays ~0 across all problems/seeds (verify — §10 measured it only on I.18.12).
+- Smoke: a tiny run (1–2 problems, small pop, few gens) → `inspect` PASS on each pop.bin →
+  (corpus phase) `./batch_lm` runs on an Operon pop.bin on a pinned GPU.
