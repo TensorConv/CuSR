@@ -19,6 +19,12 @@ inspect: inspect.c pop_format.h
 batch_lm: batch_lm.cu loader.c loader.h pop_format.h
 	$(NVCC) $(NVCC_FLAGS) -o $@ batch_lm.cu loader.c
 
+# Profiling build of the fused-FD variant (-DPROFILE): per-kernel CUDA-event
+# timing + host/transfer residual. Same flags as the real binary so codegen
+# matches; emits an extra PROFILE_JSON line. Not committed (see .gitignore).
+batch_lm_fusedfd_prof: batch_lm_fusedfd.cu loader.c loader.h pop_format.h
+	$(NVCC) $(NVCC_FLAGS) -DPROFILE -o $@ batch_lm_fusedfd.cu loader.c
+
 show: inspect
 	@if [ -f data/pop.bin ]; then ./inspect data/pop.bin; else echo "data/pop.bin 不存在, 先跑 dump_evogp.py"; fi
 

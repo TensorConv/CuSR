@@ -1,0 +1,148 @@
+{
+  "title": "Per-kernel profiling (CUDA events) — batch_lm_fusedfd LM loop / 逐-kernel 打点",
+  "date": "2026-06-16",
+  "question": {
+    "zh": "fused-FD 常数优化 kernel 的时间到底花在哪?在 GPU 计算 vs host 编排/传输之间怎么分?哪个 kernel 主导?这是 characterization,用来给 roofline 的'墙钟混淆'补上真实拆分,并定优化优先级。",
+    "en": "Where does the fused-FD constant-optimization kernel actually spend time — GPU compute vs host orchestration/transfer — and which kernel dominates? This is characterization: it fills in the split the analytical roofline conflates in end-to-end wall, and sets optimization priorities."
+  },
+  "setup": {
+    "zh": "用 -DPROFILE 编译的 batch_lm_fusedfd_prof:在 LM 主循环里用 cudaEvent 对每次 kernel 启动和每次 H↔D 拷贝计时并按类别累加,host_residual = 循环墙钟 − 所有 GPU 类别之和(= 启动延迟 + host accept/reject + 超出传输时间的 memcpy 等待)。另把一次性 setup(CUDA ctx + 设备分配 + 初始 eval)与稳态循环分开。数值输出与冻结的 parity 二进制逐字节一致(已校验)。M ∈ {1k,4k,16k,64k,256k},N=1000,early-gen synth,max_iter=50,3 次计时取中位(1 次预热丢弃),单卡独占。",
+    "en": "A -DPROFILE build (batch_lm_fusedfd_prof) brackets every kernel launch and every H<->D copy in the LM loop with cudaEvents and accumulates per category; host_residual = loop wall - sum of all GPU categories (= launch latency + host accept/reject + memcpy-wait beyond transfer). One-time setup (CUDA ctx + device alloc + initial eval) is separated from the steady-state loop. Numerical output is bit-identical to the frozen parity binary (verified). M in {1k,4k,16k,64k,256k}, N=1000, early-gen synth, max_iter=50, median of 3 timed runs (1 warmup discarded), one GPU exclusively."
+  },
+  "env": {
+    "git_sha": "(this commit)",
+    "gpu": "NVIDIA A100-SXM4-80GB (one GPU, exclusive; gpu precheck clean)",
+    "binary": "cusr/kernel/batch_lm_fusedfd_prof (nvcc -O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math -DPROFILE)",
+    "method": "cudaEvent per-launch timing (default stream, serialized) + chrono wall; NOT ncu hardware metrics",
+    "parity": "status.bin + c_final.bin bit-identical: frozen vs rebuilt-default vs prof binary"
+  },
+  "params": {
+    "sweep": {"M": "1000,4000,16000,64000,256000", "N": 1000, "repeats": 3, "warmup_discarded": 1},
+    "kernel": {"variant": "fusedfd", "max_iter": 50, "eps_rel": 1e-3, "xtol": 1e-6, "MAX_K": 32, "block": 256},
+    "synth": {"pop": "synth_early-gen_M<M>_N1000_seed0.bin", "mean_K": "~2.8", "mean_nodes": "~12.5", "problem": "recoverable"}
+  },
+  "findings": [
+    {
+      "claim": {
+        "zh": "fd_jacobian 是 GPU 时间的绝对主导 —— 每个规模下都最大,占 LM 循环 GPU 时间的 49.4%(256k)~73.2%(1k)。",
+        "en": "fd_jacobian is the dominant GPU cost — the single largest kernel at every scale, 49.4% (256k) to 73.2% (1k) of LM-loop GPU time."
+      },
+      "evidence": {
+        "zh": "它就是那个 K 倍冗余的有限差分 Jacobian:每个常数列都把整棵树在 N 个点上重新解释一遍(K[m] 次整树 eval/树/迭代)。这是 #1 优化靶子(前向 AD / dual number 一趟算完所有 K 个偏导)。",
+        "en": "It is the K-redundant finite-difference Jacobian: each constant column re-interprets the whole tree over all N points (K[m] full-tree evals per tree per iter). This is optimization target #1 (forward-mode AD / dual numbers compute all K partials in one pass)."
+      }
+    },
+    {
+      "claim": {
+        "zh": "LM 循环是 GPU-bound,不是 host/传输-bound —— 修正了 roofline 的猜测。",
+        "en": "The LM loop is GPU-bound, NOT host/transfer-bound — this corrects the roofline's hypothesis."
+      },
+      "evidence": {
+        "zh": "host_residual 仅 1.8%~4.2%,全部 memcpy 2.8%~9.8%,两者合计 ≤ ~13%(64k 处峰值)。所以'远低于屋顶线'的差距是 GPU kernel 自身低效(冗余工作 + occupancy/divergence),不是 host 编排。而且 cudaEvent 的 host 端 API 开销本身被算进了 residual,所以真实 host 占比还更小 —— 这个结论是保守的。",
+        "en": "host_residual is only 1.8-4.2%; all memcpy combined is 2.8-9.8%; together <= ~13% (peak at 64k). So the gap below the roofline ceiling is GPU-kernel inefficiency (redundant work + occupancy/divergence), not host orchestration. The cudaEvent host-side API cost is itself counted in the residual, so the true host share is even smaller — this conclusion is conservative."
+      }
+    },
+    {
+      "claim": {
+        "zh": "两次树解释器遍历就是全部 —— fd_jacobian + eval = 循环时间的 69%(256k)~87%(1k)。",
+        "en": "Two tree-interpreter passes are the whole game — fd_jacobian + eval = 69% (256k) to 87% (1k) of loop time."
+      },
+      "evidence": {
+        "zh": "fd_jacobian 和 eval(每迭代 2 次前向 eval:trial + refresh)都在 N 个点上完整解释每棵树。线性代数(solve ≤ 2.4%,且随 M 缩到 0.6%)和 J 组装是次要的。结论:先优化解释/FD 冗余,不是先优化线性代数。",
+        "en": "Both fd_jacobian and eval (2 forward evals per iter: trial + refresh) fully interpret every tree over all N points. The linear algebra (solve <= 2.4%, shrinking to 0.6% with M) and J assembly are secondary. Conclusion: optimize interpretation/FD redundancy first, not the linear algebra."
+      }
+    },
+    {
+      "claim": {
+        "zh": "J 的来回传输在大规模下涨到 ~14% —— 印证了 roofline,但只是次要靶子。",
+        "en": "The J round-trip grows to ~14% at scale — confirms the roofline, but it's a secondary target."
+      },
+      "evidence": {
+        "zh": "build_jtj(把 K×N 的 Jacobian 写进 global 再读回)随 M 从 4.4% 涨到 14.1%。这印证了 roofline 的'若高效则在 J 上轻度 memory-bound'。融合 Jacobian→JtJ 不落地 J 有真实收益,但排在修 fd_jacobian 之后。",
+        "en": "build_jtj (writing the K x N Jacobian to global then reading it back) rises 4.4%->14.1% with M. This confirms the roofline's 'mildly memory-bound on J if efficient'. Fusing Jacobian->JtJ without materializing J is a real win, but ranks behind fixing fd_jacobian."
+      }
+    },
+    {
+      "claim": {
+        "zh": "一次性 setup 在小 M 下主导墙钟,大规模下被摊薄 —— 真正的每代 CO 成本是 loop_ms。",
+        "en": "One-time setup dominates small-M wall but amortizes at scale — the real per-generation CO cost is loop_ms."
+      },
+      "evidence": {
+        "zh": "setup(CUDA ctx + 设备分配 + 初始 eval)≈ 恒定 359~488ms;循环只占总墙钟的 30%(M=1k)到 78%(M=256k)。在集成进 GP 主循环时 setup 只付一次。loop-only 吞吐 41k(16k)→ 64k(256k)trees/s,约为 Tier0 端到端数字的 1.3×(后者把 setup+load 算进去了)。",
+        "en": "setup (CUDA ctx + device alloc + initial eval) is ~constant 359-488ms; the loop is only 30% of total wall at M=1k but 78% at M=256k. In an integrated GP loop, setup is paid once. Loop-only throughput is 41k (16k) -> 64k (256k) trees/s, ~1.3x the Tier0 end-to-end figure (which folded in setup+load)."
+      }
+    }
+  ],
+  "tables": [
+    {
+      "name": "LM-loop time breakdown (% of loop wall, median of 3)",
+      "columns": ["M", "iters", "loop_ms", "fd_jacobian", "eval", "build_jtj", "solve", "memcpy(H2D+D2H)", "host_resid", "loop %of wall"],
+      "rows": [
+        [1000, 50, 155.4, "73.2%", "14.2%", "4.4%", "2.4%", "2.8%", "1.8%", "30.0%"],
+        [4000, 50, 184.1, "66.4%", "15.1%", "8.2%", "2.1%", "3.4%", "2.5%", "33.2%"],
+        [16000, 50, 389.9, "56.2%", "17.3%", "10.8%", "1.0%", "7.8%", "3.1%", "46.9%"],
+        [64000, 50, 1143.0, "49.9%", "18.4%", "12.8%", "0.6%", "9.8%", "3.7%", "65.1%"],
+        [256000, 50, 3983.5, "49.4%", "19.6%", "14.1%", "0.6%", "6.6%", "4.2%", "77.9%"]
+      ]
+    },
+    {
+      "name": "Per-category GPU time at M=256000 (saturated regime, median ms)",
+      "columns": ["category", "ms", "% of loop"],
+      "rows": [
+        ["fd_jacobian (K-redundant FD)", "1968.4", "49.4%"],
+        ["eval (2 fwd passes/iter)", "780.6", "19.6%"],
+        ["build_jtj (J round-trip)", "563.4", "14.1%"],
+        ["memcpy_D2H", "206.3", "5.2%"],
+        ["residual", "185.1", "4.6%"],
+        ["host_residual", "167.1", "4.2%"],
+        ["memcpy_H2D", "55.3", "1.4%"],
+        ["loss", "30.7", "0.8%"],
+        ["solve (1 thread/tree Cholesky)", "24.2", "0.6%"]
+      ]
+    }
+  ],
+  "plots": [
+    {
+      "file": "plots/loop_breakdown_frac.png",
+      "caption": {
+        "zh": "LM 循环时间占比(100% 堆叠)随 M。fd_jacobian(红)在所有规模下主导;host_residual(紫)和 memcpy 始终很小 —— 循环是 GPU-bound。",
+        "en": "LM-loop time fraction (100% stacked) vs M. fd_jacobian (red) dominates at every scale; host_residual (purple) and memcpy stay small — the loop is GPU-bound."
+      }
+    },
+    {
+      "file": "plots/wall_decomposition.png",
+      "caption": {
+        "zh": "进程墙钟 = 一次性 setup + LM 循环(log 轴)。setup 近似恒定,所以在小 M 主导、大规模被摊薄;loop 才是随规模增长、可被优化的部分。",
+        "en": "Process wall = one-time setup + LM loop (log axis). setup is ~constant, so it dominates at small M and amortizes at scale; the loop is the part that grows with size and is optimizable."
+      }
+    }
+  ],
+  "caveats": [
+    {
+      "zh": "prof 二进制有 cudaEvent API 开销(每次运行约 700 次 event create/record),会轻微抬高 loop_ms,尤其抬高 host_residual(event 调用在 host 端、夹在 kernel 启动之间)→ 所以'GPU-bound'是保守结论,真实 host 占比更小。数值输出与冻结二进制逐字节一致(已校验 parity)。",
+      "en": "The prof binary has cudaEvent API overhead (~700 event create/record per run), slightly inflating loop_ms and especially host_residual (event calls are host-side, between launches) -> so 'GPU-bound' is a conservative conclusion; the true host share is smaller. Numerical output is bit-identical to the frozen binary (parity verified)."
+    },
+    {
+      "zh": "每-kernel 时间用 default-stream 上的 cudaEventElapsedTime(串行执行),是准确的 GPU 执行时间,但不是 ncu 硬件指标 —— 没有 warp-stall/occupancy/DRAM 吞吐(那些需要管理员 profiling 权限,见待做项)。",
+      "en": "Per-kernel times use cudaEventElapsedTime on the serialized default stream — accurate GPU execution time, but NOT ncu hardware metrics (no warp-stall/occupancy/DRAM throughput; those need the admin profiling permission, see TODO)."
+    },
+    {
+      "zh": "max_iter=50,recoverable synth 会跑满 50 迭代(部分树永不收敛),所以这反映 50-迭代预算;真实每代预算更小时 loop_ms 大致随迭代数线性缩放。",
+      "en": "max_iter=50; the recoverable synth runs the full 50 iters (some trees never converge), so this reflects a 50-iter budget; with a smaller per-gen budget loop_ms scales ~linearly with iters."
+    },
+    {
+      "zh": "early-gen 分布(mean K~2.8,~12.5 节点);late-gen-bloated / inner-const-heavy / 高-K 树会把 fd_jacobian 占比推得更高(常数越多 = 冗余列越多)。",
+      "en": "early-gen distribution (mean K~2.8, ~12.5 nodes); late-gen-bloated / inner-const-heavy / higher-K trees push the fd_jacobian share even higher (more constants = more redundant columns)."
+    },
+    {
+      "zh": "setup_ms 把 CUDA context 初始化 + 全部设备 cudaMalloc + 静态 H2D + 初始 eval 打包在一起;在集成的 GP 进程里这是一次性成本,不是每代成本。",
+      "en": "setup_ms lumps CUDA context init + all device cudaMalloc + static H2D + initial eval; in an integrated GP process this is one-time, not per-generation."
+    }
+  ],
+  "reproduce": [
+    "make -C cusr/kernel batch_lm_fusedfd_prof",
+    "source scripts/env.sh && source scripts/gpu_guard.sh; export CUDA_VISIBLE_DEVICES=$(pick_free_gpus 1)",
+    "uv run python results/profile_fusedfd_a100__20260616/sweep.py",
+    "uv run python scripts/make_report.py results/profile_fusedfd_a100__20260616/report.json"
+  ]
+}

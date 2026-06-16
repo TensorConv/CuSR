@@ -1,0 +1,45 @@
+{
+  "M": 1000,
+  "N": 1000,
+  "iters_run": 50,
+  "load_ms": 2.7515,
+  "setup_ms": 359.2108,
+  "loop_ms": 155.393,
+  "total_ms": 517.8144,
+  "gpu_sum_ms": 152.57,
+  "host_residual_ms": 2.7754,
+  "cats": {
+    "fd_jacobian": {
+      "ms": 113.7899,
+      "launches": 50
+    },
+    "eval": {
+      "ms": 22.0559,
+      "launches": 100
+    },
+    "build_jtj": {
+      "ms": 6.8925,
+      "launches": 50
+    },
+    "solve": {
+      "ms": 3.6864,
+      "launches": 50
+    },
+    "residual": {
+      "ms": 1.1991,
+      "launches": 100
+    },
+    "loss": {
+      "ms": 0.5079,
+      "launches": 50
+    },
+    "memcpy_H2D": {
+      "ms": 2.0266,
+      "launches": 150
+    },
+    "memcpy_D2H": {
+      "ms": 2.3892,
+      "launches": 150
+    }
+  }
+}

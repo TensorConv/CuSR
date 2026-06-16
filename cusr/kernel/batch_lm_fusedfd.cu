@@ -31,6 +31,33 @@
     fprintf(stderr, "CUDA error %s at %s:%d\n", cudaGetErrorString(e), __FILE__, __LINE__); \
     exit(1); }} while(0)
 
+// ---- per-kernel profiling (-DPROFILE only) -----------------------------------
+// CUDA-event timing of every launch + H<->D copy in the LM loop, bucketed by
+// category, so we can split GPU compute time from host/launch/transfer overhead
+// (the analytical roofline conflates them in end-to-end wall). The default build
+// (no -DPROFILE) expands TBEG/TEND to nothing => byte-for-byte the frozen,
+// parity-passing kernel; only the separate batch_lm_fusedfd_prof binary records.
+#ifdef PROFILE
+#include <vector>
+enum ProfCat { C_FDJAC, C_BUILDJTJ, C_SOLVE, C_EVAL, C_RESID, C_LOSS, C_H2D, C_D2H, NCAT };
+static const char *CAT_NAMES[NCAT] =
+    {"fd_jacobian","build_jtj","solve","eval","residual","loss","memcpy_H2D","memcpy_D2H"};
+struct ProfPair { int cat; cudaEvent_t s, e; };
+static std::vector<ProfPair> g_prof;
+static inline cudaEvent_t prof_begin() {
+    cudaEvent_t s; cudaEventCreate(&s); cudaEventRecord(s, 0); return s;
+}
+static inline void prof_end(int cat, cudaEvent_t s) {
+    cudaEvent_t e; cudaEventCreate(&e); cudaEventRecord(e, 0);
+    g_prof.push_back({cat, s, e});
+}
+#define TBEG(v)      cudaEvent_t v = prof_begin()
+#define TEND(cat, v) prof_end(cat, v)
+#else
+#define TBEG(v)
+#define TEND(cat, v)
+#endif
+
 enum NTypeE { N_VAR=0, N_CONST=1, N_UFUNC=2, N_BFUNC=3, N_TFUNC=4 };
 // Func enum 跟 EvoGP utils.py 严格对齐. LOOSE_* 在 dump 端退化, 解算端不识别
 // (走 default 0.0 — 视作未知 op silent failure 入口).
@@ -346,6 +373,11 @@ int main(int argc, char **argv) {
     if (load_pop_bin(pop_path, &pop)) {
         fprintf(stderr, "load failed.\n"); return 1;
     }
+#ifdef PROFILE
+    struct timespec t_load_done, t_loop_begin, t_loop_end;
+    clock_gettime(CLOCK_MONOTONIC, &t_load_done);
+    int n_loop_iters = 0;
+#endif
     const PopHeader *h = &pop.header;
     if (!quiet) {
         printf("[batch-lm] loaded %s: M_prob=%d total_nodes=%d total_c=%d N=%d n_vars=%d K_max=%d max_stack=%d\n",
@@ -448,29 +480,47 @@ int main(int argc, char **argv) {
 
     // ---- LM loop ----
     int last_print = -10;
+#ifdef PROFILE
+    clock_gettime(CLOCK_MONOTONIC, &t_loop_begin);
+#endif
     for (int it = 0; it < max_iter; it++) {
         int all_done = 1;
         for (int m = 0; m < M_prob; m++) if (!h_finished[m]) { all_done = 0; break; }
         if (all_done) break;
+#ifdef PROFILE
+        n_loop_iters++;
+#endif
 
         // A+B fused. d_y is the baseline (on the device). The whole FD Jacobian is ONE
         // kernel: each warp owns a tree and does its K[m] perturbed evals + differencing
         // straight into d_J. No per-column host prep, no per-column copies, no separate
         // eval/diff launches. d_call already holds h_c (init / phase G), read directly.
+        TBEG(e_fd);
         fd_jacobian_fused_kernel<<<grid, block>>>(d_nt, d_nv, d_ci, d_metas, M_prob,
             d_xs, n_vars, N, d_call, d_y, eps_fd, K_max, d_J);
         CUDA_CHECK(cudaGetLastError());
+        TEND(C_FDJAC, e_fd);
 
         // C. Build JtJ + JtR
+        TBEG(e_bj);
         build_jtj_jtr_kernel<<<grid, block>>>(d_J, d_r, d_metas, M_prob, N, K_max, d_JtJ, d_JtR);
         CUDA_CHECK(cudaGetLastError());
+        TEND(C_BUILDJTJ, e_bj);
 
         // D. Solve
+        TBEG(e_lam);
         CUDA_CHECK(cudaMemcpy(d_lam, h_lam, M_prob*sizeof(float), cudaMemcpyHostToDevice));
+        TEND(C_H2D, e_lam);
+        TBEG(e_sol);
         solve_kernel<<<(M_prob+255)/256, 256>>>(d_JtJ, d_JtR, d_metas, M_prob, K_max, d_lam, d_delta, d_stat);
         CUDA_CHECK(cudaGetLastError());
+        TEND(C_SOLVE, e_sol);
+        TBEG(e_del);
         CUDA_CHECK(cudaMemcpy(h_delta, d_delta, M_prob*K_max*sizeof(float), cudaMemcpyDeviceToHost));
+        TEND(C_D2H, e_del);
+        TBEG(e_sst);
         CUDA_CHECK(cudaMemcpy(h_solve_stat, d_stat, M_prob*sizeof(int), cudaMemcpyDeviceToHost));
+        TEND(C_D2H, e_sst);
 
         // E. Apply step, eval, loss_try
         memcpy(h_c_try, h_c, total_c*sizeof(float));
@@ -479,14 +529,24 @@ int main(int argc, char **argv) {
             for (int k = 0; k < pop.metas[m].K; k++)
                 h_c_try[pop.metas[m].c_offset+k] += h_delta[m*K_max+k];
         }
+        TBEG(e_dc1);
         CUDA_CHECK(cudaMemcpy(d_call, h_c_try, total_c*sizeof(float), cudaMemcpyHostToDevice));
+        TEND(C_H2D, e_dc1);
+        TBEG(e_ev1);
         eval_kernel_batched<<<grid, block>>>(d_nt, d_nv, d_ci, d_metas, M_prob, d_xs, n_vars, N, d_call, d_yp);
         CUDA_CHECK(cudaGetLastError());
+        TEND(C_EVAL, e_ev1);
+        TBEG(e_rs1);
         residual_kernel<<<(M_prob*N+127)/128, 128>>>(d_yp, d_ym, M_prob*N, d_r);
         CUDA_CHECK(cudaGetLastError());
+        TEND(C_RESID, e_rs1);
+        TBEG(e_ls1);
         loss_kernel<<<grid, block>>>(d_r, M_prob, N, d_loss);
         CUDA_CHECK(cudaGetLastError());
+        TEND(C_LOSS, e_ls1);
+        TBEG(e_lt);
         CUDA_CHECK(cudaMemcpy(h_loss_try, d_loss, M_prob*sizeof(float), cudaMemcpyDeviceToHost));
+        TEND(C_D2H, e_lt);
 
         // F. Per-tree accept/reject + λ + convergence
         // h_finished 编码 (internal, == status_out 的 enum):
@@ -545,11 +605,17 @@ int main(int argc, char **argv) {
         }
 
         // G. Refresh d_y at h_c (accepted state)
+        TBEG(e_dc2);
         CUDA_CHECK(cudaMemcpy(d_call, h_c, total_c*sizeof(float), cudaMemcpyHostToDevice));
+        TEND(C_H2D, e_dc2);
+        TBEG(e_ev2);
         eval_kernel_batched<<<grid, block>>>(d_nt, d_nv, d_ci, d_metas, M_prob, d_xs, n_vars, N, d_call, d_y);
         CUDA_CHECK(cudaGetLastError());
+        TEND(C_EVAL, e_ev2);
+        TBEG(e_rs2);
         residual_kernel<<<(M_prob*N+127)/128, 128>>>(d_y, d_ym, M_prob*N, d_r);
         CUDA_CHECK(cudaGetLastError());
+        TEND(C_RESID, e_rs2);
 
         if (!quiet && (it - last_print >= 5 || all_done)) {
             int n_done = 0; for (int m = 0; m < M_prob; m++) if (h_finished[m]) n_done++;
@@ -558,6 +624,9 @@ int main(int argc, char **argv) {
         }
     }
     CUDA_CHECK(cudaDeviceSynchronize());
+#ifdef PROFILE
+    clock_gettime(CLOCK_MONOTONIC, &t_loop_end);
+#endif
 
     // ---- Final: 把内部 h_finished {0,1,2,3,4} 映射成外部 status_out ----
     int n_conv = 0, n_maxiter = 0, n_fail_nan = 0, n_k0 = 0, n_fail_chol = 0;
@@ -593,6 +662,37 @@ int main(int argc, char **argv) {
         printf("[batch-lm] 总耗时 %.3f 秒 (%.0f trees/s, M_prob=%d)\n",
                elapsed_s, (double)M_prob / elapsed_s, M_prob);
     }
+
+#ifdef PROFILE
+    // Sum per-category GPU time from the recorded event pairs (one final sync
+    // already happened), then emit a single machine-parseable line. host_residual
+    // = loop wall not covered by any GPU op = launch latency + host accept/reject
+    // + memcpy-wait beyond transfer. Printed regardless of --quiet.
+    {
+        double cat_ms[NCAT] = {0}; long cat_n[NCAT] = {0};
+        for (size_t i = 0; i < g_prof.size(); i++) {
+            float ms = 0; cudaEventElapsedTime(&ms, g_prof[i].s, g_prof[i].e);
+            cat_ms[g_prof[i].cat] += ms; cat_n[g_prof[i].cat] += 1;
+            cudaEventDestroy(g_prof[i].s); cudaEventDestroy(g_prof[i].e);
+        }
+        double gpu_sum = 0; for (int c = 0; c < NCAT; c++) gpu_sum += cat_ms[c];
+#define TS_MS(a,b) (((b).tv_sec-(a).tv_sec)*1e3 + ((b).tv_nsec-(a).tv_nsec)/1e6)
+        double load_ms  = TS_MS(t_start, t_load_done);
+        double setup_ms = TS_MS(t_load_done, t_loop_begin);
+        double loop_ms  = TS_MS(t_loop_begin, t_loop_end);
+        double total_ms = TS_MS(t_start, t_end);
+#undef TS_MS
+        printf("PROFILE_JSON {\"M\":%d,\"N\":%d,\"iters_run\":%d,"
+               "\"load_ms\":%.4f,\"setup_ms\":%.4f,\"loop_ms\":%.4f,\"total_ms\":%.4f,"
+               "\"gpu_sum_ms\":%.4f,\"host_residual_ms\":%.4f,\"cats\":{",
+               M_prob, N, n_loop_iters, load_ms, setup_ms, loop_ms, total_ms,
+               gpu_sum, loop_ms - gpu_sum);
+        for (int c = 0; c < NCAT; c++)
+            printf("%s\"%s\":{\"ms\":%.4f,\"launches\":%ld}",
+                   c ? "," : "", CAT_NAMES[c], cat_ms[c], cat_n[c]);
+        printf("}}\n");
+    }
+#endif
 
     // ---- cleanup ----
     free(h_c); free(h_c_try); free(h_c_pert);
