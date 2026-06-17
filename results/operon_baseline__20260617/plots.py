@@ -42,8 +42,8 @@ for name in ("op", "fd", "ad"):
     ax1.plot(gens, [med_ratio(g, name) for g in gens], "o-", color=C[name], label=NAME[name])
 ax1.set_yscale("log"); ax1.set_xlabel("generation")
 ax1.set_ylabel("median  loss_final / loss_start   (fp64; lower = deeper fit)")
-ax1.set_title("CO efficacy (honest anchor): typical fractional loss reduction\n"
-              "kernel ≈ Operon on small trees; Operon deeper as trees bloat; AD < FD")
+ax1.set_title("CO efficacy (POOLED median over 17 problems)\n"
+              "per-problem the ordering flips — see the per-problem table in the report")
 ax1.legend(); ax1.grid(alpha=0.3, which="both")
 for eng in ("fd", "ad"):
     conv = [100 * (cat(g, f"{eng}_st") == 0).mean() for g in gens]
@@ -55,20 +55,35 @@ ax2.set_title("Kernel LM status vs generation (FD vs AD — controlled)")
 ax2.legend(fontsize=8); ax2.grid(alpha=0.3)
 fig.tight_layout(); fig.savefig(D / "plots/efficacy_and_status.png", dpi=130); plt.close(fig)
 
-# ---- 2. robustness gap: of Operon-improved(>1%) trees, fraction kernel did NOT improve(>1%) ----
-fig, ax = plt.subplots(figsize=(7, 4.6))
-for eng in ("fd", "ad"):
-    frac = []
-    for g in gens:
-        s = cat(g, "s"); op = cat(g, "op"); k = cat(g, eng)
-        opi = (s > 0) & np.isfinite(op) & (op < s * IMPROVE)
-        ki = (s > 0) & np.isfinite(k) & (k < s * IMPROVE)
-        den = opi.sum() or 1
-        frac.append(100 * (opi & ~ki).sum() / den)
-    ax.plot(gens, frac, "o-", color=C[eng], label=f"kernel {eng.upper()}")
+# ---- 2. robustness gap PER PROBLEM (review #2: pooled "widens" is a 6/17 artifact) ----
+# COMBINED (fd+ad)/2 gap per problem — SAME definition as analyze.py so the widen/narrow
+# count matches finding #4 (6/11). Per-problem lines (red=widen, grey=narrow) + pooled bold.
+def cell_gap(r):   # combined (FD+AD) gap fraction for one cell
+    opt = r["K"] > 0; s = r["loss_start"]
+    opi = opt & (s > 0) & np.isfinite(r["op_loss"]) & (r["op_loss"] < s * IMPROVE)
+    den = int(opi.sum()) or 1
+    fdg = int((opi & ~(np.isfinite(r["fd_loss"]) & (r["fd_loss"] < s * IMPROVE))).sum())
+    adg = int((opi & ~(np.isfinite(r["ad_loss"]) & (r["ad_loss"] < s * IMPROVE))).sum())
+    return 100 * (fdg + adg) / (2 * den)
+per_prob_gap = defaultdict(dict)
+for prob in PROBLEMS:
+    for g, r in cell_records(prob):
+        per_prob_gap[prob][g] = cell_gap(r)
+fig, ax = plt.subplots(figsize=(7.5, 4.8))
+widen = narrow = 0; pooled = defaultdict(lambda: [0, 0])
+for prob, gd in per_prob_gap.items():
+    xs = [g for g in gens if g in gd]; ys = [gd[g] for g in xs]
+    if len(xs) >= 2:
+        w = ys[-1] > ys[0] + 1e-9; widen += int(w); narrow += int(ys[-1] < ys[0] - 1e-9)
+        ax.plot(xs, ys, "-", color=("#e76f51" if w else "#9aa7b0"), alpha=0.5, lw=1)
+    for g in xs:
+        pooled[g][0] += gd[g]; pooled[g][1] += 1
+ax.plot(gens, [pooled[g][0] / pooled[g][1] for g in gens], "o-", color="#111", lw=2.4,
+        label="mean over 17 problems")
 ax.set_xlabel("generation")
-ax.set_ylabel("% of Operon->>1%-improved trees the kernel did NOT improve >1%")
-ax.set_title("Robustness gap to a mature fp64 LM (Operon)\nlower = kernel keeps up; widens with bloat; AD < FD")
+ax.set_ylabel("% of Operon->>1%-improved trees the kernel (FD+AD avg) did NOT improve >1%")
+ax.set_title(f"Robustness gap to Operon — PER PROBLEM (combined FD+AD)\n"
+             f"{widen}/17 widen (red), {narrow}/17 narrow (grey) g0→g100; the pooled mean hides the split")
 ax.legend(); ax.grid(alpha=0.3)
 fig.tight_layout(); fig.savefig(D / "plots/robustness_gap.png", dpi=130); plt.close(fig)
 
