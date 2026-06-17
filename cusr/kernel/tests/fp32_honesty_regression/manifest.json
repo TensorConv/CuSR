@@ -1,0 +1,5256 @@
+{
+ "description": "fp32-honesty regression fixtures: pre-CO trees where the established kernel (FD/AD) reports status==0 yet is >2x worse in fp64 at c_final. A fixed kernel must NOT report status==0+fp64-worse on these.",
+ "serious_mult": 2.0,
+ "gens": [
+  0,
+  4,
+  16,
+  64,
+  100
+ ],
+ "fixtures": {
+  "feynman/I.12.1": {
+   "file": "fixture__feynman_I.12.1.bin",
+   "M": 3,
+   "trees": [
+    {
+     "problem": "feynman/I.12.1",
+     "gen": 0,
+     "orig_index": 15,
+     "K": 6,
+     "loss_start_fp64": 44703.341579416396,
+     "fd": {
+      "status": 4,
+      "final_fp64": 44673.54122964392,
+      "fp32": 44673.5390625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 337066.70475326537,
+      "fp32": 44672.95703125,
+      "serious": true
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "feynman/I.12.1",
+     "gen": 0,
+     "orig_index": 2307,
+     "K": 5,
+     "loss_start_fp64": 232323.28068109238,
+     "fd": {
+      "status": 0,
+      "final_fp64": 76111.25262590585,
+      "fp32": 73734.7890625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 3661162.6838906785,
+      "fp32": 187389.921875,
+      "serious": true
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "feynman/I.12.1",
+     "gen": 0,
+     "orig_index": 2689,
+     "K": 11,
+     "loss_start_fp64": 1309891.3089356716,
+     "fd": {
+      "status": 2,
+      "final_fp64": 1309891.3089356716,
+      "fp32": 1323135.875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 3422423.8920958037,
+      "fp32": 602382.125,
+      "serious": true
+     },
+     "fixture_index": 2
+    }
+   ]
+  },
+  "feynman/I.18.12": {
+   "file": "fixture__feynman_I.18.12.bin",
+   "M": 5,
+   "trees": [
+    {
+     "problem": "feynman/I.18.12",
+     "gen": 0,
+     "orig_index": 516,
+     "K": 8,
+     "loss_start_fp64": 822113.3096505818,
+     "fd": {
+      "status": 0,
+      "final_fp64": 591299.4989431405,
+      "fp32": 591281.4375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 3096906.792205139,
+      "fp32": 1241839.25,
+      "serious": true
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "feynman/I.18.12",
+     "gen": 0,
+     "orig_index": 1523,
+     "K": 9,
+     "loss_start_fp64": 32580.88845227327,
+     "fd": {
+      "status": 0,
+      "final_fp64": 165748.80852776958,
+      "fp32": 70969.0,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 30292.38107299829,
+      "fp32": 31387.97265625,
+      "serious": false
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "feynman/I.18.12",
+     "gen": 0,
+     "orig_index": 1971,
+     "K": 9,
+     "loss_start_fp64": 517306.45456715865,
+     "fd": {
+      "status": 1,
+      "final_fp64": 142050.17653767194,
+      "fp32": 142003.4375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1873252.3220424894,
+      "fp32": 126429.484375,
+      "serious": true
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "feynman/I.18.12",
+     "gen": 0,
+     "orig_index": 2837,
+     "K": 11,
+     "loss_start_fp64": 87641.27596166631,
+     "fd": {
+      "status": 0,
+      "final_fp64": 194727.8628258445,
+      "fp32": 58707.79296875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 91911.78091160773,
+      "fp32": 3489135.75,
+      "serious": false
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "feynman/I.18.12",
+     "gen": 0,
+     "orig_index": 3349,
+     "K": 7,
+     "loss_start_fp64": 296449.51583770406,
+     "fd": {
+      "status": 0,
+      "final_fp64": 265706.15182539355,
+      "fp32": 3901171.75,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 4660458.104328919,
+      "fp32": 154038.90625,
+      "serious": true
+     },
+     "fixture_index": 4
+    }
+   ]
+  },
+  "feynman/I.27.6": {
+   "file": "fixture__feynman_I.27.6.bin",
+   "M": 9,
+   "trees": [
+    {
+     "problem": "feynman/I.27.6",
+     "gen": 0,
+     "orig_index": 314,
+     "K": 10,
+     "loss_start_fp64": 82076.04174688147,
+     "fd": {
+      "status": 0,
+      "final_fp64": 1829126.3457632156,
+      "fp32": 32538.919921875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 77411.22099576463,
+      "fp32": 84256.6015625,
+      "serious": false
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "feynman/I.27.6",
+     "gen": 0,
+     "orig_index": 782,
+     "K": 11,
+     "loss_start_fp64": 228570.21234997438,
+     "fd": {
+      "status": 0,
+      "final_fp64": 236966.43003464708,
+      "fp32": 273420.96875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1225595.16490161,
+      "fp32": 1429180.0,
+      "serious": true
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "feynman/I.27.6",
+     "gen": 0,
+     "orig_index": 918,
+     "K": 7,
+     "loss_start_fp64": 1403730.0332552786,
+     "fd": {
+      "status": 0,
+      "final_fp64": 48202.786810198624,
+      "fp32": 47827.6640625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 129484894.1397217,
+      "fp32": 162988.90625,
+      "serious": true
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "feynman/I.27.6",
+     "gen": 0,
+     "orig_index": 1523,
+     "K": 9,
+     "loss_start_fp64": 25155.636807893818,
+     "fd": {
+      "status": 0,
+      "final_fp64": 21500474.466435168,
+      "fp32": 2387.0185546875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 18635.900312424525,
+      "fp32": 44975.5078125,
+      "serious": false
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "feynman/I.27.6",
+     "gen": 0,
+     "orig_index": 2109,
+     "K": 11,
+     "loss_start_fp64": 6926.335903786661,
+     "fd": {
+      "status": 0,
+      "final_fp64": 308509.1134166964,
+      "fp32": 5640.0625,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 4963.977554846846,
+      "fp32": 4940.6689453125,
+      "serious": false
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "feynman/I.27.6",
+     "gen": 0,
+     "orig_index": 2307,
+     "K": 5,
+     "loss_start_fp64": 164597.51501035911,
+     "fd": {
+      "status": 0,
+      "final_fp64": 4595131.8553964645,
+      "fp32": 258576.921875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1118665.4203190403,
+      "fp32": 120783.703125,
+      "serious": true
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "feynman/I.27.6",
+     "gen": 64,
+     "orig_index": 184,
+     "K": 12,
+     "loss_start_fp64": 42490.94511515951,
+     "fd": {
+      "status": 4,
+      "final_fp64": 42490.94511515951,
+      "fp32": 42490.9453125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 7441940648.7133465,
+      "fp32": 8.059764862060547,
+      "serious": true
+     },
+     "fixture_index": 6
+    },
+    {
+     "problem": "feynman/I.27.6",
+     "gen": 64,
+     "orig_index": 938,
+     "K": 12,
+     "loss_start_fp64": 57467.41079309245,
+     "fd": {
+      "status": 0,
+      "final_fp64": 8.573403724353556,
+      "fp32": 8.573404312133789,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 25178417.47413639,
+      "fp32": 25178416.0,
+      "serious": true
+     },
+     "fixture_index": 7
+    },
+    {
+     "problem": "feynman/I.27.6",
+     "gen": 64,
+     "orig_index": 940,
+     "K": 5,
+     "loss_start_fp64": 98395.86381436931,
+     "fd": {
+      "status": 0,
+      "final_fp64": 428147.07646745106,
+      "fp32": 555305.875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 98395.86381436931,
+      "fp32": 187040.96875,
+      "serious": false
+     },
+     "fixture_index": 8
+    }
+   ]
+  },
+  "feynman/I.6.2": {
+   "file": "fixture__feynman_I.6.2.bin",
+   "M": 7,
+   "trees": [
+    {
+     "problem": "feynman/I.6.2",
+     "gen": 0,
+     "orig_index": 639,
+     "K": 11,
+     "loss_start_fp64": 415109.1988348635,
+     "fd": {
+      "status": 0,
+      "final_fp64": 107629139.15858966,
+      "fp32": 319346.84375,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 73756.86267735848,
+      "fp32": 73724.59375,
+      "serious": false
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "feynman/I.6.2",
+     "gen": 0,
+     "orig_index": 883,
+     "K": 8,
+     "loss_start_fp64": 257761.74754714046,
+     "fd": {
+      "status": 0,
+      "final_fp64": 137823.88478047063,
+      "fp32": 564050688.0,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 586067.4541690995,
+      "fp32": 152777.59375,
+      "serious": true
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "feynman/I.6.2",
+     "gen": 0,
+     "orig_index": 2210,
+     "K": 11,
+     "loss_start_fp64": 403.80323609186587,
+     "fd": {
+      "status": 0,
+      "final_fp64": 453.2652233883054,
+      "fp32": 556.4141235351562,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 858.3556858051568,
+      "fp32": 269.38482666015625,
+      "serious": true
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "feynman/I.6.2",
+     "gen": 0,
+     "orig_index": 2994,
+     "K": 4,
+     "loss_start_fp64": 1808642.5577925039,
+     "fd": {
+      "status": 0,
+      "final_fp64": 645693.6868699627,
+      "fp32": 645743.625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 7718611.288845699,
+      "fp32": 493223.75,
+      "serious": true
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "feynman/I.6.2",
+     "gen": 0,
+     "orig_index": 3980,
+     "K": 6,
+     "loss_start_fp64": 605384.9663491541,
+     "fd": {
+      "status": 0,
+      "final_fp64": 7939486.747298164,
+      "fp32": 56085.34375,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 38335.78867542709,
+      "fp32": 38320.6171875,
+      "serious": false
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "feynman/I.6.2",
+     "gen": 4,
+     "orig_index": 1988,
+     "K": 8,
+     "loss_start_fp64": 1528359.4108666186,
+     "fd": {
+      "status": 0,
+      "final_fp64": 8809.54983691566,
+      "fp32": 4256.2783203125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1697244347.743725,
+      "fp32": 1621691.5,
+      "serious": true
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "feynman/I.6.2",
+     "gen": 16,
+     "orig_index": 1227,
+     "K": 10,
+     "loss_start_fp64": 1066.974541650744,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1066.974541650744,
+      "fp32": 1066.9744873046875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 15727.585013091342,
+      "fp32": 0.05475938692688942,
+      "serious": true
+     },
+     "fixture_index": 6
+    }
+   ]
+  },
+  "feynman/I.12.2": {
+   "file": "fixture__feynman_I.12.2.bin",
+   "M": 7,
+   "trees": [
+    {
+     "problem": "feynman/I.12.2",
+     "gen": 0,
+     "orig_index": 314,
+     "K": 10,
+     "loss_start_fp64": 85085.91961770625,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2054576.8923860895,
+      "fp32": 61420.5546875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 65956.31211530614,
+      "fp32": 84492.2421875,
+      "serious": false
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "feynman/I.12.2",
+     "gen": 0,
+     "orig_index": 456,
+     "K": 2,
+     "loss_start_fp64": 105619.64667278039,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2686654.9232808393,
+      "fp32": 107511.6640625,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 105619.64667278039,
+      "fp32": 124392.5859375,
+      "serious": false
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "feynman/I.12.2",
+     "gen": 0,
+     "orig_index": 774,
+     "K": 10,
+     "loss_start_fp64": 139964.6709985467,
+     "fd": {
+      "status": 0,
+      "final_fp64": 921330.9267100857,
+      "fp32": 1568356.0,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 68254.80817408791,
+      "fp32": 68590.3359375,
+      "serious": false
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "feynman/I.12.2",
+     "gen": 0,
+     "orig_index": 2286,
+     "K": 10,
+     "loss_start_fp64": 99053.49202450068,
+     "fd": {
+      "status": 0,
+      "final_fp64": 85289.81220920198,
+      "fp32": 83739.9375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 456893.3827741906,
+      "fp32": 284285.375,
+      "serious": true
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "feynman/I.12.2",
+     "gen": 0,
+     "orig_index": 2307,
+     "K": 5,
+     "loss_start_fp64": 169754.97016055963,
+     "fd": {
+      "status": 0,
+      "final_fp64": 332818.90804438526,
+      "fp32": 59996.9140625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1123581.5835109442,
+      "fp32": 125957.1015625,
+      "serious": true
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "feynman/I.12.2",
+     "gen": 0,
+     "orig_index": 3431,
+     "K": 6,
+     "loss_start_fp64": 49967.21608841064,
+     "fd": {
+      "status": 0,
+      "final_fp64": 1364873.8118662336,
+      "fp32": 101243.25,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 49967.21608841064,
+      "fp32": 2885823.75,
+      "serious": false
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "feynman/I.12.2",
+     "gen": 16,
+     "orig_index": 512,
+     "K": 11,
+     "loss_start_fp64": 6518.995615969881,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2.394739312773358e-07,
+      "fp32": 1.5859800583939432e-08,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 62645.269067033136,
+      "fp32": 7.095599698914157e-07,
+      "serious": true
+     },
+     "fixture_index": 6
+    }
+   ]
+  },
+  "feynman/I.13.12": {
+   "file": "fixture__feynman_I.13.12.bin",
+   "M": 9,
+   "trees": [
+    {
+     "problem": "feynman/I.13.12",
+     "gen": 0,
+     "orig_index": 314,
+     "K": 10,
+     "loss_start_fp64": 95408.12086794668,
+     "fd": {
+      "status": 0,
+      "final_fp64": 250411.95381876684,
+      "fp32": 56157.34765625,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 779494.0339198667,
+      "fp32": 54779.34375,
+      "serious": true
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "feynman/I.13.12",
+     "gen": 0,
+     "orig_index": 393,
+     "K": 5,
+     "loss_start_fp64": 335936.55908612744,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2526532.43851905,
+      "fp32": 323553.75,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 312917.6866385147,
+      "fp32": 313395.8125,
+      "serious": false
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "feynman/I.13.12",
+     "gen": 0,
+     "orig_index": 883,
+     "K": 8,
+     "loss_start_fp64": 4671634.895424575,
+     "fd": {
+      "status": 0,
+      "final_fp64": 94570056.85667178,
+      "fp32": 24022138.0,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 907383.2438580461,
+      "fp32": 341651.6875,
+      "serious": false
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "feynman/I.13.12",
+     "gen": 0,
+     "orig_index": 1098,
+     "K": 10,
+     "loss_start_fp64": 152533.95338076222,
+     "fd": {
+      "status": 0,
+      "final_fp64": 44733.778714899454,
+      "fp32": 44940.671875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 2568518.5996443443,
+      "fp32": 108436.3359375,
+      "serious": true
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "feynman/I.13.12",
+     "gen": 0,
+     "orig_index": 1157,
+     "K": 8,
+     "loss_start_fp64": 74334.86155881267,
+     "fd": {
+      "status": 0,
+      "final_fp64": 61854.28110575647,
+      "fp32": 243181.5625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 427910.15125669504,
+      "fp32": 61335.67578125,
+      "serious": true
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "feynman/I.13.12",
+     "gen": 0,
+     "orig_index": 2069,
+     "K": 5,
+     "loss_start_fp64": 27478.5759857185,
+     "fd": {
+      "status": 0,
+      "final_fp64": 89154.52372399959,
+      "fp32": 42381.09375,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 26416.08414643739,
+      "fp32": 25843.140625,
+      "serious": false
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "feynman/I.13.12",
+     "gen": 0,
+     "orig_index": 2654,
+     "K": 8,
+     "loss_start_fp64": 74942.54293696067,
+     "fd": {
+      "status": 0,
+      "final_fp64": 190457.99515202013,
+      "fp32": 67168.09375,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 51838.977736663684,
+      "fp32": 51824.4609375,
+      "serious": false
+     },
+     "fixture_index": 6
+    },
+    {
+     "problem": "feynman/I.13.12",
+     "gen": 0,
+     "orig_index": 2830,
+     "K": 12,
+     "loss_start_fp64": 3931898.4647471607,
+     "fd": {
+      "status": 0,
+      "final_fp64": 473958.47915253846,
+      "fp32": 482756.0,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 99895000.20473796,
+      "fp32": 78416.984375,
+      "serious": true
+     },
+     "fixture_index": 7
+    },
+    {
+     "problem": "feynman/I.13.12",
+     "gen": 4,
+     "orig_index": 2915,
+     "K": 10,
+     "loss_start_fp64": 137588.14189638343,
+     "fd": {
+      "status": 0,
+      "final_fp64": 73607.13119772813,
+      "fp32": 73601.9609375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 573527.3011674318,
+      "fp32": 70705.640625,
+      "serious": true
+     },
+     "fixture_index": 8
+    }
+   ]
+  },
+  "feynman/II.3.24": {
+   "file": "fixture__feynman_II.3.24.bin",
+   "M": 5,
+   "trees": [
+    {
+     "problem": "feynman/II.3.24",
+     "gen": 0,
+     "orig_index": 782,
+     "K": 11,
+     "loss_start_fp64": 131548.38237082717,
+     "fd": {
+      "status": 0,
+      "final_fp64": 223072.64345311138,
+      "fp32": 160573.75,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 70258253.1648952,
+      "fp32": 115690.09375,
+      "serious": true
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "feynman/II.3.24",
+     "gen": 0,
+     "orig_index": 1799,
+     "K": 7,
+     "loss_start_fp64": 191840.7391278934,
+     "fd": {
+      "status": 0,
+      "final_fp64": 470936.03392924345,
+      "fp32": 177808.0,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 64713.474126798705,
+      "fp32": 62851.453125,
+      "serious": false
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "feynman/II.3.24",
+     "gen": 0,
+     "orig_index": 2307,
+     "K": 5,
+     "loss_start_fp64": 164972.48821213964,
+     "fd": {
+      "status": 0,
+      "final_fp64": 18635.353586896774,
+      "fp32": 18913.458984375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1118711.1920677435,
+      "fp32": 121079.5,
+      "serious": true
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "feynman/II.3.24",
+     "gen": 0,
+     "orig_index": 3254,
+     "K": 8,
+     "loss_start_fp64": 399.2004827993227,
+     "fd": {
+      "status": 0,
+      "final_fp64": 355.55295471277316,
+      "fp32": 355.55291748046875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 828.6835795043394,
+      "fp32": 355.34051513671875,
+      "serious": true
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "feynman/II.3.24",
+     "gen": 16,
+     "orig_index": 1557,
+     "K": 8,
+     "loss_start_fp64": 435.33599164754804,
+     "fd": {
+      "status": 0,
+      "final_fp64": 490.81047536444163,
+      "fp32": 149297504.0,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 104693.74372697622,
+      "fp32": 103.01206970214844,
+      "serious": true
+     },
+     "fixture_index": 4
+    }
+   ]
+  },
+  "nguyen/1": {
+   "file": "fixture__nguyen_1.bin",
+   "M": 5,
+   "trees": [
+    {
+     "problem": "nguyen/1",
+     "gen": 0,
+     "orig_index": 3210,
+     "K": 8,
+     "loss_start_fp64": 1491.5370010554159,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1418.99811511268,
+      "fp32": 1418.9970703125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 43053497.69736955,
+      "fp32": 897.744140625,
+      "serious": true
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "nguyen/1",
+     "gen": 0,
+     "orig_index": 3509,
+     "K": 8,
+     "loss_start_fp64": 18417.378922805095,
+     "fd": {
+      "status": 0,
+      "final_fp64": 65843.57363493944,
+      "fp32": 64849.0859375,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 18417.378922805095,
+      "fp32": 57848.59765625,
+      "serious": false
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "nguyen/1",
+     "gen": 4,
+     "orig_index": 983,
+     "K": 8,
+     "loss_start_fp64": 1424673.4693365511,
+     "fd": {
+      "status": 0,
+      "final_fp64": 27631156.34361716,
+      "fp32": 1802193.5,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 457880.36512532685,
+      "fp32": 457935.0625,
+      "serious": false
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "nguyen/1",
+     "gen": 64,
+     "orig_index": 637,
+     "K": 10,
+     "loss_start_fp64": 7591.5866570482785,
+     "fd": {
+      "status": 0,
+      "final_fp64": 170.07428938201699,
+      "fp32": 169.66529846191406,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 341360.9102904169,
+      "fp32": 341360.21875,
+      "serious": true
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "nguyen/1",
+     "gen": 64,
+     "orig_index": 1279,
+     "K": 9,
+     "loss_start_fp64": 8243.00929693266,
+     "fd": {
+      "status": 0,
+      "final_fp64": 201.42435207906402,
+      "fp32": 201.06491088867188,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1616598.224106615,
+      "fp32": 1616626.125,
+      "serious": true
+     },
+     "fixture_index": 4
+    }
+   ]
+  },
+  "nguyen/2": {
+   "file": "fixture__nguyen_2.bin",
+   "M": 7,
+   "trees": [
+    {
+     "problem": "nguyen/2",
+     "gen": 0,
+     "orig_index": 918,
+     "K": 7,
+     "loss_start_fp64": 121819.42751901661,
+     "fd": {
+      "status": 0,
+      "final_fp64": 346818.9843183594,
+      "fp32": 24928.41796875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 88830.90382065676,
+      "fp32": 88713.28125,
+      "serious": false
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "nguyen/2",
+     "gen": 0,
+     "orig_index": 1523,
+     "K": 9,
+     "loss_start_fp64": 89412.1125299141,
+     "fd": {
+      "status": 0,
+      "final_fp64": 33829.455137894256,
+      "fp32": 23325.689453125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1549133.4234258595,
+      "fp32": 18162.671875,
+      "serious": true
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "nguyen/2",
+     "gen": 0,
+     "orig_index": 2536,
+     "K": 9,
+     "loss_start_fp64": 2125236.190800751,
+     "fd": {
+      "status": 0,
+      "final_fp64": 14935256.923106704,
+      "fp32": 204075.71875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 2075824.9418052372,
+      "fp32": 2535154.0,
+      "serious": false
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "nguyen/2",
+     "gen": 0,
+     "orig_index": 3162,
+     "K": 9,
+     "loss_start_fp64": 7611671.721045698,
+     "fd": {
+      "status": 0,
+      "final_fp64": 1721174315.9452777,
+      "fp32": 421368.1875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 363236.1407827216,
+      "fp32": 357866.0,
+      "serious": false
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "nguyen/2",
+     "gen": 0,
+     "orig_index": 3298,
+     "K": 10,
+     "loss_start_fp64": 3815.6820422051915,
+     "fd": {
+      "status": 0,
+      "final_fp64": 3357.6681260845635,
+      "fp32": 3377.82763671875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1157488.037387538,
+      "fp32": 2830.933349609375,
+      "serious": true
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "nguyen/2",
+     "gen": 0,
+     "orig_index": 3601,
+     "K": 6,
+     "loss_start_fp64": 87106.37099678139,
+     "fd": {
+      "status": 0,
+      "final_fp64": 87987.5978647642,
+      "fp32": 85873.2421875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 200607.68692723496,
+      "fp32": 71047.484375,
+      "serious": true
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "nguyen/2",
+     "gen": 16,
+     "orig_index": 652,
+     "K": 12,
+     "loss_start_fp64": 6380.188404398142,
+     "fd": {
+      "status": 4,
+      "final_fp64": 6380.188404398142,
+      "fp32": 6380.1884765625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 69988.36909695044,
+      "fp32": 69990.03125,
+      "serious": true
+     },
+     "fixture_index": 6
+    }
+   ]
+  },
+  "nguyen/3": {
+   "file": "fixture__nguyen_3.bin",
+   "M": 47,
+   "trees": [
+    {
+     "problem": "nguyen/3",
+     "gen": 0,
+     "orig_index": 464,
+     "K": 7,
+     "loss_start_fp64": 168634.80695308093,
+     "fd": {
+      "status": 0,
+      "final_fp64": 66294.44589751016,
+      "fp32": 66267.515625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 147401734.98239455,
+      "fp32": 148383.8125,
+      "serious": true
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 0,
+     "orig_index": 769,
+     "K": 10,
+     "loss_start_fp64": 53901.51994794412,
+     "fd": {
+      "status": 1,
+      "final_fp64": 53544.050421053194,
+      "fp32": 53563.7734375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 174731.9026835344,
+      "fp32": 29772.275390625,
+      "serious": true
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 0,
+     "orig_index": 774,
+     "K": 10,
+     "loss_start_fp64": 45267.140020196806,
+     "fd": {
+      "status": 0,
+      "final_fp64": 169143.2319564118,
+      "fp32": 106645.3359375,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 18701438.76568673,
+      "fp32": 47129.0625,
+      "serious": true
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 0,
+     "orig_index": 792,
+     "K": 8,
+     "loss_start_fp64": 717.6728831764087,
+     "fd": {
+      "status": 4,
+      "final_fp64": 547.207220548652,
+      "fp32": 547.2069091796875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1549.9798335838555,
+      "fp32": 334.5125732421875,
+      "serious": true
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 0,
+     "orig_index": 3431,
+     "K": 6,
+     "loss_start_fp64": 155126.09309092973,
+     "fd": {
+      "status": 0,
+      "final_fp64": 18032.329239091814,
+      "fp32": 18025.015625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 329107.4601513543,
+      "fp32": 24196.32421875,
+      "serious": true
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 0,
+     "orig_index": 3509,
+     "K": 8,
+     "loss_start_fp64": 18897.70727574532,
+     "fd": {
+      "status": 0,
+      "final_fp64": 66327.46837424955,
+      "fp32": 65301.08203125,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 18897.70727574532,
+      "fp32": 58315.6328125,
+      "serious": false
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 4,
+     "orig_index": 2603,
+     "K": 7,
+     "loss_start_fp64": 1449.2173109778314,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1334.2460731449162,
+      "fp32": 1334.24609375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 3108.6448406517707,
+      "fp32": 23.30994415283203,
+      "serious": true
+     },
+     "fixture_index": 6
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 4,
+     "orig_index": 3726,
+     "K": 12,
+     "loss_start_fp64": 2688.624533407355,
+     "fd": {
+      "status": 4,
+      "final_fp64": 2109.5909074985957,
+      "fp32": 2109.5732421875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 552597.128997551,
+      "fp32": 1811.5404052734375,
+      "serious": true
+     },
+     "fixture_index": 7
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 16,
+     "orig_index": 1874,
+     "K": 13,
+     "loss_start_fp64": 26327276.94359064,
+     "fd": {
+      "status": 4,
+      "final_fp64": 42865.0646858878,
+      "fp32": 42860.0546875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 315405216.68949676,
+      "fp32": 920247.9375,
+      "serious": true
+     },
+     "fixture_index": 8
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 16,
+     "orig_index": 3838,
+     "K": 12,
+     "loss_start_fp64": 233042.9129732544,
+     "fd": {
+      "status": 0,
+      "final_fp64": 0.06867019886768233,
+      "fp32": 0.06866876780986786,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 10530911.810956683,
+      "fp32": 3.7992355823516846,
+      "serious": true
+     },
+     "fixture_index": 9
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 203,
+     "K": 5,
+     "loss_start_fp64": 894.9786271866518,
+     "fd": {
+      "status": 4,
+      "final_fp64": 894.9786271866518,
+      "fp32": 894.9786376953125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1612306.5653696256,
+      "fp32": 1611143.625,
+      "serious": true
+     },
+     "fixture_index": 10
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 399,
+     "K": 9,
+     "loss_start_fp64": 493.5931350184061,
+     "fd": {
+      "status": 0,
+      "final_fp64": 4.440797235465652,
+      "fp32": 4.440793514251709,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 14101.28356065938,
+      "fp32": 23.389253616333008,
+      "serious": true
+     },
+     "fixture_index": 11
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 1100,
+     "K": 11,
+     "loss_start_fp64": 504.2288296962948,
+     "fd": {
+      "status": 2,
+      "final_fp64": 504.2288296962948,
+      "fp32": 504.2288513183594,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1571.7307772225026,
+      "fp32": 1631.375244140625,
+      "serious": true
+     },
+     "fixture_index": 12
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 1423,
+     "K": 10,
+     "loss_start_fp64": 2138.824466112623,
+     "fd": {
+      "status": 0,
+      "final_fp64": 163.06211608703154,
+      "fp32": 163.06192016601562,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 4738.4327733022055,
+      "fp32": 4732.15625,
+      "serious": true
+     },
+     "fixture_index": 13
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 1578,
+     "K": 10,
+     "loss_start_fp64": 340.6147672533914,
+     "fd": {
+      "status": 4,
+      "final_fp64": 198.61004238252707,
+      "fp32": 198.61007690429688,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1248.0038191043027,
+      "fp32": 338.889404296875,
+      "serious": true
+     },
+     "fixture_index": 14
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 2141,
+     "K": 10,
+     "loss_start_fp64": 687.7384069130783,
+     "fd": {
+      "status": 4,
+      "final_fp64": 687.7384069130783,
+      "fp32": 687.73828125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 2866.940052270785,
+      "fp32": 225.4132537841797,
+      "serious": true
+     },
+     "fixture_index": 15
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 2451,
+     "K": 9,
+     "loss_start_fp64": 501.565705295359,
+     "fd": {
+      "status": 4,
+      "final_fp64": 501.565705295359,
+      "fp32": 501.56561279296875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 10867.223506912538,
+      "fp32": 172.52285766601562,
+      "serious": true
+     },
+     "fixture_index": 16
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 2684,
+     "K": 12,
+     "loss_start_fp64": 1989.0660333066814,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1989.0660333066814,
+      "fp32": 1989.066162109375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 362298.83664249704,
+      "fp32": 439200.5625,
+      "serious": true
+     },
+     "fixture_index": 17
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 2935,
+     "K": 9,
+     "loss_start_fp64": 1417.5077278048184,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1417.5077278048184,
+      "fp32": 1417.5078125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 3376.2594365398354,
+      "fp32": 3245.623291015625,
+      "serious": true
+     },
+     "fixture_index": 18
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 3279,
+     "K": 9,
+     "loss_start_fp64": 1164.7228204847288,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1164.7228204847288,
+      "fp32": 1164.722900390625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 12767129.739680944,
+      "fp32": 12786054.0,
+      "serious": true
+     },
+     "fixture_index": 19
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 3389,
+     "K": 10,
+     "loss_start_fp64": 1681.2997553953528,
+     "fd": {
+      "status": 2,
+      "final_fp64": 1681.2997553953528,
+      "fp32": 1681.300048828125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 926583.073954595,
+      "fp32": 440.49615478515625,
+      "serious": true
+     },
+     "fixture_index": 20
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 3680,
+     "K": 9,
+     "loss_start_fp64": 1238.8901636005546,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1238.8901636005546,
+      "fp32": 1238.89013671875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 5097762.235144459,
+      "fp32": 3627179.75,
+      "serious": true
+     },
+     "fixture_index": 21
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 64,
+     "orig_index": 3829,
+     "K": 9,
+     "loss_start_fp64": 495.60884087172246,
+     "fd": {
+      "status": 4,
+      "final_fp64": 495.60884087172246,
+      "fp32": 495.60888671875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 378657770.6095689,
+      "fp32": 385021824.0,
+      "serious": true
+     },
+     "fixture_index": 22
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 6,
+     "K": 11,
+     "loss_start_fp64": 1883.9186657553741,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1883.9186657553741,
+      "fp32": 1883.918701171875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 31945553.071746137,
+      "fp32": 31955498.0,
+      "serious": true
+     },
+     "fixture_index": 23
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 327,
+     "K": 10,
+     "loss_start_fp64": 490.46934754675215,
+     "fd": {
+      "status": 4,
+      "final_fp64": 490.46934754675215,
+      "fp32": 490.46942138671875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1001.7483702382195,
+      "fp32": 1086.791259765625,
+      "serious": true
+     },
+     "fixture_index": 24
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 521,
+     "K": 12,
+     "loss_start_fp64": 495.43665292469814,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2.0046356490372585,
+      "fp32": 2.0046331882476807,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1840.4132438968181,
+      "fp32": 18.669666290283203,
+      "serious": true
+     },
+     "fixture_index": 25
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 658,
+     "K": 10,
+     "loss_start_fp64": 678.0640032799172,
+     "fd": {
+      "status": 4,
+      "final_fp64": 678.0640032799172,
+      "fp32": 678.06396484375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 2714.6727078230288,
+      "fp32": 2714.22265625,
+      "serious": true
+     },
+     "fixture_index": 26
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 711,
+     "K": 10,
+     "loss_start_fp64": 775.6572523751415,
+     "fd": {
+      "status": 4,
+      "final_fp64": 775.6572523751415,
+      "fp32": 775.6573486328125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 656281.7368356308,
+      "fp32": 656041.5,
+      "serious": true
+     },
+     "fixture_index": 27
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 712,
+     "K": 9,
+     "loss_start_fp64": 1786.4007023611746,
+     "fd": {
+      "status": 0,
+      "final_fp64": 734.8035951304527,
+      "fp32": 734.8035888671875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 166300.02818617126,
+      "fp32": 166373.265625,
+      "serious": true
+     },
+     "fixture_index": 28
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 718,
+     "K": 9,
+     "loss_start_fp64": 2395.2782272941645,
+     "fd": {
+      "status": 0,
+      "final_fp64": 17.897836870494633,
+      "fp32": 17.89789581298828,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 2330603.538630182,
+      "fp32": 2332325.75,
+      "serious": true
+     },
+     "fixture_index": 29
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 976,
+     "K": 10,
+     "loss_start_fp64": 1686.8793169163328,
+     "fd": {
+      "status": 0,
+      "final_fp64": 666.9530645381067,
+      "fp32": 666.961181640625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 46161879.31638975,
+      "fp32": 46341760.0,
+      "serious": true
+     },
+     "fixture_index": 30
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 980,
+     "K": 11,
+     "loss_start_fp64": 452.28730343008493,
+     "fd": {
+      "status": 0,
+      "final_fp64": 131.89252372534202,
+      "fp32": 131.89051818847656,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 29641050.21471812,
+      "fp32": 29673024.0,
+      "serious": true
+     },
+     "fixture_index": 31
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 1050,
+     "K": 8,
+     "loss_start_fp64": 2846.899494356089,
+     "fd": {
+      "status": 0,
+      "final_fp64": 1112.47947401397,
+      "fp32": 1112.485107421875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 3321728.6660577743,
+      "fp32": 3318750.5,
+      "serious": true
+     },
+     "fixture_index": 32
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 1053,
+     "K": 9,
+     "loss_start_fp64": 2155.1264588367067,
+     "fd": {
+      "status": 0,
+      "final_fp64": 1123.1257135463477,
+      "fp32": 1123.12646484375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 234047.52539697202,
+      "fp32": 1526.2901611328125,
+      "serious": true
+     },
+     "fixture_index": 33
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 1075,
+     "K": 10,
+     "loss_start_fp64": 1101.154988673432,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1101.154988673432,
+      "fp32": 1101.155029296875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 42928.11261934204,
+      "fp32": 42780.49609375,
+      "serious": true
+     },
+     "fixture_index": 34
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 1312,
+     "K": 10,
+     "loss_start_fp64": 1117.1348149133669,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1117.1348149133669,
+      "fp32": 1117.1348876953125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 458655580972.29926,
+      "fp32": 458569842688.0,
+      "serious": true
+     },
+     "fixture_index": 35
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 2061,
+     "K": 10,
+     "loss_start_fp64": 766.4818266040479,
+     "fd": {
+      "status": 0,
+      "final_fp64": 70.3504934850848,
+      "fp32": 70.35044860839844,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 2616.1344904700018,
+      "fp32": 727.1593017578125,
+      "serious": true
+     },
+     "fixture_index": 36
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 2213,
+     "K": 11,
+     "loss_start_fp64": 491.605242268345,
+     "fd": {
+      "status": 4,
+      "final_fp64": 491.605242268345,
+      "fp32": 491.60528564453125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 109688.18721934012,
+      "fp32": 109684.421875,
+      "serious": true
+     },
+     "fixture_index": 37
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 2539,
+     "K": 8,
+     "loss_start_fp64": 505.781741952312,
+     "fd": {
+      "status": 4,
+      "final_fp64": 25.478489443788963,
+      "fp32": 25.47846221923828,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1931.4741836072403,
+      "fp32": 17.79612159729004,
+      "serious": true
+     },
+     "fixture_index": 38
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 2837,
+     "K": 11,
+     "loss_start_fp64": 491.650906168291,
+     "fd": {
+      "status": 4,
+      "final_fp64": 491.650906168291,
+      "fp32": 491.6510009765625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 21624108.598125912,
+      "fp32": 21624840.0,
+      "serious": true
+     },
+     "fixture_index": 39
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 2863,
+     "K": 11,
+     "loss_start_fp64": 504.81731794529514,
+     "fd": {
+      "status": 4,
+      "final_fp64": 504.81731794529514,
+      "fp32": 504.8173828125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 15036.420242599455,
+      "fp32": 15044.8388671875,
+      "serious": true
+     },
+     "fixture_index": 40
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 2885,
+     "K": 9,
+     "loss_start_fp64": 312.1135727808641,
+     "fd": {
+      "status": 4,
+      "final_fp64": 312.1135727808641,
+      "fp32": 312.1136169433594,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 529354.1446940737,
+      "fp32": 529579.125,
+      "serious": true
+     },
+     "fixture_index": 41
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 3296,
+     "K": 11,
+     "loss_start_fp64": 1762.585979901647,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1762.585979901647,
+      "fp32": 1762.5859375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 381908.52598850033,
+      "fp32": 381305.46875,
+      "serious": true
+     },
+     "fixture_index": 42
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 3368,
+     "K": 12,
+     "loss_start_fp64": 489.7928116766675,
+     "fd": {
+      "status": 4,
+      "final_fp64": 219.30859008686713,
+      "fp32": 219.30859375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1486.9141091287856,
+      "fp32": 1079.88427734375,
+      "serious": true
+     },
+     "fixture_index": 43
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 3751,
+     "K": 10,
+     "loss_start_fp64": 490.469303622981,
+     "fd": {
+      "status": 4,
+      "final_fp64": 490.469303622981,
+      "fp32": 490.4693603515625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 2156.0405039653315,
+      "fp32": 2103.376708984375,
+      "serious": true
+     },
+     "fixture_index": 44
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 3915,
+     "K": 11,
+     "loss_start_fp64": 489.74890375845735,
+     "fd": {
+      "status": 0,
+      "final_fp64": 270.36600706146123,
+      "fp32": 270.36602783203125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 2518.8586433197133,
+      "fp32": 199.96145629882812,
+      "serious": true
+     },
+     "fixture_index": 45
+    },
+    {
+     "problem": "nguyen/3",
+     "gen": 100,
+     "orig_index": 3938,
+     "K": 10,
+     "loss_start_fp64": 300.2546961597345,
+     "fd": {
+      "status": 2,
+      "final_fp64": 300.2546961597345,
+      "fp32": 300.25469970703125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 719.2105166649962,
+      "fp32": 507.026611328125,
+      "serious": true
+     },
+     "fixture_index": 46
+    }
+   ]
+  },
+  "nguyen/4": {
+   "file": "fixture__nguyen_4.bin",
+   "M": 12,
+   "trees": [
+    {
+     "problem": "nguyen/4",
+     "gen": 0,
+     "orig_index": 947,
+     "K": 6,
+     "loss_start_fp64": 23177.349240973446,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2327.1349623451724,
+      "fp32": 2337.046142578125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 90726.93497314511,
+      "fp32": 8674.6201171875,
+      "serious": true
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 0,
+     "orig_index": 1563,
+     "K": 10,
+     "loss_start_fp64": 369299.6117983816,
+     "fd": {
+      "status": 0,
+      "final_fp64": 84210.81386410668,
+      "fp32": 84179.6953125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1171268.0889297356,
+      "fp32": 160722.625,
+      "serious": true
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 0,
+     "orig_index": 3498,
+     "K": 9,
+     "loss_start_fp64": 75572.55894780798,
+     "fd": {
+      "status": 0,
+      "final_fp64": 550401.3709538993,
+      "fp32": 66155.71875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 61557.949378057914,
+      "fp32": 79545.515625,
+      "serious": false
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 4,
+     "orig_index": 3141,
+     "K": 3,
+     "loss_start_fp64": 3294.9516958034274,
+     "fd": {
+      "status": 0,
+      "final_fp64": 596171.3050159086,
+      "fp32": 1496.6884765625,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1292.4440353455875,
+      "fp32": 1292.126220703125,
+      "serious": false
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 16,
+     "orig_index": 216,
+     "K": 12,
+     "loss_start_fp64": 3335.843837622617,
+     "fd": {
+      "status": 4,
+      "final_fp64": 3335.843837622617,
+      "fp32": 3335.843994140625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 21653.892366834232,
+      "fp32": 7.2451324462890625,
+      "serious": true
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 16,
+     "orig_index": 492,
+     "K": 11,
+     "loss_start_fp64": 663.3518715630811,
+     "fd": {
+      "status": 4,
+      "final_fp64": 663.3518715630811,
+      "fp32": 663.3515625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 10443.579412414912,
+      "fp32": 65.35713958740234,
+      "serious": true
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 16,
+     "orig_index": 943,
+     "K": 10,
+     "loss_start_fp64": 7366.252931727519,
+     "fd": {
+      "status": 4,
+      "final_fp64": 2036.901022117027,
+      "fp32": 2036.9013671875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 26943.62568426142,
+      "fp32": 25088.453125,
+      "serious": true
+     },
+     "fixture_index": 6
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 16,
+     "orig_index": 1128,
+     "K": 10,
+     "loss_start_fp64": 1452.9726087372026,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1452.9726087372026,
+      "fp32": 1452.9718017578125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 123015.21309600904,
+      "fp32": 135.4893798828125,
+      "serious": true
+     },
+     "fixture_index": 7
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 16,
+     "orig_index": 3260,
+     "K": 12,
+     "loss_start_fp64": 135.98230917620884,
+     "fd": {
+      "status": 4,
+      "final_fp64": 135.98230917620884,
+      "fp32": 135.98245239257812,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 5027.550874567184,
+      "fp32": 57.188133239746094,
+      "serious": true
+     },
+     "fixture_index": 8
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 16,
+     "orig_index": 3413,
+     "K": 8,
+     "loss_start_fp64": 69000.88095732554,
+     "fd": {
+      "status": 0,
+      "final_fp64": 0.6454658777557035,
+      "fp32": 0.6454519033432007,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 262808.13598352356,
+      "fp32": 0.6456979513168335,
+      "serious": true
+     },
+     "fixture_index": 9
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 64,
+     "orig_index": 267,
+     "K": 8,
+     "loss_start_fp64": 1040.8185615914692,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1040.8185615914692,
+      "fp32": 1040.5614013671875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 7380.861469561984,
+      "fp32": 333.84906005859375,
+      "serious": true
+     },
+     "fixture_index": 10
+    },
+    {
+     "problem": "nguyen/4",
+     "gen": 100,
+     "orig_index": 857,
+     "K": 10,
+     "loss_start_fp64": 7596.422014351722,
+     "fd": {
+      "status": 1,
+      "final_fp64": 301233.63184591767,
+      "fp32": 4322.35400390625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 43310.239555202446,
+      "fp32": 4562.29541015625,
+      "serious": true
+     },
+     "fixture_index": 11
+    }
+   ]
+  },
+  "nguyen/5": {
+   "file": "fixture__nguyen_5.bin",
+   "M": 12,
+   "trees": [
+    {
+     "problem": "nguyen/5",
+     "gen": 0,
+     "orig_index": 909,
+     "K": 11,
+     "loss_start_fp64": 503629.9782682464,
+     "fd": {
+      "status": 0,
+      "final_fp64": 66705.87068432027,
+      "fp32": 65575.109375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1260941.1931426548,
+      "fp32": 474519.0625,
+      "serious": true
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 0,
+     "orig_index": 2585,
+     "K": 4,
+     "loss_start_fp64": 508160.2629255048,
+     "fd": {
+      "status": 0,
+      "final_fp64": 1984645.6051119997,
+      "fp32": 89641288.0,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 392831.32215975714,
+      "fp32": 132973.25,
+      "serious": false
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 0,
+     "orig_index": 3498,
+     "K": 9,
+     "loss_start_fp64": 75150.31581044695,
+     "fd": {
+      "status": 0,
+      "final_fp64": 831414.2648423094,
+      "fp32": 48311.70703125,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 61181.21103919421,
+      "fp32": 78374.203125,
+      "serious": false
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 0,
+     "orig_index": 3509,
+     "K": 8,
+     "loss_start_fp64": 18040.92544679602,
+     "fd": {
+      "status": 0,
+      "final_fp64": 65112.07548443395,
+      "fp32": 64795.515625,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 18040.92544679602,
+      "fp32": 57742.125,
+      "serious": false
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 4,
+     "orig_index": 859,
+     "K": 6,
+     "loss_start_fp64": 145.97304406889288,
+     "fd": {
+      "status": 0,
+      "final_fp64": 13.222798976879906,
+      "fp32": 13.222797393798828,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 82285.52524250478,
+      "fp32": 19.764699935913086,
+      "serious": true
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 4,
+     "orig_index": 1850,
+     "K": 8,
+     "loss_start_fp64": 62.63969141531097,
+     "fd": {
+      "status": 4,
+      "final_fp64": 13.397265204868448,
+      "fp32": 13.397296905517578,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 440.83183978643154,
+      "fp32": 9.859243392944336,
+      "serious": true
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 4,
+     "orig_index": 2922,
+     "K": 6,
+     "loss_start_fp64": 810.8424721796218,
+     "fd": {
+      "status": 0,
+      "final_fp64": 37.73642708535044,
+      "fp32": 34.69190216064453,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 11106.011260012821,
+      "fp32": 17.558902740478516,
+      "serious": true
+     },
+     "fixture_index": 6
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 16,
+     "orig_index": 3602,
+     "K": 8,
+     "loss_start_fp64": 1467.1285690200018,
+     "fd": {
+      "status": 0,
+      "final_fp64": 149.48798250626328,
+      "fp32": 149.488037109375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 3678.8911520736638,
+      "fp32": 2328.820068359375,
+      "serious": true
+     },
+     "fixture_index": 7
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 64,
+     "orig_index": 1933,
+     "K": 8,
+     "loss_start_fp64": 85.86733514427254,
+     "fd": {
+      "status": 4,
+      "final_fp64": 51.71630942267966,
+      "fp32": 51.71630859375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1092.1089700112898,
+      "fp32": 57.58531188964844,
+      "serious": true
+     },
+     "fixture_index": 8
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 100,
+     "orig_index": 888,
+     "K": 7,
+     "loss_start_fp64": 475.55501525524295,
+     "fd": {
+      "status": 4,
+      "final_fp64": 475.55501525524295,
+      "fp32": 475.5552978515625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1750.0163472191352,
+      "fp32": 1750.9935302734375,
+      "serious": true
+     },
+     "fixture_index": 9
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 100,
+     "orig_index": 1441,
+     "K": 7,
+     "loss_start_fp64": 6.093054328301172,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2.6625629663733257,
+      "fp32": 2.6625590324401855,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 135.0295107678946,
+      "fp32": 209.980712890625,
+      "serious": true
+     },
+     "fixture_index": 10
+    },
+    {
+     "problem": "nguyen/5",
+     "gen": 100,
+     "orig_index": 1537,
+     "K": 7,
+     "loss_start_fp64": 453.0554929855434,
+     "fd": {
+      "status": 4,
+      "final_fp64": 453.0554929855434,
+      "fp32": 453.0556945800781,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1059.023407997446,
+      "fp32": 1043.537353515625,
+      "serious": true
+     },
+     "fixture_index": 11
+    }
+   ]
+  },
+  "nguyen/6": {
+   "file": "fixture__nguyen_6.bin",
+   "M": 15,
+   "trees": [
+    {
+     "problem": "nguyen/6",
+     "gen": 0,
+     "orig_index": 102,
+     "K": 5,
+     "loss_start_fp64": 4592348.850274489,
+     "fd": {
+      "status": 0,
+      "final_fp64": 37.98889492993286,
+      "fp32": 37.98889923095703,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 48231886.550307855,
+      "fp32": 136689.640625,
+      "serious": true
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 0,
+     "orig_index": 476,
+     "K": 8,
+     "loss_start_fp64": 734477.233696488,
+     "fd": {
+      "status": 0,
+      "final_fp64": 252642.43445132533,
+      "fp32": 252582.5,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 2997103.0828280756,
+      "fp32": 292085.78125,
+      "serious": true
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 0,
+     "orig_index": 774,
+     "K": 10,
+     "loss_start_fp64": 44865.68248622268,
+     "fd": {
+      "status": 0,
+      "final_fp64": 62288.50804825546,
+      "fp32": 60129.17578125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 203154.2422604749,
+      "fp32": 30337.279296875,
+      "serious": true
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 0,
+     "orig_index": 2265,
+     "K": 4,
+     "loss_start_fp64": 75080.9685111382,
+     "fd": {
+      "status": 0,
+      "final_fp64": 191794.84199567346,
+      "fp32": 40535.7265625,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 74641.87657297628,
+      "fp32": 68992.09375,
+      "serious": false
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 0,
+     "orig_index": 2915,
+     "K": 10,
+     "loss_start_fp64": 681.0919675476853,
+     "fd": {
+      "status": 0,
+      "final_fp64": 583.5428244981889,
+      "fp32": 583.542724609375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1.0117896872355076e+19,
+      "fp32": 662.880859375,
+      "serious": true
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 0,
+     "orig_index": 3137,
+     "K": 8,
+     "loss_start_fp64": 603442.778455577,
+     "fd": {
+      "status": 0,
+      "final_fp64": 1331375.7833796581,
+      "fp32": 4962810.0,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 44553.704647279585,
+      "fp32": 44538.1015625,
+      "serious": false
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 0,
+     "orig_index": 3498,
+     "K": 9,
+     "loss_start_fp64": 74827.81165657143,
+     "fd": {
+      "status": 0,
+      "final_fp64": 173922.09860327718,
+      "fp32": 174513.53125,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 60650.68065911699,
+      "fp32": 78686.6171875,
+      "serious": false
+     },
+     "fixture_index": 6
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 0,
+     "orig_index": 3509,
+     "K": 8,
+     "loss_start_fp64": 18393.732560993278,
+     "fd": {
+      "status": 0,
+      "final_fp64": 65773.19481863995,
+      "fp32": 64773.4296875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 18393.732560993278,
+      "fp32": 57901.1484375,
+      "serious": false
+     },
+     "fixture_index": 7
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 4,
+     "orig_index": 2740,
+     "K": 11,
+     "loss_start_fp64": 1290.5070276834772,
+     "fd": {
+      "status": 0,
+      "final_fp64": 726.2976356184555,
+      "fp32": 727.1242065429688,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 5747.521665338477,
+      "fp32": 662.2691040039062,
+      "serious": true
+     },
+     "fixture_index": 8
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 16,
+     "orig_index": 1571,
+     "K": 14,
+     "loss_start_fp64": 36.07077880278322,
+     "fd": {
+      "status": 0,
+      "final_fp64": 0.0839805345801946,
+      "fp32": 0.08398019522428513,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 204.31596364014032,
+      "fp32": 0.7663968205451965,
+      "serious": true
+     },
+     "fixture_index": 9
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 16,
+     "orig_index": 3295,
+     "K": 14,
+     "loss_start_fp64": 4629.110291813155,
+     "fd": {
+      "status": 4,
+      "final_fp64": 20.97758172675448,
+      "fp32": 20.977561950683594,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 37394799.091764055,
+      "fp32": 1488.55517578125,
+      "serious": true
+     },
+     "fixture_index": 10
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 16,
+     "orig_index": 3312,
+     "K": 9,
+     "loss_start_fp64": 155.3201752208715,
+     "fd": {
+      "status": 0,
+      "final_fp64": 341.7796791620144,
+      "fp32": 138.19503784179688,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 333.09034861531325,
+      "fp32": 98.53099060058594,
+      "serious": true
+     },
+     "fixture_index": 11
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 64,
+     "orig_index": 658,
+     "K": 14,
+     "loss_start_fp64": 362039.36674759106,
+     "fd": {
+      "status": 2,
+      "final_fp64": 214794.6826143777,
+      "fp32": 214795.21875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1470357.9361345272,
+      "fp32": 96979.046875,
+      "serious": true
+     },
+     "fixture_index": 12
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 64,
+     "orig_index": 877,
+     "K": 13,
+     "loss_start_fp64": 257.1652216076351,
+     "fd": {
+      "status": 1,
+      "final_fp64": 19.27649364880964,
+      "fp32": 19.28104019165039,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 728.2193773336116,
+      "fp32": 10.431392669677734,
+      "serious": true
+     },
+     "fixture_index": 13
+    },
+    {
+     "problem": "nguyen/6",
+     "gen": 64,
+     "orig_index": 2077,
+     "K": 15,
+     "loss_start_fp64": 152.73267722624178,
+     "fd": {
+      "status": 4,
+      "final_fp64": 0.002789801112140948,
+      "fp32": 0.0027898051775991917,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 627.3658319319311,
+      "fp32": 2.567873239517212,
+      "serious": true
+     },
+     "fixture_index": 14
+    }
+   ]
+  },
+  "nguyen/7": {
+   "file": "fixture__nguyen_7.bin",
+   "M": 13,
+   "trees": [
+    {
+     "problem": "nguyen/7",
+     "gen": 0,
+     "orig_index": 152,
+     "K": 5,
+     "loss_start_fp64": 27408.99523743504,
+     "fd": {
+      "status": 0,
+      "final_fp64": 19468.291761446628,
+      "fp32": 19545.57421875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 69765.39681973131,
+      "fp32": 24543.12890625,
+      "serious": true
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 0,
+     "orig_index": 909,
+     "K": 11,
+     "loss_start_fp64": 52821.72256980683,
+     "fd": {
+      "status": 0,
+      "final_fp64": 30055.381125341017,
+      "fp32": 29673.96875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 138504.69840606494,
+      "fp32": 71565.1640625,
+      "serious": true
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 0,
+     "orig_index": 1180,
+     "K": 11,
+     "loss_start_fp64": 91815.20320516553,
+     "fd": {
+      "status": 0,
+      "final_fp64": 354327.8986157024,
+      "fp32": 62042.4296875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 91815.20320516553,
+      "fp32": 74588.296875,
+      "serious": false
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 0,
+     "orig_index": 1760,
+     "K": 7,
+     "loss_start_fp64": 410.4089936050615,
+     "fd": {
+      "status": 4,
+      "final_fp64": 409.53815277806393,
+      "fp32": 409.53814697265625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1578.4152536706883,
+      "fp32": 408.35675048828125,
+      "serious": true
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 0,
+     "orig_index": 1799,
+     "K": 7,
+     "loss_start_fp64": 13000884.78472481,
+     "fd": {
+      "status": 2,
+      "final_fp64": 13000884.78472481,
+      "fp32": 56554184.0,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 31352511.944376025,
+      "fp32": 56554184.0,
+      "serious": true
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 0,
+     "orig_index": 2585,
+     "K": 4,
+     "loss_start_fp64": 77996.6113439514,
+     "fd": {
+      "status": 0,
+      "final_fp64": 1311539.1927723186,
+      "fp32": 7370736640.0,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 178353.70742770773,
+      "fp32": 89584.7734375,
+      "serious": true
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 0,
+     "orig_index": 2722,
+     "K": 2,
+     "loss_start_fp64": 417.73951291507615,
+     "fd": {
+      "status": 0,
+      "final_fp64": 409.5381527824761,
+      "fp32": 409.53814697265625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1561.2173014083914,
+      "fp32": 408.621826171875,
+      "serious": true
+     },
+     "fixture_index": 6
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 0,
+     "orig_index": 3145,
+     "K": 4,
+     "loss_start_fp64": 58382.74207354,
+     "fd": {
+      "status": 0,
+      "final_fp64": 340669.1529019131,
+      "fp32": 62904.75,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 60565.62319968186,
+      "fp32": 66187.640625,
+      "serious": false
+     },
+     "fixture_index": 7
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 0,
+     "orig_index": 3838,
+     "K": 5,
+     "loss_start_fp64": 417.9435914666849,
+     "fd": {
+      "status": 0,
+      "final_fp64": 409.53815278063695,
+      "fp32": 409.53814697265625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1548.7474862389668,
+      "fp32": 407.64385986328125,
+      "serious": true
+     },
+     "fixture_index": 8
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 4,
+     "orig_index": 344,
+     "K": 4,
+     "loss_start_fp64": 246.41673691809268,
+     "fd": {
+      "status": 4,
+      "final_fp64": 235.22405662686654,
+      "fp32": 235.22406005859375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 611.684277212144,
+      "fp32": 124.65411376953125,
+      "serious": true
+     },
+     "fixture_index": 9
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 4,
+     "orig_index": 1886,
+     "K": 10,
+     "loss_start_fp64": 634.1019639497833,
+     "fd": {
+      "status": 0,
+      "final_fp64": 634.0830687247048,
+      "fp32": 634.0549926757812,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1410.8409281192999,
+      "fp32": 632.6571655273438,
+      "serious": true
+     },
+     "fixture_index": 10
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 64,
+     "orig_index": 2149,
+     "K": 12,
+     "loss_start_fp64": 47076.34575261282,
+     "fd": {
+      "status": 4,
+      "final_fp64": 47076.34575261282,
+      "fp32": 47076.34375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 150270.38414661863,
+      "fp32": 150536.1875,
+      "serious": true
+     },
+     "fixture_index": 11
+    },
+    {
+     "problem": "nguyen/7",
+     "gen": 100,
+     "orig_index": 2231,
+     "K": 3,
+     "loss_start_fp64": 562.6785109527251,
+     "fd": {
+      "status": 0,
+      "final_fp64": 409.53815277851845,
+      "fp32": 409.53814697265625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1590.3631534355754,
+      "fp32": 408.53997802734375,
+      "serious": true
+     },
+     "fixture_index": 12
+    }
+   ]
+  },
+  "nguyen/8": {
+   "file": "fixture__nguyen_8.bin",
+   "M": 11,
+   "trees": [
+    {
+     "problem": "nguyen/8",
+     "gen": 0,
+     "orig_index": 113,
+     "K": 10,
+     "loss_start_fp64": 36067.94267241479,
+     "fd": {
+      "status": 0,
+      "final_fp64": 90962.12081568984,
+      "fp32": 46034.9609375,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 11663.775864568826,
+      "fp32": 11500.26953125,
+      "serious": false
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "nguyen/8",
+     "gen": 0,
+     "orig_index": 394,
+     "K": 4,
+     "loss_start_fp64": 58103.22861700566,
+     "fd": {
+      "status": 0,
+      "final_fp64": 161085.7248039468,
+      "fp32": 76867.296875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 54474.547048354485,
+      "fp32": 53414.98828125,
+      "serious": false
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "nguyen/8",
+     "gen": 0,
+     "orig_index": 1157,
+     "K": 8,
+     "loss_start_fp64": 833257067.0414168,
+     "fd": {
+      "status": 0,
+      "final_fp64": 48313.11370874246,
+      "fp32": 5207509.0,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 50125613696.903046,
+      "fp32": 231426400.0,
+      "serious": true
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "nguyen/8",
+     "gen": 0,
+     "orig_index": 1844,
+     "K": 9,
+     "loss_start_fp64": 110637.73699569458,
+     "fd": {
+      "status": 0,
+      "final_fp64": 17139.31269722491,
+      "fp32": 16703.548828125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 305246.9814777459,
+      "fp32": 17599.29296875,
+      "serious": true
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "nguyen/8",
+     "gen": 0,
+     "orig_index": 2585,
+     "K": 4,
+     "loss_start_fp64": 215674.47127686854,
+     "fd": {
+      "status": 0,
+      "final_fp64": 3292779.3131790636,
+      "fp32": 140844640.0,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 134905.78153735856,
+      "fp32": 267832.71875,
+      "serious": false
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "nguyen/8",
+     "gen": 0,
+     "orig_index": 2932,
+     "K": 11,
+     "loss_start_fp64": 4758.024902942593,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2751.6609679507023,
+      "fp32": 2762.994140625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 33437.44785554828,
+      "fp32": 2553.1962890625,
+      "serious": true
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "nguyen/8",
+     "gen": 0,
+     "orig_index": 3234,
+     "K": 9,
+     "loss_start_fp64": 76026.64453921013,
+     "fd": {
+      "status": 0,
+      "final_fp64": 76352.88412954402,
+      "fp32": 77376.796875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 194221.5259063488,
+      "fp32": 76094.21875,
+      "serious": true
+     },
+     "fixture_index": 6
+    },
+    {
+     "problem": "nguyen/8",
+     "gen": 4,
+     "orig_index": 3457,
+     "K": 12,
+     "loss_start_fp64": 155461.40728844464,
+     "fd": {
+      "status": 0,
+      "final_fp64": 0.022349590049918718,
+      "fp32": 0.022349663078784943,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 17913500.812351722,
+      "fp32": 272.698974609375,
+      "serious": true
+     },
+     "fixture_index": 7
+    },
+    {
+     "problem": "nguyen/8",
+     "gen": 64,
+     "orig_index": 2959,
+     "K": 10,
+     "loss_start_fp64": 300.1634443004757,
+     "fd": {
+      "status": 4,
+      "final_fp64": 300.1634443004757,
+      "fp32": 300.16351318359375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1132.2461833216844,
+      "fp32": 121.55332946777344,
+      "serious": true
+     },
+     "fixture_index": 8
+    },
+    {
+     "problem": "nguyen/8",
+     "gen": 64,
+     "orig_index": 3140,
+     "K": 12,
+     "loss_start_fp64": 435.4421975428289,
+     "fd": {
+      "status": 2,
+      "final_fp64": 62.00728712285875,
+      "fp32": 62.00777816772461,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1726.592968883049,
+      "fp32": 16.800151824951172,
+      "serious": true
+     },
+     "fixture_index": 9
+    },
+    {
+     "problem": "nguyen/8",
+     "gen": 64,
+     "orig_index": 3820,
+     "K": 11,
+     "loss_start_fp64": 1525.5626163314496,
+     "fd": {
+      "status": 0,
+      "final_fp64": 104.87114385790595,
+      "fp32": 107.36013793945312,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 17776.392010706913,
+      "fp32": 4.866062164306641,
+      "serious": true
+     },
+     "fixture_index": 10
+    }
+   ]
+  },
+  "nguyen/9": {
+   "file": "fixture__nguyen_9.bin",
+   "M": 31,
+   "trees": [
+    {
+     "problem": "nguyen/9",
+     "gen": 0,
+     "orig_index": 72,
+     "K": 13,
+     "loss_start_fp64": 72921.44336857702,
+     "fd": {
+      "status": 0,
+      "final_fp64": 257847.0586746176,
+      "fp32": 104405.8203125,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 39535.68003344127,
+      "fp32": 41551.19921875,
+      "serious": false
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 0,
+     "orig_index": 178,
+     "K": 4,
+     "loss_start_fp64": 223467.38390473792,
+     "fd": {
+      "status": 0,
+      "final_fp64": 470488.0933968962,
+      "fp32": 182472.15625,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 130379.28528439354,
+      "fp32": 171153.078125,
+      "serious": false
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 0,
+     "orig_index": 376,
+     "K": 2,
+     "loss_start_fp64": 886523.8118616028,
+     "fd": {
+      "status": 0,
+      "final_fp64": 855518.3067697543,
+      "fp32": 857326.75,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 5614491.13741202,
+      "fp32": 55377500.0,
+      "serious": true
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 0,
+     "orig_index": 883,
+     "K": 8,
+     "loss_start_fp64": 240805.56107484695,
+     "fd": {
+      "status": 0,
+      "final_fp64": 73830.02845285702,
+      "fp32": 413349.625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 10553282.457744546,
+      "fp32": 156246.265625,
+      "serious": true
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 0,
+     "orig_index": 1523,
+     "K": 9,
+     "loss_start_fp64": 27997.591356743065,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2272.2604319199054,
+      "fp32": 13101.568359375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 68741.10386102708,
+      "fp32": 4752.28564453125,
+      "serious": true
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 0,
+     "orig_index": 2992,
+     "K": 11,
+     "loss_start_fp64": 355743.2247852753,
+     "fd": {
+      "status": 0,
+      "final_fp64": 1562391.7295716044,
+      "fp32": 213684.71875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 250632.9800909944,
+      "fp32": 251551.578125,
+      "serious": false
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 0,
+     "orig_index": 3899,
+     "K": 8,
+     "loss_start_fp64": 1468007.516844669,
+     "fd": {
+      "status": 0,
+      "final_fp64": 518.7163305054053,
+      "fp32": 395.89385986328125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 8506434.338475615,
+      "fp32": 891485.125,
+      "serious": true
+     },
+     "fixture_index": 6
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 4,
+     "orig_index": 827,
+     "K": 11,
+     "loss_start_fp64": 183.01985972948256,
+     "fd": {
+      "status": 4,
+      "final_fp64": 57.46559919147691,
+      "fp32": 57.458518981933594,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 621.9940684991004,
+      "fp32": 90.73126983642578,
+      "serious": true
+     },
+     "fixture_index": 7
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 16,
+     "orig_index": 3076,
+     "K": 8,
+     "loss_start_fp64": 84.20306971665619,
+     "fd": {
+      "status": 0,
+      "final_fp64": 76.59876491615861,
+      "fp32": 76.59876251220703,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 284.57221943261106,
+      "fp32": 73.1968994140625,
+      "serious": true
+     },
+     "fixture_index": 8
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 16,
+     "orig_index": 3978,
+     "K": 8,
+     "loss_start_fp64": 74.63479150930328,
+     "fd": {
+      "status": 0,
+      "final_fp64": 44.74891157219219,
+      "fp32": 44.7364501953125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 184.81477889851737,
+      "fp32": 184.56350708007812,
+      "serious": true
+     },
+     "fixture_index": 9
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 202,
+     "K": 5,
+     "loss_start_fp64": 99.77944020075127,
+     "fd": {
+      "status": 4,
+      "final_fp64": 95.83674720684034,
+      "fp32": 95.83682250976562,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 410.4351926827085,
+      "fp32": 99.61753845214844,
+      "serious": true
+     },
+     "fixture_index": 10
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 501,
+     "K": 7,
+     "loss_start_fp64": 73.76470306440444,
+     "fd": {
+      "status": 4,
+      "final_fp64": 64.54863632541674,
+      "fp32": 64.54866027832031,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 465.1383222024497,
+      "fp32": 57.6842041015625,
+      "serious": true
+     },
+     "fixture_index": 11
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 543,
+     "K": 10,
+     "loss_start_fp64": 237.28595748912937,
+     "fd": {
+      "status": 4,
+      "final_fp64": 88.75840556416009,
+      "fp32": 88.75843048095703,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 509.50440119795144,
+      "fp32": 93.49090576171875,
+      "serious": true
+     },
+     "fixture_index": 12
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 546,
+     "K": 10,
+     "loss_start_fp64": 184.82941757500498,
+     "fd": {
+      "status": 4,
+      "final_fp64": 176.57446930647632,
+      "fp32": 176.57440185546875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 530.1770453005611,
+      "fp32": 42.59376525878906,
+      "serious": true
+     },
+     "fixture_index": 13
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 809,
+     "K": 6,
+     "loss_start_fp64": 245.1115205662703,
+     "fd": {
+      "status": 4,
+      "final_fp64": 130.7107649360555,
+      "fp32": 130.7107696533203,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 619.6565691180931,
+      "fp32": 195.59434509277344,
+      "serious": true
+     },
+     "fixture_index": 14
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 1044,
+     "K": 11,
+     "loss_start_fp64": 258.4800315639709,
+     "fd": {
+      "status": 4,
+      "final_fp64": 225.06750276751612,
+      "fp32": 225.0675048828125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 579.4277499520065,
+      "fp32": 94.18832397460938,
+      "serious": true
+     },
+     "fixture_index": 15
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 2081,
+     "K": 10,
+     "loss_start_fp64": 237.46234835211553,
+     "fd": {
+      "status": 4,
+      "final_fp64": 186.0991617294433,
+      "fp32": 186.0991668701172,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 509.868601186697,
+      "fp32": 229.109375,
+      "serious": true
+     },
+     "fixture_index": 16
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 2372,
+     "K": 6,
+     "loss_start_fp64": 73.76472943010941,
+     "fd": {
+      "status": 0,
+      "final_fp64": 194.8912061326949,
+      "fp32": 49.1739501953125,
+      "serious": true
+     },
+     "ad": {
+      "status": 2,
+      "final_fp64": 73.76448028268726,
+      "fp32": 73.76451110839844,
+      "serious": false
+     },
+     "fixture_index": 17
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 2397,
+     "K": 5,
+     "loss_start_fp64": 226.7557499834042,
+     "fd": {
+      "status": 0,
+      "final_fp64": 148.9571529760309,
+      "fp32": 149.19927978515625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 514.2736249007511,
+      "fp32": 204.9966278076172,
+      "serious": true
+     },
+     "fixture_index": 18
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 2477,
+     "K": 11,
+     "loss_start_fp64": 275.048234179476,
+     "fd": {
+      "status": 4,
+      "final_fp64": 274.7890796238899,
+      "fp32": 274.78912353515625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 559.9011147759354,
+      "fp32": 272.77081298828125,
+      "serious": true
+     },
+     "fixture_index": 19
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 3121,
+     "K": 11,
+     "loss_start_fp64": 126.57865438497613,
+     "fd": {
+      "status": 0,
+      "final_fp64": 0.013077624482148694,
+      "fp32": 0.013077596202492714,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 695.6060683054712,
+      "fp32": 90.74980926513672,
+      "serious": true
+     },
+     "fixture_index": 20
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 3208,
+     "K": 10,
+     "loss_start_fp64": 202.29161132992652,
+     "fd": {
+      "status": 4,
+      "final_fp64": 199.82871817885615,
+      "fp32": 199.8286895751953,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 513.8190346703334,
+      "fp32": 159.08383178710938,
+      "serious": true
+     },
+     "fixture_index": 21
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 3284,
+     "K": 7,
+     "loss_start_fp64": 92.14387914415781,
+     "fd": {
+      "status": 0,
+      "final_fp64": 480.1096602819191,
+      "fp32": 85.51575469970703,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 84.58652479019386,
+      "fp32": 84.40522003173828,
+      "serious": false
+     },
+     "fixture_index": 22
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 64,
+     "orig_index": 3643,
+     "K": 10,
+     "loss_start_fp64": 665.6288477243803,
+     "fd": {
+      "status": 0,
+      "final_fp64": 383.69708199928516,
+      "fp32": 383.80584716796875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1734.9692855046906,
+      "fp32": 2841.502197265625,
+      "serious": true
+     },
+     "fixture_index": 23
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 100,
+     "orig_index": 998,
+     "K": 10,
+     "loss_start_fp64": 212.23827386037536,
+     "fd": {
+      "status": 4,
+      "final_fp64": 206.54925627866027,
+      "fp32": 206.64222717285156,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 575.132159169524,
+      "fp32": 94.59716033935547,
+      "serious": true
+     },
+     "fixture_index": 24
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 100,
+     "orig_index": 1351,
+     "K": 5,
+     "loss_start_fp64": 98.58276865092529,
+     "fd": {
+      "status": 0,
+      "final_fp64": 434.2880259104238,
+      "fp32": 62.984466552734375,
+      "serious": true
+     },
+     "ad": {
+      "status": 2,
+      "final_fp64": 98.57435393519236,
+      "fp32": 98.57435607910156,
+      "serious": false
+     },
+     "fixture_index": 25
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 100,
+     "orig_index": 1633,
+     "K": 6,
+     "loss_start_fp64": 90.7503424093344,
+     "fd": {
+      "status": 4,
+      "final_fp64": 90.24565194109479,
+      "fp32": 90.24569702148438,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 425.24243127400064,
+      "fp32": 81.98262023925781,
+      "serious": true
+     },
+     "fixture_index": 26
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 100,
+     "orig_index": 2182,
+     "K": 8,
+     "loss_start_fp64": 235.20143981770968,
+     "fd": {
+      "status": 4,
+      "final_fp64": 45.71186501308552,
+      "fp32": 45.71186447143555,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 550.3429838366742,
+      "fp32": 42.98588943481445,
+      "serious": true
+     },
+     "fixture_index": 27
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 100,
+     "orig_index": 2251,
+     "K": 10,
+     "loss_start_fp64": 192.17869303956425,
+     "fd": {
+      "status": 0,
+      "final_fp64": 143.11065504585844,
+      "fp32": 143.11871337890625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1211.4886714026102,
+      "fp32": 1206.0235595703125,
+      "serious": true
+     },
+     "fixture_index": 28
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 100,
+     "orig_index": 3452,
+     "K": 5,
+     "loss_start_fp64": 81.4427616076348,
+     "fd": {
+      "status": 0,
+      "final_fp64": 544.2211857619317,
+      "fp32": 49.06190872192383,
+      "serious": true
+     },
+     "ad": {
+      "status": 2,
+      "final_fp64": 71.01240674990258,
+      "fp32": 71.01240539550781,
+      "serious": false
+     },
+     "fixture_index": 29
+    },
+    {
+     "problem": "nguyen/9",
+     "gen": 100,
+     "orig_index": 3744,
+     "K": 10,
+     "loss_start_fp64": 240.7296979087967,
+     "fd": {
+      "status": 4,
+      "final_fp64": 239.1943370791853,
+      "fp32": 239.1942138671875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 509.2220211944841,
+      "fp32": 144.53900146484375,
+      "serious": true
+     },
+     "fixture_index": 30
+    }
+   ]
+  },
+  "nguyen/10": {
+   "file": "fixture__nguyen_10.bin",
+   "M": 59,
+   "trees": [
+    {
+     "problem": "nguyen/10",
+     "gen": 0,
+     "orig_index": 178,
+     "K": 4,
+     "loss_start_fp64": 223657.51854554954,
+     "fd": {
+      "status": 0,
+      "final_fp64": 470804.9240837761,
+      "fp32": 182557.15625,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 130575.53255478202,
+      "fp32": 171333.609375,
+      "serious": false
+     },
+     "fixture_index": 0
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 0,
+     "orig_index": 608,
+     "K": 8,
+     "loss_start_fp64": 100.64045789754914,
+     "fd": {
+      "status": 4,
+      "final_fp64": 97.81076051189088,
+      "fp32": 97.81076049804688,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 247.97721832132572,
+      "fp32": 93.12178039550781,
+      "serious": true
+     },
+     "fixture_index": 1
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 0,
+     "orig_index": 883,
+     "K": 8,
+     "loss_start_fp64": 241131.67882279138,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2071940.1453245007,
+      "fp32": 173238.9375,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 11115788.858401082,
+      "fp32": 155420.9375,
+      "serious": true
+     },
+     "fixture_index": 2
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 0,
+     "orig_index": 1338,
+     "K": 5,
+     "loss_start_fp64": 1862.1796442915131,
+     "fd": {
+      "status": 0,
+      "final_fp64": 659.0939640673782,
+      "fp32": 658.9476928710938,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 3857490.77307776,
+      "fp32": 5214756.0,
+      "serious": true
+     },
+     "fixture_index": 3
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 0,
+     "orig_index": 1523,
+     "K": 9,
+     "loss_start_fp64": 28190.09086968441,
+     "fd": {
+      "status": 0,
+      "final_fp64": 34316.98500817775,
+      "fp32": 27278.52734375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 77733.51459389634,
+      "fp32": 4976.67138671875,
+      "serious": true
+     },
+     "fixture_index": 4
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 0,
+     "orig_index": 3899,
+     "K": 8,
+     "loss_start_fp64": 1468225.5653801586,
+     "fd": {
+      "status": 0,
+      "final_fp64": 670.961867216118,
+      "fp32": 518.6611328125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 8818135.184004806,
+      "fp32": 1124818.25,
+      "serious": true
+     },
+     "fixture_index": 5
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 4,
+     "orig_index": 52,
+     "K": 11,
+     "loss_start_fp64": 51.225991231234715,
+     "fd": {
+      "status": 1,
+      "final_fp64": 25.620048271055126,
+      "fp32": 25.607364654541016,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 112.69780990464707,
+      "fp32": 115.60733032226562,
+      "serious": true
+     },
+     "fixture_index": 6
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 4,
+     "orig_index": 1099,
+     "K": 9,
+     "loss_start_fp64": 54.407507648243985,
+     "fd": {
+      "status": 1,
+      "final_fp64": 77.50462668230223,
+      "fp32": 77.39273834228516,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 235.12926836094397,
+      "fp32": 24.313003540039062,
+      "serious": true
+     },
+     "fixture_index": 7
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 4,
+     "orig_index": 2050,
+     "K": 10,
+     "loss_start_fp64": 52.705966314851054,
+     "fd": {
+      "status": 4,
+      "final_fp64": 52.47386665711879,
+      "fp32": 52.4738883972168,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 309.6125067119357,
+      "fp32": 43.53585433959961,
+      "serious": true
+     },
+     "fixture_index": 8
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 4,
+     "orig_index": 2204,
+     "K": 5,
+     "loss_start_fp64": 101.79997032363437,
+     "fd": {
+      "status": 4,
+      "final_fp64": 99.86521308383666,
+      "fp32": 99.86521911621094,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 530.3835293171935,
+      "fp32": 96.00161743164062,
+      "serious": true
+     },
+     "fixture_index": 9
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 4,
+     "orig_index": 3061,
+     "K": 7,
+     "loss_start_fp64": 432.9293659130965,
+     "fd": {
+      "status": 4,
+      "final_fp64": 46.84734602932219,
+      "fp32": 46.848541259765625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1295.518752332614,
+      "fp32": 11.49548625946045,
+      "serious": true
+     },
+     "fixture_index": 10
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 248,
+     "K": 12,
+     "loss_start_fp64": 301.80139079901755,
+     "fd": {
+      "status": 2,
+      "final_fp64": 292.07169255896775,
+      "fp32": 292.07171630859375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 113506.22040298085,
+      "fp32": 18.2777099609375,
+      "serious": true
+     },
+     "fixture_index": 11
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 300,
+     "K": 6,
+     "loss_start_fp64": 338.50154657668094,
+     "fd": {
+      "status": 2,
+      "final_fp64": 245.16468612937484,
+      "fp32": 245.16470336914062,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 910529.9472259083,
+      "fp32": 16.60686492919922,
+      "serious": true
+     },
+     "fixture_index": 12
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 327,
+     "K": 11,
+     "loss_start_fp64": 299.6031461432833,
+     "fd": {
+      "status": 0,
+      "final_fp64": 658.9019837754363,
+      "fp32": 193.83633422851562,
+      "serious": true
+     },
+     "ad": {
+      "status": 4,
+      "final_fp64": 497986.0334047989,
+      "fp32": 87.33379364013672,
+      "serious": false
+     },
+     "fixture_index": 13
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 348,
+     "K": 10,
+     "loss_start_fp64": 462.8709667009914,
+     "fd": {
+      "status": 2,
+      "final_fp64": 462.8709667009914,
+      "fp32": 462.8709716796875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1391402.8702091083,
+      "fp32": 13.592779159545898,
+      "serious": true
+     },
+     "fixture_index": 14
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 400,
+     "K": 11,
+     "loss_start_fp64": 299.6768153280166,
+     "fd": {
+      "status": 2,
+      "final_fp64": 299.6768153280166,
+      "fp32": 299.67681884765625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 488855.6408321639,
+      "fp32": 17.915878295898438,
+      "serious": true
+     },
+     "fixture_index": 15
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 449,
+     "K": 9,
+     "loss_start_fp64": 226.59235487318836,
+     "fd": {
+      "status": 0,
+      "final_fp64": 12.576249428789993,
+      "fp32": 12.576231002807617,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 727.8479457369405,
+      "fp32": 31.30092430114746,
+      "serious": true
+     },
+     "fixture_index": 16
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 576,
+     "K": 12,
+     "loss_start_fp64": 419.62617802080854,
+     "fd": {
+      "status": 2,
+      "final_fp64": 419.62617802080854,
+      "fp32": 419.62628173828125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 116121.09882706849,
+      "fp32": 247.85528564453125,
+      "serious": true
+     },
+     "fixture_index": 17
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 650,
+     "K": 10,
+     "loss_start_fp64": 302.33740916224394,
+     "fd": {
+      "status": 4,
+      "final_fp64": 291.86766148970446,
+      "fp32": 291.8677978515625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 288170.0135970968,
+      "fp32": 16.591402053833008,
+      "serious": true
+     },
+     "fixture_index": 18
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 989,
+     "K": 12,
+     "loss_start_fp64": 452.50148169233586,
+     "fd": {
+      "status": 2,
+      "final_fp64": 423.21603888917446,
+      "fp32": 423.21600341796875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 112868.98230087964,
+      "fp32": 421.6159362792969,
+      "serious": true
+     },
+     "fixture_index": 19
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 1285,
+     "K": 10,
+     "loss_start_fp64": 299.6312957643994,
+     "fd": {
+      "status": 1,
+      "final_fp64": 195.34559923506177,
+      "fp32": 195.34524536132812,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 799562.620691513,
+      "fp32": 19.592931747436523,
+      "serious": true
+     },
+     "fixture_index": 20
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 1640,
+     "K": 11,
+     "loss_start_fp64": 1719.448084256379,
+     "fd": {
+      "status": 2,
+      "final_fp64": 1719.448084256379,
+      "fp32": 1719.447509765625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 703041.3423814372,
+      "fp32": 1938.4090576171875,
+      "serious": true
+     },
+     "fixture_index": 21
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 1820,
+     "K": 12,
+     "loss_start_fp64": 312.6421412128349,
+     "fd": {
+      "status": 4,
+      "final_fp64": 291.92217260498757,
+      "fp32": 291.9223327636719,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 192040.71827546062,
+      "fp32": 16.591917037963867,
+      "serious": true
+     },
+     "fixture_index": 22
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 2366,
+     "K": 10,
+     "loss_start_fp64": 10887177.739545373,
+     "fd": {
+      "status": 0,
+      "final_fp64": 2288212.9744023695,
+      "fp32": 2288264.5,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 35291860.451715626,
+      "fp32": 1392215.375,
+      "serious": true
+     },
+     "fixture_index": 23
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 2420,
+     "K": 11,
+     "loss_start_fp64": 337185.7021375345,
+     "fd": {
+      "status": 0,
+      "final_fp64": 380.44672772289323,
+      "fp32": 380.4452819824219,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 3602524.4059227007,
+      "fp32": 427.856201171875,
+      "serious": true
+     },
+     "fixture_index": 24
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 2588,
+     "K": 11,
+     "loss_start_fp64": 300.84807925654314,
+     "fd": {
+      "status": 0,
+      "final_fp64": 16.374014387120493,
+      "fp32": 16.3740291595459,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 783.8090683131096,
+      "fp32": 215.54107666015625,
+      "serious": true
+     },
+     "fixture_index": 25
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 2736,
+     "K": 11,
+     "loss_start_fp64": 294.07279159685174,
+     "fd": {
+      "status": 2,
+      "final_fp64": 294.07279159685174,
+      "fp32": 294.0728759765625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 68666799.80861872,
+      "fp32": 25.589557647705078,
+      "serious": true
+     },
+     "fixture_index": 26
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 2914,
+     "K": 10,
+     "loss_start_fp64": 220.21650902110636,
+     "fd": {
+      "status": 0,
+      "final_fp64": 193.19928557100536,
+      "fp32": 193.1991729736328,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 441.6890369924811,
+      "fp32": 442.19659423828125,
+      "serious": true
+     },
+     "fixture_index": 27
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 3545,
+     "K": 7,
+     "loss_start_fp64": 295.2980703979691,
+     "fd": {
+      "status": 4,
+      "final_fp64": 192.0146136834927,
+      "fp32": 192.01461791992188,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1252835.8878079662,
+      "fp32": 161.19265747070312,
+      "serious": true
+     },
+     "fixture_index": 28
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 3914,
+     "K": 12,
+     "loss_start_fp64": 237.05609727261407,
+     "fd": {
+      "status": 1,
+      "final_fp64": 7.320324776548648,
+      "fp32": 7.320269584655762,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 223929.0587613709,
+      "fp32": 123.11611938476562,
+      "serious": true
+     },
+     "fixture_index": 29
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 16,
+     "orig_index": 3990,
+     "K": 12,
+     "loss_start_fp64": 342.0020965153943,
+     "fd": {
+      "status": 4,
+      "final_fp64": 321.1218769129023,
+      "fp32": 321.1220397949219,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 9573826.973046752,
+      "fp32": 59.319862365722656,
+      "serious": true
+     },
+     "fixture_index": 30
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 70,
+     "K": 10,
+     "loss_start_fp64": 16.526129597794636,
+     "fd": {
+      "status": 0,
+      "final_fp64": 5.509411402379732e-10,
+      "fp32": 5.494052990329124e-10,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 40.01469361884321,
+      "fp32": 4.893490768154152e-07,
+      "serious": true
+     },
+     "fixture_index": 31
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 252,
+     "K": 9,
+     "loss_start_fp64": 89.05178823741775,
+     "fd": {
+      "status": 4,
+      "final_fp64": 88.92758482289153,
+      "fp32": 88.92758178710938,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 552.2089817617539,
+      "fp32": 81.10352325439453,
+      "serious": true
+     },
+     "fixture_index": 32
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 355,
+     "K": 10,
+     "loss_start_fp64": 88.941002570027,
+     "fd": {
+      "status": 0,
+      "final_fp64": 598.388752097,
+      "fp32": 87.67346954345703,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 622.6430021220679,
+      "fp32": 87.90643310546875,
+      "serious": true
+     },
+     "fixture_index": 33
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 482,
+     "K": 9,
+     "loss_start_fp64": 8.842342896252507,
+     "fd": {
+      "status": 4,
+      "final_fp64": 0.36271696738063797,
+      "fp32": 0.3627218008041382,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 39.89515308601828,
+      "fp32": 0.08137086033821106,
+      "serious": true
+     },
+     "fixture_index": 34
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 978,
+     "K": 9,
+     "loss_start_fp64": 116.10709214229956,
+     "fd": {
+      "status": 0,
+      "final_fp64": 686.3862439450822,
+      "fp32": 109.49114990234375,
+      "serious": true
+     },
+     "ad": {
+      "status": 4,
+      "final_fp64": 656.1669754683163,
+      "fp32": 116.07186126708984,
+      "serious": false
+     },
+     "fixture_index": 35
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 1246,
+     "K": 11,
+     "loss_start_fp64": 6413.007317784033,
+     "fd": {
+      "status": 4,
+      "final_fp64": 1306.578353833258,
+      "fp32": 1306.5784912109375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 37839.86453780404,
+      "fp32": 52030.2578125,
+      "serious": true
+     },
+     "fixture_index": 36
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 1634,
+     "K": 11,
+     "loss_start_fp64": 20.188967355550584,
+     "fd": {
+      "status": 4,
+      "final_fp64": 20.188967355550584,
+      "fp32": 20.188934326171875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 41.28806958346404,
+      "fp32": 0.04463065043091774,
+      "serious": true
+     },
+     "fixture_index": 37
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 1753,
+     "K": 8,
+     "loss_start_fp64": 116.07590943249818,
+     "fd": {
+      "status": 4,
+      "final_fp64": 662.0041502449735,
+      "fp32": 113.943603515625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 666.269264336523,
+      "fp32": 113.13511657714844,
+      "serious": true
+     },
+     "fixture_index": 38
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 2294,
+     "K": 5,
+     "loss_start_fp64": 116.11546863779245,
+     "fd": {
+      "status": 4,
+      "final_fp64": 116.07186753573981,
+      "fp32": 116.07186126708984,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 683.3176878284909,
+      "fp32": 115.21784973144531,
+      "serious": true
+     },
+     "fixture_index": 39
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 2726,
+     "K": 10,
+     "loss_start_fp64": 6055.297720141646,
+     "fd": {
+      "status": 4,
+      "final_fp64": 6055.297720141646,
+      "fp32": 6055.296875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 58181.95496047679,
+      "fp32": 61121.18359375,
+      "serious": true
+     },
+     "fixture_index": 40
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 3270,
+     "K": 12,
+     "loss_start_fp64": 6059.240906832863,
+     "fd": {
+      "status": 4,
+      "final_fp64": 6059.240906832863,
+      "fp32": 6059.24072265625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 75686.33316529894,
+      "fp32": 77118.1640625,
+      "serious": true
+     },
+     "fixture_index": 41
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 3465,
+     "K": 10,
+     "loss_start_fp64": 116.07987559141094,
+     "fd": {
+      "status": 0,
+      "final_fp64": 660.9864329750919,
+      "fp32": 115.73625946044922,
+      "serious": true
+     },
+     "ad": {
+      "status": 2,
+      "final_fp64": 116.07987559141094,
+      "fp32": 116.07989501953125,
+      "serious": false
+     },
+     "fixture_index": 42
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 3507,
+     "K": 9,
+     "loss_start_fp64": 2626.436910553244,
+     "fd": {
+      "status": 4,
+      "final_fp64": 2626.436910553244,
+      "fp32": 2626.436767578125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 3824454.030876362,
+      "fp32": 818.0257568359375,
+      "serious": true
+     },
+     "fixture_index": 43
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 3528,
+     "K": 10,
+     "loss_start_fp64": 6055.829559341737,
+     "fd": {
+      "status": 4,
+      "final_fp64": 6055.829559341737,
+      "fp32": 6055.8291015625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 27396.475982479293,
+      "fp32": 26844.9609375,
+      "serious": true
+     },
+     "fixture_index": 44
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 3533,
+     "K": 8,
+     "loss_start_fp64": 116.11498676058926,
+     "fd": {
+      "status": 0,
+      "final_fp64": 680.8419585882664,
+      "fp32": 107.91093444824219,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 656.532419571525,
+      "fp32": 108.26348876953125,
+      "serious": true
+     },
+     "fixture_index": 45
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 3538,
+     "K": 9,
+     "loss_start_fp64": 139424.7731829971,
+     "fd": {
+      "status": 4,
+      "final_fp64": 10414.866150587546,
+      "fp32": 8803.9853515625,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 331787.9015783876,
+      "fp32": 10863.734375,
+      "serious": true
+     },
+     "fixture_index": 46
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 3580,
+     "K": 12,
+     "loss_start_fp64": 439.22128527962695,
+     "fd": {
+      "status": 4,
+      "final_fp64": 412.90657745602994,
+      "fp32": 412.9067687988281,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 2112.3449655577856,
+      "fp32": 350.9556884765625,
+      "serious": true
+     },
+     "fixture_index": 47
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 3753,
+     "K": 10,
+     "loss_start_fp64": 424.4288803537294,
+     "fd": {
+      "status": 4,
+      "final_fp64": 423.5734038919612,
+      "fp32": 423.5733642578125,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 1847.3189516243544,
+      "fp32": 363.810302734375,
+      "serious": true
+     },
+     "fixture_index": 48
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 3858,
+     "K": 9,
+     "loss_start_fp64": 6059.75791353284,
+     "fd": {
+      "status": 4,
+      "final_fp64": 6059.75791353284,
+      "fp32": 6059.7568359375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 70157.41179681403,
+      "fp32": 70701.015625,
+      "serious": true
+     },
+     "fixture_index": 49
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 64,
+     "orig_index": 3945,
+     "K": 2,
+     "loss_start_fp64": 269.80055895808977,
+     "fd": {
+      "status": 0,
+      "final_fp64": 116.07186717605862,
+      "fp32": 116.07186126708984,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 650.1648306624857,
+      "fp32": 114.03398132324219,
+      "serious": true
+     },
+     "fixture_index": 50
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 100,
+     "orig_index": 243,
+     "K": 8,
+     "loss_start_fp64": 215.68713741753095,
+     "fd": {
+      "status": 0,
+      "final_fp64": 552.224570304885,
+      "fp32": 1505.2850341796875,
+      "serious": true
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 87.55614541011784,
+      "fp32": 87.55646514892578,
+      "serious": false
+     },
+     "fixture_index": 51
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 100,
+     "orig_index": 1426,
+     "K": 8,
+     "loss_start_fp64": 236.56750643504887,
+     "fd": {
+      "status": 0,
+      "final_fp64": 160.35074316302308,
+      "fp32": 168.3724822998047,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 717.0043570698116,
+      "fp32": 725.0740966796875,
+      "serious": true
+     },
+     "fixture_index": 52
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 100,
+     "orig_index": 1510,
+     "K": 8,
+     "loss_start_fp64": 104.97974060114777,
+     "fd": {
+      "status": 4,
+      "final_fp64": 104.97974060114777,
+      "fp32": 104.9798355102539,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 239.15351676224046,
+      "fp32": 239.19219970703125,
+      "serious": true
+     },
+     "fixture_index": 53
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 100,
+     "orig_index": 2428,
+     "K": 8,
+     "loss_start_fp64": 105.28276924793626,
+     "fd": {
+      "status": 4,
+      "final_fp64": 105.28276924793626,
+      "fp32": 105.28282165527344,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 696.6250236302187,
+      "fp32": 689.2030029296875,
+      "serious": true
+     },
+     "fixture_index": 54
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 100,
+     "orig_index": 2859,
+     "K": 8,
+     "loss_start_fp64": 105.27144162164355,
+     "fd": {
+      "status": 4,
+      "final_fp64": 105.27144162164355,
+      "fp32": 105.271484375,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 697.3482409300734,
+      "fp32": 654.6414184570312,
+      "serious": true
+     },
+     "fixture_index": 55
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 100,
+     "orig_index": 3185,
+     "K": 9,
+     "loss_start_fp64": 105.30237946724418,
+     "fd": {
+      "status": 4,
+      "final_fp64": 105.30237946724418,
+      "fp32": 105.30242919921875,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 19131.36782159217,
+      "fp32": 23.940528869628906,
+      "serious": true
+     },
+     "fixture_index": 56
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 100,
+     "orig_index": 3204,
+     "K": 4,
+     "loss_start_fp64": 89.50246800193005,
+     "fd": {
+      "status": 4,
+      "final_fp64": 88.78756496937869,
+      "fp32": 88.78756713867188,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 589.0373878422345,
+      "fp32": 88.2791976928711,
+      "serious": true
+     },
+     "fixture_index": 57
+    },
+    {
+     "problem": "nguyen/10",
+     "gen": 100,
+     "orig_index": 3571,
+     "K": 7,
+     "loss_start_fp64": 105.29163859480417,
+     "fd": {
+      "status": 0,
+      "final_fp64": 16.779651885849695,
+      "fp32": 16.774852752685547,
+      "serious": false
+     },
+     "ad": {
+      "status": 0,
+      "final_fp64": 50717.51075957725,
+      "fp32": 0.013924770057201385,
+      "serious": true
+     },
+     "fixture_index": 58
+    }
+   ]
+  }
+ },
+ "total_trees": 257
+}
