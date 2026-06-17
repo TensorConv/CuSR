@@ -237,7 +237,20 @@ flags 与基线一致: `-O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math`。
 
 within_1.05× 的 11.6pp 缺口 **100% 来自集合构成**: AD 多收敛 FD 直接 Cholesky-fail 的 ~112 棵难树 (113/115 loss 下降), 这些病态树 fp32 追不上 scipy fp64 (within_1.05× 仅 35.7%), 进了 AD 分母却超 1.05×。**FD 的高分是靠放弃难树换来的。** 故 within_1.05× **不是集合不变量**, 不应据此判 AD 劣于 FD。
 
-**性能**: AD 2431 trees/s vs FD 1776 (pop.bin, **+37%**); AD kernel 44 寄存器 (FD 45), lmem 2304 B/thread (AD_W=8 single-chunk 覆盖 K_max=8 的真实负载)。rung-5 profiling (-DPROFILE, pop.bin): **J 生产段 88.7→29.7ms (3.0× 塌缩)**, loop 131→77ms (1.70×); J 生产从 FD loop 的 67.5% 降到 AD 的 38.6%, 两趟树解释 (ad_jac+eval=57ms) 现占 74% → v4.1 融合 eval 是下一杠杆。详见 `tests/v4_validation/profile_ad_vs_fd.txt`。
+**性能**: AD 2431 trees/s vs FD 1776 (pop.bin, **+37%**); AD kernel 44 寄存器 (FD 45), lmem 2304 B/thread (AD_W=8 single-chunk 覆盖 K_max=8 的真实负载)。rung-5 profiling (-DPROFILE, pop.bin): **J 生产段 88.7→29.7ms (3.0× 塌缩)**, loop 131→77ms (1.70×); J 生产从 FD loop 的 67.5% 降到 AD 的 38.6%, 两趟树解释 (ad_jac+eval=57ms) 现占 74% → v4.1 融合 eval 是下一杠杆。(脚本在 `tests/v4_validation/`; 原始 `.txt` 输出 gitignore, 跑脚本重生。)
+
+**真实负载吞吐 (benchmark corpus, 2026-06-17; 脚本 `tests/v4_validation/{operon_sweep,throughput_sweep}.py`)**: 端到端 AD/FD **~1.23–1.29×, 跨 scale 稳定, 不随 M 放大**:
+
+| 负载 | M | mean K | AD/FD (端到端 trees/s) |
+|---|---|---|---|
+| synth early-gen | 64k | 1.7 | 1.22× |
+| synth early-gen | 256k | 1.7 | 1.12× |
+| Operon pre-CO (len32) | 4k | 6–11 | 1.23× (中位, 15 cells) |
+| nguyen_5 (EvoGP) | **65k** | 11 | **1.27×** |
+
+**为什么不随 scale 放大** (反直觉, 重要): loop speedup 在全 K 区间稳定 ~1.27–1.3×, 因为 J 生产的**加速比**与其**占 loop 比例**反向抵消。J 生产单核加速随 K **非单调**: K~2.8 (EvoGP 设计负载) **3.0×**, K~1.7 1.76×, K~11 (Operon dense) **仅 1.49×** —— 高 K 时 chunked-forward 每趟携带 ~K 个切向量, **算术主导**, walk-count 优势 (FD `1+K` 趟 → AD `ceil(K/8)` 趟) 被吃掉。且 build_jtj (高 K 下占 AD loop ~20%) + eval 是 AD 不碰的共享开销。
+
+→ **AD 的甜点是 K~2-5 的 EvoGP 设计负载**; Operon dense (K 12-22) 是 stress test (operon_baseline README 自述 "~2.8× denser than evogp, not the kernel's design workload")。高 K 大 M 要再快必须 **v4.1**: 融合 J→JtJ 免物化 d_J (砍掉那 ~20% build_jtj) + 按 K 分桶调 AD_W (高 K 时 AD_W=8 携带过宽)。
 
 **12 角度 adversarial review**: 0 个被确认的 high/critical bug。两个 HIGH (POW 负底数未测 / 高 K 跨 chunk 未测) 均被复核**驳回** (NaN 是正确契约且与 FD 一致 / 跨 chunk 干扰结构上不可能)。jvp-rules / warp-lane / chunk-boundary / djac-layout / lm-loop-semantics 全 clean。
 

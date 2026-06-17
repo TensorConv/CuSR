@@ -99,3 +99,5 @@ cusr/kernel/test_jvp_host
 cusr/kernel/tests/test_jvp_host
 cusr/kernel/tests/test_ad_jac
 cusr/kernel/*.o
+# v4_validation: track scripts (.py/.sh) + README only; raw outputs regenerate
+cusr/kernel/tests/v4_validation/*.txt
