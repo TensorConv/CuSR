@@ -5,17 +5,22 @@ Reproduces the gate's per-binary within_1.05x (should match 80.8% AD / 92.4% FD)
 then recomputes it on the STABLE set common to AD&FD&scipy. If AD~=FD there, the
 gate gap is purely that AD converges extra hard trees (good), not worse minima.
 """
-import sys, time, numpy as np, multiprocessing as mp
+import sys, time, os, numpy as np, multiprocessing as mp
 sys.path.insert(0, '/home/weish/hao/CuSR')
 from cusr.kernel.verify import load_pop_bin, _scipy_worker
 from cusr.kernel.tree_interpreter import eval_batch
 
-POP = '/home/weish/hao/CuSR/data/fixtures/pop.bin'
+# Defaults reproduce the pop.bin run; override via env to re-use on any corpus
+# (e.g. high-K Operon snapshots). SETCTRL_POP must match the corpus the AD/FD
+# out-dirs were produced from.
+POP = os.environ.get('SETCTRL_POP', '/home/weish/hao/CuSR/data/fixtures/pop.bin')
+AD_OUT = os.environ.get('SETCTRL_AD_OUT', '/tmp/cmp/ad_out')
+FD_OUT = os.environ.get('SETCTRL_FD_OUT', '/tmp/cmp/fd_out')
 pop = load_pop_bin(POP); M, xs = pop['M'], pop['xs']
-ad_c = np.fromfile('/tmp/cmp/ad_out/c_final.bin', dtype=np.float32)
-ad_st = np.fromfile('/tmp/cmp/ad_out/status.bin', dtype=np.int32)
-fd_c = np.fromfile('/tmp/cmp/fd_out/c_final.bin', dtype=np.float32)
-fd_st = np.fromfile('/tmp/cmp/fd_out/status.bin', dtype=np.int32)
+ad_c = np.fromfile(f'{AD_OUT}/c_final.bin', dtype=np.float32)
+ad_st = np.fromfile(f'{AD_OUT}/status.bin', dtype=np.int32)
+fd_c = np.fromfile(f'{FD_OUT}/c_final.bin', dtype=np.float32)
+fd_st = np.fromfile(f'{FD_OUT}/status.bin', dtype=np.int32)
 
 
 def gpu_loss(nt, nv, nn, c, ym):
