@@ -1,0 +1,399 @@
+{
+  "drift": {
+    "korns/11": {
+      "32": {
+        "0": {
+          "mean_K": 1.7306666666666668,
+          "mean_nodes": 6.930666666666666,
+          "K_max": 7,
+          "max_nodes": 15
+        },
+        "1": {
+          "mean_K": 1.802833333333333,
+          "mean_nodes": 6.426333333333333,
+          "K_max": 10,
+          "max_nodes": 28
+        },
+        "2": {
+          "mean_K": 1.9270000000000003,
+          "mean_nodes": 6.373333333333332,
+          "K_max": 13,
+          "max_nodes": 32
+        },
+        "4": {
+          "mean_K": 3.074833333333333,
+          "mean_nodes": 8.696333333333333,
+          "K_max": 13,
+          "max_nodes": 32
+        },
+        "8": {
+          "mean_K": 6.495833333333334,
+          "mean_nodes": 17.3075,
+          "K_max": 16,
+          "max_nodes": 32
+        },
+        "16": {
+          "mean_K": 7.995833333333333,
+          "mean_nodes": 24.87183333333333,
+          "K_max": 16,
+          "max_nodes": 32
+        },
+        "32": {
+          "mean_K": 7.565666666666666,
+          "mean_nodes": 26.898833333333332,
+          "K_max": 14,
+          "max_nodes": 32
+        },
+        "64": {
+          "mean_K": 6.000166666666666,
+          "mean_nodes": 27.58016666666667,
+          "K_max": 12,
+          "max_nodes": 32
+        },
+        "100": {
+          "mean_K": 6.279333333333334,
+          "mean_nodes": 27.480333333333334,
+          "K_max": 13,
+          "max_nodes": 32
+        }
+      },
+      "64": {
+        "0": {
+          "mean_K": 1.7306666666666668,
+          "mean_nodes": 6.930666666666666,
+          "K_max": 7,
+          "max_nodes": 15
+        },
+        "1": {
+          "mean_K": 1.802833333333333,
+          "mean_nodes": 6.426333333333333,
+          "K_max": 10,
+          "max_nodes": 28
+        },
+        "2": {
+          "mean_K": 1.9276666666666664,
+          "mean_nodes": 6.375,
+          "K_max": 14,
+          "max_nodes": 36
+        },
+        "4": {
+          "mean_K": 3.0983333333333327,
+          "mean_nodes": 8.805833333333334,
+          "K_max": 18,
+          "max_nodes": 59
+        },
+        "8": {
+          "mean_K": 6.998166666666666,
+          "mean_nodes": 18.884833333333336,
+          "K_max": 26,
+          "max_nodes": 64
+        },
+        "16": {
+          "mean_K": 13.953333333333333,
+          "mean_nodes": 43.4605,
+          "K_max": 28,
+          "max_nodes": 64
+        },
+        "32": {
+          "mean_K": 15.238833333333334,
+          "mean_nodes": 51.743833333333335,
+          "K_max": 27,
+          "max_nodes": 64
+        },
+        "64": {
+          "mean_K": 13.998833333333332,
+          "mean_nodes": 56.473666666666674,
+          "K_max": 21,
+          "max_nodes": 64
+        },
+        "100": {
+          "mean_K": 12.713500000000002,
+          "mean_nodes": 57.33033333333333,
+          "K_max": 22,
+          "max_nodes": 64
+        }
+      }
+    },
+    "korns/12": {
+      "32": {
+        "0": {
+          "mean_K": 1.7306666666666668,
+          "mean_nodes": 6.930666666666666,
+          "K_max": 7,
+          "max_nodes": 15
+        },
+        "1": {
+          "mean_K": 1.6126666666666665,
+          "mean_nodes": 5.823,
+          "K_max": 10,
+          "max_nodes": 27
+        },
+        "2": {
+          "mean_K": 1.5625,
+          "mean_nodes": 4.8385,
+          "K_max": 10,
+          "max_nodes": 29
+        },
+        "4": {
+          "mean_K": 1.83,
+          "mean_nodes": 4.479166666666667,
+          "K_max": 11,
+          "max_nodes": 32
+        },
+        "8": {
+          "mean_K": 1.2591666666666668,
+          "mean_nodes": 2.3511666666666664,
+          "K_max": 10,
+          "max_nodes": 25
+        },
+        "16": {
+          "mean_K": 1.8461666666666663,
+          "mean_nodes": 4.2865,
+          "K_max": 14,
+          "max_nodes": 32
+        },
+        "32": {
+          "mean_K": 6.014333333333333,
+          "mean_nodes": 18.752333333333336,
+          "K_max": 14,
+          "max_nodes": 32
+        },
+        "64": {
+          "mean_K": 5.050666666666667,
+          "mean_nodes": 22.41,
+          "K_max": 11,
+          "max_nodes": 32
+        },
+        "100": {
+          "mean_K": 4.665166666666667,
+          "mean_nodes": 22.435999999999996,
+          "K_max": 11,
+          "max_nodes": 32
+        }
+      },
+      "64": {
+        "0": {
+          "mean_K": 1.7306666666666668,
+          "mean_nodes": 6.930666666666666,
+          "K_max": 7,
+          "max_nodes": 15
+        },
+        "1": {
+          "mean_K": 1.6126666666666665,
+          "mean_nodes": 5.823,
+          "K_max": 10,
+          "max_nodes": 27
+        },
+        "2": {
+          "mean_K": 1.5625,
+          "mean_nodes": 4.8385,
+          "K_max": 10,
+          "max_nodes": 29
+        },
+        "4": {
+          "mean_K": 1.830166666666667,
+          "mean_nodes": 4.4795,
+          "K_max": 13,
+          "max_nodes": 33
+        },
+        "8": {
+          "mean_K": 1.2591666666666668,
+          "mean_nodes": 2.3511666666666664,
+          "K_max": 10,
+          "max_nodes": 25
+        },
+        "16": {
+          "mean_K": 1.895833333333333,
+          "mean_nodes": 4.4455,
+          "K_max": 16,
+          "max_nodes": 53
+        },
+        "32": {
+          "mean_K": 10.405666666666667,
+          "mean_nodes": 33.823,
+          "K_max": 26,
+          "max_nodes": 64
+        },
+        "64": {
+          "mean_K": 11.756666666666668,
+          "mean_nodes": 44.74883333333333,
+          "K_max": 24,
+          "max_nodes": 64
+        },
+        "100": {
+          "mean_K": 12.286333333333333,
+          "mean_nodes": 47.150666666666666,
+          "K_max": 26,
+          "max_nodes": 64
+        }
+      }
+    }
+  },
+  "per_problem": {
+    "korns/11": {
+      "mean_K": 13.795000000000002,
+      "mean_nodes": 56.70000000000001,
+      "K_max": 22,
+      "n_inner": 1
+    },
+    "korns/12": {
+      "mean_K": 14.366666666666667,
+      "mean_nodes": 55.967666666666666,
+      "K_max": 26,
+      "n_inner": 2
+    }
+  },
+  "kover_total": 0,
+  "prof": [
+    {
+      "dataset": "korns/11",
+      "gen": 0,
+      "M": 4000,
+      "fd_conv_pct": 49.5,
+      "fd_fail_chol": 486,
+      "fd_fail_nan": 207,
+      "fd_maxiter": 515,
+      "fd_k0": 811,
+      "ad_conv_pct": 44.9,
+      "ad_fail_chol": 423,
+      "ad_fail_nan": 230,
+      "ad_maxiter": 742,
+      "ad_k0": 811
+    },
+    {
+      "dataset": "korns/11",
+      "gen": 4,
+      "M": 4000,
+      "fd_conv_pct": 67.0,
+      "fd_fail_chol": 509,
+      "fd_fail_nan": 35,
+      "fd_maxiter": 600,
+      "fd_k0": 174,
+      "ad_conv_pct": 65.3,
+      "ad_fail_chol": 551,
+      "ad_fail_nan": 38,
+      "ad_maxiter": 624,
+      "ad_k0": 174
+    },
+    {
+      "dataset": "korns/11",
+      "gen": 16,
+      "M": 4000,
+      "fd_conv_pct": 39.1,
+      "fd_fail_chol": 1579,
+      "fd_fail_nan": 92,
+      "fd_maxiter": 742,
+      "fd_k0": 24,
+      "ad_conv_pct": 23.4,
+      "ad_fail_chol": 1730,
+      "ad_fail_nan": 84,
+      "ad_maxiter": 1227,
+      "ad_k0": 24
+    },
+    {
+      "dataset": "korns/11",
+      "gen": 64,
+      "M": 4000,
+      "fd_conv_pct": 5.7,
+      "fd_fail_chol": 3657,
+      "fd_fail_nan": 64,
+      "fd_maxiter": 43,
+      "fd_k0": 9,
+      "ad_conv_pct": 2.5,
+      "ad_fail_chol": 3656,
+      "ad_fail_nan": 62,
+      "ad_maxiter": 174,
+      "ad_k0": 9
+    },
+    {
+      "dataset": "korns/11",
+      "gen": 100,
+      "M": 4000,
+      "fd_conv_pct": 11.6,
+      "fd_fail_chol": 3327,
+      "fd_fail_nan": 71,
+      "fd_maxiter": 123,
+      "fd_k0": 16,
+      "ad_conv_pct": 6.1,
+      "ad_fail_chol": 3247,
+      "ad_fail_nan": 52,
+      "ad_maxiter": 440,
+      "ad_k0": 16
+    },
+    {
+      "dataset": "korns/12",
+      "gen": 0,
+      "M": 4000,
+      "fd_conv_pct": 45.4,
+      "fd_fail_chol": 499,
+      "fd_fail_nan": 188,
+      "fd_maxiter": 686,
+      "fd_k0": 811,
+      "ad_conv_pct": 44.2,
+      "ad_fail_chol": 387,
+      "ad_fail_nan": 219,
+      "ad_maxiter": 815,
+      "ad_k0": 811
+    },
+    {
+      "dataset": "korns/12",
+      "gen": 4,
+      "M": 4000,
+      "fd_conv_pct": 62.1,
+      "fd_fail_chol": 616,
+      "fd_fail_nan": 31,
+      "fd_maxiter": 638,
+      "fd_k0": 231,
+      "ad_conv_pct": 58.7,
+      "ad_fail_chol": 531,
+      "ad_fail_nan": 35,
+      "ad_maxiter": 855,
+      "ad_k0": 231
+    },
+    {
+      "dataset": "korns/12",
+      "gen": 16,
+      "M": 4000,
+      "fd_conv_pct": 59.6,
+      "fd_fail_chol": 981,
+      "fd_fail_nan": 34,
+      "fd_maxiter": 461,
+      "fd_k0": 140,
+      "ad_conv_pct": 55.6,
+      "ad_fail_chol": 976,
+      "ad_fail_nan": 46,
+      "ad_maxiter": 614,
+      "ad_k0": 140
+    },
+    {
+      "dataset": "korns/12",
+      "gen": 64,
+      "M": 4000,
+      "fd_conv_pct": 2.0,
+      "fd_fail_chol": 3859,
+      "fd_fail_nan": 15,
+      "fd_maxiter": 20,
+      "fd_k0": 27,
+      "ad_conv_pct": 1.2,
+      "ad_fail_chol": 3887,
+      "ad_fail_nan": 16,
+      "ad_maxiter": 23,
+      "ad_k0": 27
+    },
+    {
+      "dataset": "korns/12",
+      "gen": 100,
+      "M": 4000,
+      "fd_conv_pct": 4.0,
+      "fd_fail_chol": 3740,
+      "fd_fail_nan": 22,
+      "fd_maxiter": 52,
+      "fd_k0": 27,
+      "ad_conv_pct": 1.1,
+      "ad_fail_chol": 3890,
+      "ad_fail_nan": 26,
+      "ad_maxiter": 15,
+      "ad_k0": 27
+    }
+  ]
+}

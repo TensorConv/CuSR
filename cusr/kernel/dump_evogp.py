@@ -167,6 +167,35 @@ PROBLEMS = {
     "nguyen/10": {"skeleton_expr": "2*sin(x0)*cos(x1)", "variables": ["x0", "x1"],
                   "constants": [], "ground_truth_constants": [],
                   "sampling_ranges": [(0.0, 1.0), (0.0, 1.0)], "_note": "Nguyen-10  2sin(x)cos(y)"},
+
+    # --- Korns inner-constant magnifier (Korns 2011), FREQUENCY-class subset. ---
+    # Unlike every entry above (whose true constants are OUTER scales or absent),
+    # these bury constants INSIDE cos/sin as frequencies — positions linear
+    # least-squares cannot fit, so constant optimization (CO) is decisive here.
+    # Expressible with the GP funcset {+,-,*,/,sin,cos,tan}: the x0**3 in korns/11
+    # is only a y-generator (GP approximates it with x*x*x), same status as the
+    # POW/SQRT/LOG Feynman & Nguyen skeletons. Ranges restricted to the CO-benchmark
+    # [-5,5] convention (Korns' original U[-50,50] aliases the frequencies into
+    # noise). Inner-constant taxonomy: cusr/demonstrator/{problems,taxonomy}.py.
+    "korns/11": {
+        # 6.87 + 11*cos(7.23*x^3) — one inner frequency (7.23) with a cube ->
+        # severe aliasing, a known-ceiling target even with perfect CO.
+        "skeleton_expr": "c0 + c1*cos(c2*x0**3)",
+        "variables": ["x0"],
+        "constants": ["c0", "c1", "c2"],
+        "ground_truth_constants": [6.87, 11.0, 7.23],
+        "sampling_ranges": [(-5.0, 5.0)],
+        "_note": "Korns-11  6.87+11*cos(7.23*x^3)  — inner freq (cube), known ceiling",
+    },
+    "korns/12": {
+        # 2 - 2.1*cos(9.8*x0)*sin(1.3*x1) — two inner frequencies (9.8 & 1.3).
+        "skeleton_expr": "c0 + c1*cos(c2*x0)*sin(c3*x1)",
+        "variables": ["x0", "x1"],
+        "constants": ["c0", "c1", "c2", "c3"],
+        "ground_truth_constants": [2.0, -2.1, 9.8, 1.3],
+        "sampling_ranges": [(-5.0, 5.0), (-5.0, 5.0)],
+        "_note": "Korns-12  2-2.1*cos(9.8*x0)*sin(1.3*x1)  — two inner freqs",
+    },
 }
 
 
