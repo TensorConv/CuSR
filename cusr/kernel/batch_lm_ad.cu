@@ -24,13 +24,10 @@
 #include <ctime>
 #include <cuda_runtime.h>
 
-#include "pop_format.h"
-#include "ad_interp.cuh"   // v4: enum NTypeE / F_* / MAX_STACK / MAX_K + eval_tree_jvp_d + ad_jacobian_kernel
+#include "lm_core.cuh"     // shared: CUDA_CHECK, STATUS_*, eval_tree_d, eval_kernel_batched,
+                           // residual_kernel, loss_kernel, build_jtj_jtr_kernel, write_blob.
+                           // (pulls in pop_format.h + ad_interp.cuh: enums/bounds/JVP/AD kernel)
 #include "loader.h"
-
-#define CUDA_CHECK(x) do { cudaError_t e = (x); if (e != cudaSuccess) { \
-    fprintf(stderr, "CUDA error %s at %s:%d\n", cudaGetErrorString(e), __FILE__, __LINE__); \
-    exit(1); }} while(0)
 
 // ---- per-kernel profiling (-DPROFILE only) -----------------------------------
 // CUDA-event timing of every launch + H<->D copy in the LM loop, bucketed by
@@ -59,20 +56,10 @@ static inline void prof_end(int cat, cudaEvent_t s) {
 #define TEND(cat, v)
 #endif
 
-// enum NTypeE / FuncE (F_*) 与 MAX_STACK / MAX_K 现由 ad_interp.cuh 提供 (single
-// source of truth, 见 docs/kernel/AD_JACOBIAN_V4.md §5.1) — 删此处副本避免重定义。
-
-// status code:
-//   0 = CONVERGED         d_norm < xtol·(c_norm + xtol)
-//   1 = MAXITER           没收敛也没 fail, max_iter 用完
-//   2 = FAIL_NAN          loss/loss_try 出 NaN/Inf (eval 把树推到奇点)
-//   3 = K0_SKIP           K=0, 没常数可优化
-//   4 = FAIL_CHOLESKY     Cholesky breakdown 反复, λ 爆 > 1e12 (solve_kernel:s<=0)
-#define STATUS_CONVERGED      0
-#define STATUS_MAXITER        1
-#define STATUS_FAIL_NAN       2
-#define STATUS_K0_SKIP        3
-#define STATUS_FAIL_CHOLESKY  4
+// enum NTypeE / FuncE (F_*), MAX_STACK / MAX_K, STATUS_* codes, CUDA_CHECK,
+// eval_tree_d / eval_kernel_batched / residual_kernel / loss_kernel /
+// build_jtj_jtr_kernel / write_blob 现由 lm_core.cuh 提供 (single source of
+// truth, 见 docs/kernel/INPROCESS_CO_PLAN.md step 1) — 删此处副本避免重定义。
 
 // solve_kernel 数值旋钮 (exp012, 见 012/MIXED_PRECISION_PROBE.md). 起因: inner-const-heavy
 // tier-B 64.8% 软肋, 520 个 miss = 高 K 树 fp32 Cholesky s≤0. 根因 = 死/冗余常数(结构秩亏)
@@ -94,126 +81,8 @@ typedef float solve_t;
 #define PIVOT_FLOOR_EPS 1e-9f
 #endif
 
-__device__ float eval_tree_d(
-    const int *nt, const float *nv, int n_nodes, const int *const_idx,
-    const float *x, const float *c)
-{
-    float stack[MAX_STACK]; int sp = 0;
-    for (int i = n_nodes - 1; i >= 0; i--) {
-        int t = nt[i]; float v = nv[i];
-        if (t == N_VAR) stack[sp++] = x[(int)v];
-        else if (t == N_CONST) stack[sp++] = c[const_idx[i]];
-        else if (t == N_UFUNC) {
-            float a = stack[--sp]; int fid = (int)v; float r;
-            switch (fid) {
-                case F_SIN:  r=sinf(a);  break;
-                case F_COS:  r=cosf(a);  break;
-                case F_TAN:  r=tanf(a);  break;
-                case F_SINH: r=sinhf(a); break;
-                case F_COSH: r=coshf(a); break;
-                case F_TANH: r=tanhf(a); break;
-                case F_LOG:  r=logf(a);  break;
-                case F_EXP:  r=expf(a);  break;
-                case F_INV:  r=1.0f/a;   break;
-                case F_NEG:  r=-a;       break;
-                case F_ABS:  r=fabsf(a); break;
-                case F_SQRT: r=sqrtf(a); break;
-                default:     r=0.0f;     // unknown op -- silent failure 入口
-            }
-            stack[sp++] = r;
-        } else if (t == N_BFUNC) {
-            float l = stack[--sp]; float rv = stack[--sp];
-            int fid = (int)v; float o;
-            switch (fid) {
-                case F_ADD: o=l+rv;       break;
-                case F_SUB: o=l-rv;       break;
-                case F_MUL: o=l*rv;       break;
-                case F_DIV: o=l/rv;       break;
-                case F_POW: o=powf(l,rv); break;
-                case F_MAX: o=fmaxf(l,rv);break;
-                case F_MIN: o=fminf(l,rv);break;
-                case F_LT:  o=(l < rv)  ? 1.0f : 0.0f; break;
-                case F_GT:  o=(l > rv)  ? 1.0f : 0.0f; break;
-                case F_LE:  o=(l <= rv) ? 1.0f : 0.0f; break;
-                case F_GE:  o=(l >= rv) ? 1.0f : 0.0f; break;
-                default:    o=0.0f;       // unknown op -- silent failure 入口
-            }
-            stack[sp++] = o;
-        }
-    }
-    return stack[0];
-}
-
-__global__ void eval_kernel_batched(
-    const int *nt_all, const float *nv_all, const int *ci_all,
-    const TreeMeta *metas, int M_prob,
-    const float *xs, int n_vars, int N, const float *c_all, float *y_out)
-{
-    int wpb = blockDim.x / 32;
-    int wb = threadIdx.x / 32;
-    int lane = threadIdx.x & 31;
-    int m = blockIdx.x * wpb + wb;
-    if (m >= M_prob) return;
-    TreeMeta meta = metas[m];
-    const int *nt = nt_all + meta.node_offset;
-    const float *nv = nv_all + meta.node_offset;
-    const int *ci = ci_all + meta.node_offset;
-    const float *c = c_all + meta.c_offset;
-    for (int i = lane; i < N; i += 32)
-        y_out[m * N + i] = eval_tree_d(nt, nv, meta.n_nodes, ci, xs + i * n_vars, c);
-}
-
-__global__ void residual_kernel(const float *yp, const float *ym, int total, float *r) {
-    int tid = blockIdx.x * blockDim.x + threadIdx.x;
-    if (tid >= total) return;
-    r[tid] = yp[tid] - ym[tid];  // ym 是 [M_prob*N] per-tree (real EvoGP dump 复制了)
-}
-
-__global__ void loss_kernel(const float *r, int M, int N, float *loss) {
-    int wpb = blockDim.x / 32;
-    int wb = threadIdx.x / 32;
-    int lane = threadIdx.x & 31;
-    int m = blockIdx.x * wpb + wb;
-    if (m >= M) return;
-    float s = 0;
-    for (int i = lane; i < N; i += 32) {
-        float r_ = r[m*N + i];
-        s += r_ * r_;
-    }
-    for (int off = 16; off > 0; off >>= 1) s += __shfl_xor_sync(0xFFFFFFFFu, s, off);
-    if (lane == 0) loss[m] = 0.5f * s;
-}
-
-__global__ void build_jtj_jtr_kernel(
-    const float *J, const float *r, const TreeMeta *metas,
-    int M_prob, int N, int K_max, float *JtJ, float *JtR)
-{
-    int wpb = blockDim.x / 32;
-    int wb = threadIdx.x / 32;
-    int lane = threadIdx.x & 31;
-    int m = blockIdx.x * wpb + wb;
-    if (m >= M_prob) return;
-    int K_m = metas[m].K;
-    const float *Jm = J + (size_t)m * K_max * N;
-    const float *rm = r + (size_t)m * N;
-    float *JJm = JtJ + (size_t)m * K_max * K_max;
-    float *JRm = JtR + (size_t)m * K_max;
-
-    for (int k = 0; k < K_m; k++) {
-        float s = 0;
-        for (int i = lane; i < N; i += 32) s += Jm[k*N+i] * rm[i];
-        for (int off = 16; off > 0; off >>= 1) s += __shfl_xor_sync(0xFFFFFFFFu, s, off);
-        if (lane == 0) JRm[k] = s;
-    }
-    for (int j1 = 0; j1 < K_m; j1++) {
-        for (int j2 = j1; j2 < K_m; j2++) {
-            float s = 0;
-            for (int i = lane; i < N; i += 32) s += Jm[j1*N+i] * Jm[j2*N+i];
-            for (int off = 16; off > 0; off >>= 1) s += __shfl_xor_sync(0xFFFFFFFFu, s, off);
-            if (lane == 0) { JJm[j1*K_max+j2] = s; JJm[j2*K_max+j1] = s; }
-        }
-    }
-}
+// eval_tree_d / eval_kernel_batched / residual_kernel / loss_kernel /
+// build_jtj_jtr_kernel 现由 lm_core.cuh 提供 (single source of truth) — 删此处副本。
 
 // Fused FD Jacobian: one warp owns one tree and does ALL of that tree's K[m]
 // perturbed evaluations + the differencing, straight into d_J. Replaces the
@@ -281,12 +150,20 @@ __global__ void solve_kernel(
         b[j1] = -(solve_t)JtR[m*K_max + j1];
         for (int j2 = 0; j2 < K; j2++)
             A[j1*K + j2] = (solve_t)JtJ[m*K_max*K_max + j1*K_max + j2];
+#ifdef TRUST_REGION
+        A[j1*K + j1] += (solve_t)lam;              // absolute Levenberg damping (trust-region)
+#else
         A[j1*K + j1] *= (solve_t)(1.0f + lam);   // damping 形式不动 (relative), 隔离纯精度效应
+#endif
     }
     for (int j = 0; j < K; j++) {
         solve_t s = A[j*K + j];
         for (int k = 0; k < j; k++) s -= A[j*K+k] * A[j*K+k];
-#ifdef PIVOT_FLOOR
+#ifdef TRUST_REGION
+        // trust-region absolute Levenberg rescue: near-degenerate pivot → use λ as floor, proceed.
+        // mechanism: s_new = max(s, lam); with absolute damping A += lam, this ensures diagonal >= lam.
+        if (s <= (solve_t)0) s = (solve_t)lam;
+#elif defined PIVOT_FLOOR
         // ablation (W0 gate 不过, 见顶部注释): 退化主元抬到正地板 ε → δ~b/√ε 不受控巨步.
         if (s < (solve_t)PIVOT_FLOOR_EPS) s = (solve_t)PIVOT_FLOOR_EPS;
 #else
@@ -314,17 +191,7 @@ __global__ void solve_kernel(
     status[m] = 0;
 }
 
-// ----------------------------------------------------------------------
-// helpers
-// ----------------------------------------------------------------------
-static void write_blob(const char *path, const void *buf, size_t bytes) {
-    FILE *f = fopen(path, "wb");
-    if (!f) { fprintf(stderr, "fopen %s failed\n", path); exit(1); }
-    if (fwrite(buf, 1, bytes, f) != bytes) {
-        fprintf(stderr, "fwrite %s short\n", path); exit(1);
-    }
-    fclose(f);
-}
+// write_blob 现由 lm_core.cuh 提供 (single source of truth) — 删此处副本。
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -431,7 +298,12 @@ int main(int argc, char **argv) {
     int   *h_finished = (int*)calloc(M_prob, sizeof(int));
     int   *h_iter = (int*)calloc(M_prob, sizeof(int));
     int   *h_rejected = (int*)calloc(M_prob, sizeof(int));
-    for (int m = 0; m < M_prob; m++) h_lam[m] = 1e-3f;
+    for (int m = 0; m < M_prob; m++) h_lam[m] =
+#ifdef TRUST_REGION
+        1e-4f;  // absolute scale: 1e-4 competes with JtJ diagonal magnitudes (1e-8 to 1e8 in corpus)
+#else
+        1e-3f;  // relative scale: multiplies diag(JtJ)
+#endif
 
     // K=0 跳过: 没常数可优化, 立即标 finished + status=3
     int n_k0_pre = 0;
@@ -624,6 +496,20 @@ int main(int argc, char **argv) {
     CUDA_CHECK(cudaDeviceSynchronize());
 #ifdef PROFILE
     clock_gettime(CLOCK_MONOTONIC, &t_loop_end);
+#endif
+
+#ifndef NO_FP64_GUARD
+    // fp64-honesty boundary audit: deliver c_init for any tree whose honest fp64
+    // loss got worse (fast-math fake-improvement). See lm_core.cuh. Also corrects
+    // the reported loss (h_loss -> loss_final.bin) so the diagnostic can't lie.
+    {
+        int n_rev = fp64_boundary_audit(grid, block, d_nt, d_nv, d_ci, d_metas,
+            M_prob, d_xs, n_vars, N, d_ym, total_c, pop.metas, pop.c_init,
+            h_c, h_finished, h_loss);
+        if (n_rev < 0) { fprintf(stderr, "[fp64-guard] CUDA error during boundary audit\n"); return 1; }
+        if (!quiet) printf("[fp64-guard] reverted %d/%d trees (fp64 c_final non-finite or worse than c_init)\n",
+                           n_rev, M_prob);
+    }
 #endif
 
     // ---- Final: 把内部 h_finished {0,1,2,3,4} 映射成外部 status_out ----

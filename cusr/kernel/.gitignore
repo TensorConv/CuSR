@@ -1,8 +1,17 @@
 # compiled binaries
 batch_lm
+batch_lm_ad
+batch_lm_ad_*
+batch_lm_noguard
 batch_lm_devjac
 batch_lm_fusedfd
 inspect
+
+# in-process CO drop-in shared libs (P1) — build artifacts (make libcusr_co_*.so)
+libcusr_co_fd.so
+libcusr_co_ad.so
+libcusr_co_fd_prof.so
+libcusr_co_ad_prof.so
 
 # test run outputs
 tests/_out/

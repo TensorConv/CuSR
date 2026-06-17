@@ -25,161 +25,14 @@
 #include <ctime>
 #include <cuda_runtime.h>
 
-#include "pop_format.h"
+#include "lm_core.cuh"     // shared: CUDA_CHECK, STATUS_*, enum NTypeE / F_* / MAX_STACK / MAX_K,
+                           // eval_tree_d, eval_kernel_batched, residual_kernel, loss_kernel,
+                           // build_jtj_jtr_kernel, write_blob (single source of truth)
 #include "loader.h"
 
-#define CUDA_CHECK(x) do { cudaError_t e = (x); if (e != cudaSuccess) { \
-    fprintf(stderr, "CUDA error %s at %s:%d\n", cudaGetErrorString(e), __FILE__, __LINE__); \
-    exit(1); }} while(0)
-
-enum NTypeE { N_VAR=0, N_CONST=1, N_UFUNC=2, N_BFUNC=3, N_TFUNC=4 };
-// Func enum 跟 EvoGP utils.py 严格对齐. LOOSE_* 在 dump 端退化, 解算端不识别
-// (走 default 0.0 — 视作未知 op silent failure 入口).
-enum FuncE {
-    F_ADD=1, F_SUB=2, F_MUL=3, F_DIV=4, F_POW=6,
-    F_MAX=8, F_MIN=9, F_LT=10, F_GT=11, F_LE=12, F_GE=13,
-    F_SIN=14, F_COS=15, F_TAN=16,
-    F_SINH=17, F_COSH=18, F_TANH=19,
-    F_LOG=20, F_EXP=22, F_INV=23,
-    F_NEG=25, F_ABS=26, F_SQRT=27,
-};
-
-// Compile-time bounds. 跑前 runtime guard.
-#define MAX_STACK 64
-#define MAX_K     32
-
-// status code:
-//   0 = CONVERGED         d_norm < xtol·(c_norm + xtol)
-//   1 = MAXITER           没收敛也没 fail, max_iter 用完
-//   2 = FAIL_NAN          loss/loss_try 出 NaN/Inf (eval 把树推到奇点)
-//   3 = K0_SKIP           K=0, 没常数可优化
-//   4 = FAIL_CHOLESKY     Cholesky breakdown 反复, λ 爆 > 1e12 (solve_kernel:s<=0)
-#define STATUS_CONVERGED      0
-#define STATUS_MAXITER        1
-#define STATUS_FAIL_NAN       2
-#define STATUS_K0_SKIP        3
-#define STATUS_FAIL_CHOLESKY  4
-
-__device__ float eval_tree_d(
-    const int *nt, const float *nv, int n_nodes, const int *const_idx,
-    const float *x, const float *c)
-{
-    float stack[MAX_STACK]; int sp = 0;
-    for (int i = n_nodes - 1; i >= 0; i--) {
-        int t = nt[i]; float v = nv[i];
-        if (t == N_VAR) stack[sp++] = x[(int)v];
-        else if (t == N_CONST) stack[sp++] = c[const_idx[i]];
-        else if (t == N_UFUNC) {
-            float a = stack[--sp]; int fid = (int)v; float r;
-            switch (fid) {
-                case F_SIN:  r=sinf(a);  break;
-                case F_COS:  r=cosf(a);  break;
-                case F_TAN:  r=tanf(a);  break;
-                case F_SINH: r=sinhf(a); break;
-                case F_COSH: r=coshf(a); break;
-                case F_TANH: r=tanhf(a); break;
-                case F_LOG:  r=logf(a);  break;
-                case F_EXP:  r=expf(a);  break;
-                case F_INV:  r=1.0f/a;   break;
-                case F_NEG:  r=-a;       break;
-                case F_ABS:  r=fabsf(a); break;
-                case F_SQRT: r=sqrtf(a); break;
-                default:     r=0.0f;     // unknown op -- silent failure 入口
-            }
-            stack[sp++] = r;
-        } else if (t == N_BFUNC) {
-            float l = stack[--sp]; float rv = stack[--sp];
-            int fid = (int)v; float o;
-            switch (fid) {
-                case F_ADD: o=l+rv;       break;
-                case F_SUB: o=l-rv;       break;
-                case F_MUL: o=l*rv;       break;
-                case F_DIV: o=l/rv;       break;
-                case F_POW: o=powf(l,rv); break;
-                case F_MAX: o=fmaxf(l,rv);break;
-                case F_MIN: o=fminf(l,rv);break;
-                case F_LT:  o=(l < rv)  ? 1.0f : 0.0f; break;
-                case F_GT:  o=(l > rv)  ? 1.0f : 0.0f; break;
-                case F_LE:  o=(l <= rv) ? 1.0f : 0.0f; break;
-                case F_GE:  o=(l >= rv) ? 1.0f : 0.0f; break;
-                default:    o=0.0f;       // unknown op -- silent failure 入口
-            }
-            stack[sp++] = o;
-        }
-    }
-    return stack[0];
-}
-
-__global__ void eval_kernel_batched(
-    const int *nt_all, const float *nv_all, const int *ci_all,
-    const TreeMeta *metas, int M_prob,
-    const float *xs, int n_vars, int N, const float *c_all, float *y_out)
-{
-    int wpb = blockDim.x / 32;
-    int wb = threadIdx.x / 32;
-    int lane = threadIdx.x & 31;
-    int m = blockIdx.x * wpb + wb;
-    if (m >= M_prob) return;
-    TreeMeta meta = metas[m];
-    const int *nt = nt_all + meta.node_offset;
-    const float *nv = nv_all + meta.node_offset;
-    const int *ci = ci_all + meta.node_offset;
-    const float *c = c_all + meta.c_offset;
-    for (int i = lane; i < N; i += 32)
-        y_out[m * N + i] = eval_tree_d(nt, nv, meta.n_nodes, ci, xs + i * n_vars, c);
-}
-
-__global__ void residual_kernel(const float *yp, const float *ym, int total, float *r) {
-    int tid = blockIdx.x * blockDim.x + threadIdx.x;
-    if (tid >= total) return;
-    r[tid] = yp[tid] - ym[tid];  // ym 是 [M_prob*N] per-tree (real EvoGP dump 复制了)
-}
-
-__global__ void loss_kernel(const float *r, int M, int N, float *loss) {
-    int wpb = blockDim.x / 32;
-    int wb = threadIdx.x / 32;
-    int lane = threadIdx.x & 31;
-    int m = blockIdx.x * wpb + wb;
-    if (m >= M) return;
-    float s = 0;
-    for (int i = lane; i < N; i += 32) {
-        float r_ = r[m*N + i];
-        s += r_ * r_;
-    }
-    for (int off = 16; off > 0; off >>= 1) s += __shfl_xor_sync(0xFFFFFFFFu, s, off);
-    if (lane == 0) loss[m] = 0.5f * s;
-}
-
-__global__ void build_jtj_jtr_kernel(
-    const float *J, const float *r, const TreeMeta *metas,
-    int M_prob, int N, int K_max, float *JtJ, float *JtR)
-{
-    int wpb = blockDim.x / 32;
-    int wb = threadIdx.x / 32;
-    int lane = threadIdx.x & 31;
-    int m = blockIdx.x * wpb + wb;
-    if (m >= M_prob) return;
-    int K_m = metas[m].K;
-    const float *Jm = J + (size_t)m * K_max * N;
-    const float *rm = r + (size_t)m * N;
-    float *JJm = JtJ + (size_t)m * K_max * K_max;
-    float *JRm = JtR + (size_t)m * K_max;
-
-    for (int k = 0; k < K_m; k++) {
-        float s = 0;
-        for (int i = lane; i < N; i += 32) s += Jm[k*N+i] * rm[i];
-        for (int off = 16; off > 0; off >>= 1) s += __shfl_xor_sync(0xFFFFFFFFu, s, off);
-        if (lane == 0) JRm[k] = s;
-    }
-    for (int j1 = 0; j1 < K_m; j1++) {
-        for (int j2 = j1; j2 < K_m; j2++) {
-            float s = 0;
-            for (int i = lane; i < N; i += 32) s += Jm[j1*N+i] * Jm[j2*N+i];
-            for (int off = 16; off > 0; off >>= 1) s += __shfl_xor_sync(0xFFFFFFFFu, s, off);
-            if (lane == 0) { JJm[j1*K_max+j2] = s; JJm[j2*K_max+j1] = s; }
-        }
-    }
-}
+// NTypeE / FuncE / MAX_STACK / MAX_K / STATUS_* / CUDA_CHECK / eval_tree_d /
+// eval_kernel_batched / residual_kernel / loss_kernel / build_jtj_jtr_kernel /
+// write_blob 现由 lm_core.cuh 提供 — 删此处副本避免重定义 (codegen drift 防护).
 
 __global__ void solve_kernel(
     const float *JtJ, const float *JtR, const TreeMeta *metas,
@@ -225,17 +78,7 @@ __global__ void solve_kernel(
     status[m] = 0;
 }
 
-// ----------------------------------------------------------------------
-// helpers
-// ----------------------------------------------------------------------
-static void write_blob(const char *path, const void *buf, size_t bytes) {
-    FILE *f = fopen(path, "wb");
-    if (!f) { fprintf(stderr, "fopen %s failed\n", path); exit(1); }
-    if (fwrite(buf, 1, bytes, f) != bytes) {
-        fprintf(stderr, "fwrite %s short\n", path); exit(1);
-    }
-    fclose(f);
-}
+// write_blob 现由 lm_core.cuh 提供 (single source of truth) — 删此处副本。
 
 int main(int argc, char **argv) {
     if (argc < 2) {
@@ -517,6 +360,19 @@ int main(int argc, char **argv) {
         }
     }
     CUDA_CHECK(cudaDeviceSynchronize());
+
+#ifndef NO_FP64_GUARD
+    // fp64-honesty boundary audit: deliver c_init for any tree whose honest fp64
+    // loss got worse (fast-math fake-improvement). See lm_core.cuh.
+    {
+        int n_rev = fp64_boundary_audit(grid, block, d_nt, d_nv, d_ci, d_metas,
+            M_prob, d_xs, n_vars, N, d_ym, total_c, pop.metas, pop.c_init,
+            h_c, h_finished, h_loss);
+        if (n_rev < 0) { fprintf(stderr, "[fp64-guard] CUDA error during boundary audit\n"); return 1; }
+        if (!quiet) printf("[fp64-guard] reverted %d/%d trees (fp64 c_final non-finite or worse than c_init)\n",
+                           n_rev, M_prob);
+    }
+#endif
 
     // ---- Final: 把内部 h_finished {0,1,2,3,4} 映射成外部 status_out ----
     int n_conv = 0, n_maxiter = 0, n_fail_nan = 0, n_k0 = 0, n_fail_chol = 0;

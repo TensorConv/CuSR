@@ -293,12 +293,20 @@ __global__ void solve_kernel(
         b[j1] = -(solve_t)JtR[m*K_max + j1];
         for (int j2 = 0; j2 < K; j2++)
             A[j1*K + j2] = (solve_t)JtJ[m*K_max*K_max + j1*K_max + j2];
+#ifdef TRUST_REGION
+        A[j1*K + j1] += (solve_t)lam;              // absolute Levenberg damping (trust-region)
+#else
         A[j1*K + j1] *= (solve_t)(1.0f + lam);   // damping 形式不动 (relative), 隔离纯精度效应
+#endif
     }
     for (int j = 0; j < K; j++) {
         solve_t s = A[j*K + j];
         for (int k = 0; k < j; k++) s -= A[j*K+k] * A[j*K+k];
-#ifdef PIVOT_FLOOR
+#ifdef TRUST_REGION
+        // trust-region absolute Levenberg rescue: near-degenerate pivot → use λ as floor, proceed.
+        // mechanism: s_new = max(s, lam); with absolute damping A += lam, this ensures diagonal >= lam.
+        if (s <= (solve_t)0) s = (solve_t)lam;
+#elif defined PIVOT_FLOOR
         // ablation (W0 gate 不过, 见顶部注释): 退化主元抬到正地板 ε → δ~b/√ε 不受控巨步.
         if (s < (solve_t)PIVOT_FLOOR_EPS) s = (solve_t)PIVOT_FLOOR_EPS;
 #else
@@ -443,7 +451,12 @@ int main(int argc, char **argv) {
     int   *h_finished = (int*)calloc(M_prob, sizeof(int));
     int   *h_iter = (int*)calloc(M_prob, sizeof(int));
     int   *h_rejected = (int*)calloc(M_prob, sizeof(int));
-    for (int m = 0; m < M_prob; m++) h_lam[m] = 1e-3f;
+    for (int m = 0; m < M_prob; m++) h_lam[m] =
+#ifdef TRUST_REGION
+        1e-4f;  // absolute scale: 1e-4 competes with JtJ diagonal magnitudes (1e-8 to 1e8 in corpus)
+#else
+        1e-3f;  // relative scale: multiplies diag(JtJ)
+#endif
 
     // K=0 跳过: 没常数可优化, 立即标 finished + status=3
     int n_k0_pre = 0;
