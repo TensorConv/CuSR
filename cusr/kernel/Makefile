@@ -19,6 +19,10 @@ inspect: inspect.c pop_format.h
 batch_lm: batch_lm.cu loader.c loader.h pop_format.h
 	$(NVCC) $(NVCC_FLAGS) -o $@ batch_lm.cu loader.c
 
+# fused-FD variant (reference / old Jacobian path). Plain build, no PROFILE.
+batch_lm_fusedfd: batch_lm_fusedfd.cu loader.c loader.h pop_format.h
+	$(NVCC) $(NVCC_FLAGS) -o $@ batch_lm_fusedfd.cu loader.c
+
 # Profiling build of the fused-FD variant (-DPROFILE): per-kernel CUDA-event
 # timing + host/transfer residual. Same flags as the real binary so codegen
 # matches; emits an extra PROFILE_JSON line. Not committed (see .gitignore).

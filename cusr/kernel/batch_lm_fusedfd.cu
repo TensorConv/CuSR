@@ -467,6 +467,12 @@ int main(int argc, char **argv) {
     CUDA_CHECK(cudaGetLastError());
     CUDA_CHECK(cudaMemcpy(h_loss, d_loss, M_prob*sizeof(float), cudaMemcpyDeviceToHost));
 
+    // 收敛诚实性诊断 (additive, 不改任何 numerics / accept-reject): 抓初始 per-tree loss
+    // 副本, 在 LM loop 覆写 h_loss 之前. 写到 loss_init.bin, 对比 loss_final.bin 检验
+    // "假收敛" — status==CONVERGED 的树 loss_final 不该 > loss_init.
+    float *h_loss_init = (float*)malloc(M_prob * sizeof(float));
+    memcpy(h_loss_init, h_loss, M_prob * sizeof(float));
+
     // 初始 loss NaN/Inf → 整棵树没救, 直接标 fail. c_init 都 produce NaN 说明这棵树
     // 没法被 LM 拯救.
     for (int m = 0; m < M_prob; m++) {
@@ -585,19 +591,25 @@ int main(int argc, char **argv) {
             }
             float d_norm = sqrtf(d_norm_sq), c_norm = sqrtf(c_norm_sq);
 
-            if (d_norm < xtol * (c_norm + xtol)) {
-                // accept + 收敛 (K=0 不走这条 — 已经 pre-skip)
+            // 收敛诚实性修复 (canonical LM ordering): 先判 improvement, 再判收敛.
+            // 旧 bug: d_norm 小就标 CONVERGED 并 commit c_try, 没查 loss_try<=loss —
+            // 一个微小的 uphill step 被当成收敛 (loss_final>loss_init). 见
+            // tests/test_convergence_honesty.py.
+            int improved = isfinite(h_loss_try[m]) && (h_loss_try[m] <= h_loss[m]);
+            if (improved) {
+                // accept (loss 单调非增). K=0 不走这条 — 已经 pre-skip.
                 for (int k = 0; k < K; k++)
                     h_c[pop.metas[m].c_offset+k] = h_c_try[pop.metas[m].c_offset+k];
                 h_loss[m] = h_loss_try[m];
-                h_finished[m] = 1;
-            } else if (h_loss_try[m] < h_loss[m]) {
-                for (int k = 0; k < K; k++)
-                    h_c[pop.metas[m].c_offset+k] = h_c_try[pop.metas[m].c_offset+k];
-                h_loss[m] = h_loss_try[m];
-                h_lam[m] *= 0.1f;
-                if (h_lam[m] < 1e-12f) h_lam[m] = 1e-12f;
+                if (d_norm < xtol * (c_norm + xtol)) {
+                    h_finished[m] = 1;  // CONVERGED (step 已被接受, loss 不增)
+                } else {
+                    h_lam[m] *= 0.1f;
+                    if (h_lam[m] < 1e-12f) h_lam[m] = 1e-12f;
+                }
             } else {
+                // worsening (或 NaN/Inf): REJECT. 绝不标 converged, 绝不 commit c_try,
+                // 即便 d_norm 极小. λ 加大重试; 反复爆 λ → 同旧 reject 路径的 FAIL_NAN.
                 h_lam[m] *= 10.0f;
                 h_rejected[m]++;
                 if (h_lam[m] > 1e12f) h_finished[m] = 2;  // FAIL_NAN bucket: lam-blow-up without Cholesky 是真的 NaN-ish 路径
@@ -647,6 +659,9 @@ int main(int argc, char **argv) {
     // diagnostic (W0 MAXITER trace): kernel 自报 fp32 loss; 对比 interp fp64 判别 fp32-撒谎 vs 真更差盆地. additive, 不影响 gate.
     snprintf(buf, sizeof(buf), "%s/loss_final.bin", out_dir);
     write_blob(buf, h_loss, (size_t)M_prob * sizeof(float));
+    // diagnostic (收敛诚实性): 初始 per-tree loss (LM loop 前). additive, 不影响 gate.
+    snprintf(buf, sizeof(buf), "%s/loss_init.bin", out_dir);
+    write_blob(buf, h_loss_init, (size_t)M_prob * sizeof(float));
 
     struct timespec t_end;
     clock_gettime(CLOCK_MONOTONIC, &t_end);
@@ -697,6 +712,7 @@ int main(int argc, char **argv) {
     // ---- cleanup ----
     free(h_c); free(h_c_try); free(h_c_pert);
     free(h_lam); free(h_loss); free(h_loss_try);
+    free(h_loss_init);
     free(h_finished); free(h_iter); free(h_rejected);
     free(h_delta);
     free(h_solve_stat);
