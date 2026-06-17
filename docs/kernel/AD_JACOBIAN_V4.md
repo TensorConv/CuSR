@@ -223,21 +223,30 @@ flags 与基线一致: `-O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math`。
 
 **实现状态**: Rung 1-3 全绿。host JVP 单测 33/33; 解析 J GPU 单测 4/4; 集成 fixture (fixture/op/scale tier-1/stress) 全过, c_rel ~1e-7。`eps_fd` 已退役 (AD 精确), scale 极端量级 1e±6 不再依赖相对步长调参即过。
 
-**parity gate (vs scipy fp64)** — 表面看 AD 没过, 实为**集合假象**, 非质量回归:
+> ⚠️ **2026-06-17 更新 — 下方旧 (pre-fix) 数字已被 stop-criterion 修复 (commit `8b9234b`) 取代。**
+> 当时的 "AD 净更鲁棒 494>432" 是**假收敛膨胀**: LM accept/reject 把 uphill step 当收敛提交了 (没查
+> `loss_try<=loss`, 见 `tests/test_convergence_honesty.py`)。两引擎已修 (canonical LM 顺序, h_loss
+> 单调非增)。**以下全部为修复后实测。**
+
+**parity gate (post-fix, vs scipy fp64, pop.bin)**:
 
 | 指标 | AD (v4) | fusedfd (老版, 同机) | 阈值 |
 |---|---|---|---|
 | loss_down | 93.3% | 94.0% | ≥93 ✅/✅ |
-| within_1.05× | **80.8%** ❌ | 92.4% ✅ | ≥90 |
-| within_10× | 100.0% | 99.8% | ≥99 ✅/✅ |
-| converged | 494 | 432 | — |
-| Cholesky-fail | 81 | 138 | — |
+| within_1.05× | **84.9%** ❌ | 92.1% ✅ | ≥90 |
+| within_10× | 100.0% | 99.7% | ≥99 ✅/✅ |
+| converged | 339 | 347 | — |
 
-**集合受控判定 (决定性)**: 在 AD&FD&scipy 都收敛的**同一批 368 棵 stable 树**上, AD within_1.05× = **92.1%** vs FD **91.8%** (AD 略胜, gap +0.3pp)。→ **同集合零回归**。head-to-head: 379 棵公共收敛树 AD 与 FD 95.3% 在 1.05× 吻合 (ratio p50=p90=1.0)。
+(修复前曾是 AD 80.8 / FD 92.4, converged 494/432 — 那 494 的"领先"是假收敛。)
 
-within_1.05× 的 11.6pp 缺口 **100% 来自集合构成**: AD 多收敛 FD 直接 Cholesky-fail 的 ~112 棵难树 (113/115 loss 下降), 这些病态树 fp32 追不上 scipy fp64 (within_1.05× 仅 35.7%), 进了 AD 分母却超 1.05×。**FD 的高分是靠放弃难树换来的。** 故 within_1.05× **不是集合不变量**, 不应据此判 AD 劣于 FD。
+**集合受控判定 (决定性, post-fix)** — AD&FD&scipy 都收敛的同一 stable 集上:
+- pop.bin (stable 258): AD within_1.05× **91.1%** ≈ FD **89.9%** (AD +1.2pp)。
+- 高 K feyn_I.18.12 (stable 986): AD **81.9%** ≈ FD **82.3%** (-0.3pp)。
+→ **两个 corpus 同集合零质量回归**: 两边都收敛的树, AD 找的极小点和 FD 一样好。
 
-**性能**: AD 2431 trees/s vs FD 1776 (pop.bin, **+37%**); AD kernel 44 寄存器 (FD 45), lmem 2304 B/thread (AD_W=8 single-chunk 覆盖 K_max=8 的真实负载)。rung-5 profiling (-DPROFILE, pop.bin): **J 生产段 88.7→29.7ms (3.0× 塌缩)**, loop 131→77ms (1.70×); J 生产从 FD loop 的 67.5% 降到 AD 的 38.6%, 两趟树解释 (ad_jac+eval=57ms) 现占 74% → v4.1 融合 eval 是下一杠杆。(脚本在 `tests/v4_validation/`; 原始 `.txt` 输出 gitignore, 跑脚本重生。)
+AD raw within_1.05× 没过 (84.9) **纯是集合构成**: AD 多收 73 棵难树 (within_1.05× 仅 56.2%) 稀释了分母 (stable 91.1% → 84.9%)。**FD 的高分靠放弃这些难树。** within_1.05× **不是集合不变量**, 不应据此判 AD 劣于 FD。
+
+**性能**: pop.bin 是 small-M, trees/s 噪声大 (post-fix 实测 AD ~2.3–2.6k vs FD ~2.1–2.2k; 代表性吞吐见下方 benchmark corpus 表 ~1.23–1.29×, 别引 pop.bin 单点)。AD kernel 44 寄存器 (FD 45), lmem 2304 B/thread (AD_W=8 single-chunk 覆盖 K_max=8 的真实负载)。rung-5 profiling (-DPROFILE, pop.bin): **J 生产段 88.7→29.7ms (3.0× 塌缩)**, loop 131→77ms (1.70×); J 生产从 FD loop 的 67.5% 降到 AD 的 38.6%, 两趟树解释 (ad_jac+eval=57ms) 现占 74% → v4.1 融合 eval 是下一杠杆。(脚本在 `tests/v4_validation/`; 原始 `.txt` 输出 gitignore, 跑脚本重生。)
 
 **真实负载吞吐 (benchmark corpus, 2026-06-17; 脚本 `tests/v4_validation/{operon_sweep,throughput_sweep}.py`)**: 端到端 AD/FD **~1.23–1.29×, 跨 scale 稳定, 不随 M 放大**:
 
@@ -254,19 +263,12 @@ within_1.05× 的 11.6pp 缺口 **100% 来自集合构成**: AD 多收敛 FD 直
 
 **12 角度 adversarial review**: 0 个被确认的 high/critical bug。两个 HIGH (POW 负底数未测 / 高 K 跨 chunk 未测) 均被复核**驳回** (NaN 是正确契约且与 FD 一致 / 跨 chunk 干扰结构上不可能)。jvp-rules / warp-lane / chunk-boundary / djac-layout / lm-loop-semantics 全 clean。
 
-**收敛权衡 (净增, 非碾压)**: AD 收敛集 494 = 379 公共 + 115 AD-only; FD 432 = 379 + 53 FD-only。
-- AD 多救 115 棵 (FD 侧 70 maxiter + **45 Cholesky-fail**) —— 精确良态 J 的鲁棒性红利。
-- AD 丢 53 棵 (FD 收敛而 AD 没): **50 棵只是 maxiter** (轨迹差异, 多给迭代即可, 属收敛率超参), 仅 1 fail_nan + 2 cholesky 是硬失败。
-- net **+62**。AD 多的 4 个 fail_nan (10 vs 6) 在 FD-only 集仅 1 棵 → review 标 MEDIUM 的 POW/奇点 NaN 边界足迹**极小但非零**。
+**收敛权衡 (post-fix, 诚实)**: 修复前的 "AD 净 +62 更鲁棒" 是假收敛, 已撤。诚实数字: pop.bin AD 339 ≈ FD 347 (FD 略多); 高 K feyn FD 收敛数明显多 (2051 vs 1393)。但 `coverage_probe.py` 证明高 K 这个差距 **~92% 是标签假象**: FD 多收的 957 棵里, AD 在 **91.8%** 上找到了**同样好的 fp64 拟合** (中位 ratio 1.0), 只是诚实判据下被标 MAXITER。真·FD 更好的仅 ~8% (78 棵), 反向 AD 真赢 ~62 棵 → 净尾巴基本对消。
 
-**结论**: v4 AD **正确, 净更鲁棒** (net +62、Cholesky-fail 138→81 减半、精确 J 免 eps、+37% 吞吐)。
+**结论**: v4 AD **正确**; **交付拟合质量处处 ≈ FD** (set-controlled 双 corpus); 真实优势 = **~1.25–1.3× 吞吐 + 精确 J 免 eps**。旧 "净更鲁棒" 已证伪 (假收敛), "高 K 覆盖差" ~92% 是标签。**评判用 set-controlled / 交付 loss, 勿用收敛数。**
 
-**待决 — 采纳决策 (摆证据, 你来定)**:
-- within_1.05× **不是集合不变量** (同集合实测 AD 92.1% ≈ FD 91.8%)。两条路:
-  - **(A)** gate 的 within_1.05× 改成集合不变量 (tri-converged stable 集上比, 或并列收敛数/鲁棒性指标) → AD 即过。
-  - **(B)** 保持现 gate, 先按"拉收敛率"路线 (xtol/max_iter/fp64-solve) 收窄难树尾部 (112 棵 within-10×-非-1.05×) 再 adopt。
-  两条都不靠"把 AD 改成跟 FD 一样放弃难树"来凑 gate。
-- 复现: 验证脚本 + 原始 log 已存 `cusr/kernel/tests/v4_validation/`。
-- 难树尾部 (within-10×-非-1.05×) 收窄属"拉收敛率"路线 (xtol/max_iter/fp64 solve), 与 AD kernel 正交。
-- 工程: 提交 v4 源码; 补高 K 非线性跨 chunk + 大量级 GPU 测试 (defense-in-depth); stress oracle 用 scipy 重基线。
-- v4.1: 融合 value/JtJ (省冗余 eval + build_jtj 14%); 视 lmem profiling 调 AD_W。
+**采纳决策 (post-fix, 已 informed)**: 诚实重测后 AD 交付质量处处 ≈ FD (set-controlled 双 corpus), 更快, 精确免 eps; 挡 AD 的两条保留 (鲁棒性领先 / 高 K 覆盖) 一条是假收敛、一条 ~92% 是标签 → **AD 在 EvoGP 设计负载 (低 K) 是干净的 adopt, 高 K 上交付质量也站得住** (但见下方 fp32-honesty caveat: AD 对 fast-math 近奇点欺骗暴露更大, 采纳建议配 fp64 guard 或先上 trust-region)。raw within_1.05× gate (90%) 不是集合不变量, 不应作唯一闸门。
+- **gate 建议**: within_1.05× 评判改到 set-controlled stable 集 (`setcontrolled.py` 已 env 参数化, 任意 corpus 可跑)。
+- **复现**: `cusr/kernel/tests/v4_validation/` (setcontrolled / coverage_probe / headtohead / *sweep)。
+- **仍开 — fp32-honesty (#1, status==0 yet fp64-worse)**: 见 `tests/fp32_honesty_regression/` (基线 fusedfd 57 / ad 208 serious)。stop-criterion 修复**部分缓解**: post-fix **ad 208→141, fd 57→28** (fp32-可见的 uphill 现诚实报 status!=0); 但**纯 fast-math 欺骗** (fp32 说改善、fp64 灾难, 近奇点; AD 最坏 1.5e16×) 残留, 且 **AD 暴露远高于 FD (141 vs 28)** —— 精确导数把树推奇点更狠。需 **trust-region / fast-math audit / fp64 边界审计** 根治 (同时治两引擎)。**这是 AD 采纳的真实 caveat**: 交付质量 ≈ FD, 但 fp32-欺骗暴露更大, 建议配 fp64-honesty guard。
+- **v4.1**: 融合 J→JtJ 免物化 d_J (砍 build_jtj ~20%) + 按 K 分桶 AD_W。
