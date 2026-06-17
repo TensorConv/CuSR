@@ -1,0 +1,10 @@
+# Bulk per-cell per-tree JSONs (~61 MB) — regenerable via the committed deterministic
+# pipeline (driver.py -> analyze.py). The analysis INPUT (data/report_aggregates.json,
+# 36 KB) and report.json ARE committed, so the report is fully reproducible without these.
+data/*__operon.json
+data/*__fd.json
+data/*__ad.json
+
+# python bytecode
+__pycache__/
+*.pyc

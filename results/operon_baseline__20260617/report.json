@@ -1,0 +1,389 @@
+{
+ "title": "CuSR baseline: Operon LMOptimizer vs the GPU kernel (FD & AD) on identical pre-CO trees",
+ "date": "2026-06-17",
+ "question": {
+  "zh": "在完全相同的 pre-CO 树上,我们的 GPU 常数优化核(FD 与 AD 两版)相比成熟 CPU 优化器 Operon LMOptimizer,收敛性与最终拟合质量如何?全部 17 题,看能发现什么。",
+  "en": "On byte-identical pre-CO trees, how do our GPU constant-optimization kernels (FD and AD) compare to a mature CPU optimizer (Operon's LMOptimizer) in convergence and final fit quality? All 17 problems — exploratory."
+ },
+ "setup": {
+  "zh": "每题(cap=32, seed=0, noise=0)用 operon_dump.run_cell 确定性重生成 Operon 语料中完全相同的 pre-CO 种群(逐字节 == 已提交语料,Probe B)。每个 checkpoint 代:(1) Operon 自带 CoefficientOptimizer(LMOptimizer) 从相同 c_init 优化每棵树;(2) 核 FD(batch_lm_fusedfd)与 AD(batch_lm_ad)跑同一批 pop.bin。三者同起点(Probe A:相同起点/相同目标 0.5·SSE/相同 K/确定性);最终用中立 fp64 0.5·Σ(f-y)² 对每个引擎返回的系数统一重算 —— 与引擎自报代价无关。",
+  "en": "Per problem (cap=32, seed=0, noise=0) we deterministically regenerate the EXACT Operon pre-CO population via operon_dump.run_cell (byte-identical to the committed corpus — Probe B). Per checkpoint gen: (1) Operon's own CoefficientOptimizer(LMOptimizer) optimizes every tree from the harvested c_init; (2) kernel FD (batch_lm_fusedfd) and AD (batch_lm_ad) run on the same pop.bin. All three start from the same c_init (Probe A: same start / same 0.5·SSE objective / same K / deterministic). Each engine's returned coefficients are scored by the NEUTRAL fp64 0.5·Σ(f-y)²."
+ },
+ "env": {
+  "git_sha": "90b8d1f",
+  "host": "8×A100 sm_80 server (kernel: 1 GPU/job, GPUs 0-5; 2 free per standing rule)",
+  "operon": "pyoperon 0.6.1 (isolated venv), threads=1 (deterministic)",
+  "kernels": "batch_lm_fusedfd (FD Jacobian, established) + batch_lm_ad (AD Jacobian, commit 90b8d1f, candidate)",
+  "neutral_objective": "0.5 * sum((f(x)-y)^2), fp64, identical evaluator for all engines (lib.half_sse)",
+  "max_iter": "Operon 500 (converged: max 498, 0.08% of trees near cap); kernel 1000"
+ },
+ "params": {
+  "sweep": {
+   "problems": "17 (7 Feynman incl. multivariate + Nguyen-1..10)",
+   "gens": "0, 4, 16, 64, 100",
+   "cap": "32",
+   "seed": "0",
+   "noise": "0",
+   "pop": "4000",
+   "N": "1000",
+   "optimizable_tree_instances": "340000 (K>0), pooled over problems×gens"
+  },
+  "metrics": {
+   "efficacy_anchor": "distribution of per-tree loss_final/loss_start (fp64); median + p10/p90",
+   "meaningful_improvement": "loss_final < 0.99*loss_start (>1% cut) — NOT 'loss changed at all'",
+   "converged_but_worsened": "status==0 yet fp64 loss_final > loss_start; fp32-lie subset = kernel's own fp32 loss <= start",
+   "quality": "log10(kernel/Operon) on trees BOTH genuinely improved (excludes converged-but-worsened)"
+  }
+ },
+ "findings": [
+  {
+   "claim": {
+    "zh": "【受控·主结果】AD 比 FD 更稳健:全代池合计 46574 棵 FD-Cholesky-失败 在 AD 下转为收敛(收敛 AD 283997 vs FD 241653 / 340000 可优化树;Cholesky AD 32036 vs FD 77517)。代价:AD 新增 8069 棵 0→4、6214 棵 0→2,NaN 总数 AD 18493 > FD 8028。",
+    "en": "[CONTROLLED · headline] AD is more robust than FD: 46574 FD-Cholesky-fails become converged under AD (converged AD 283997 vs FD 241653 of 340000; Cholesky AD 32036 vs FD 77517). Cost: AD adds 8069 (0→4) and 6214 (0→2); NaN total AD 18493 > FD 8028."
+   },
+   "evidence": {
+    "zh": "AD-vs-FD 状态迁移(同 fp32 LM,仅 Jacobian 不同):4→0=46574, 4→4=22894, 0→4=8069, 0→2=6214。",
+    "en": "AD-vs-FD status migration (same fp32 LM, only Jacobian differs): 4→0=46574, 4→4=22894, 0→4=8069, 0→2=6214."
+   }
+  },
+  {
+   "claim": {
+    "zh": "【受控】无导数 bug:FD 与 AD 都显著改进的 312382 棵树上,最终 0.5·SSE 几乎一致(log10(AD/FD) 中位 -0.0;AD 更优 71097, FD 更优 72615)。",
+    "en": "[CONTROLLED] No derivative bug: on 312382 trees where both FD and AD genuinely improve, final 0.5·SSE is essentially identical (median log10(AD/FD)=-0.0; AD-better 71097, FD-better 72615)."
+   },
+   "evidence": {
+    "zh": "共同显著改进集质量比 p10 -0.4305, p90 0.3395。",
+    "en": "common-genuinely-improved quality ratio p10 -0.4305, p90 0.3395."
+   }
+  },
+  {
+   "claim": {
+    "zh": "【同口径效能】用中立损失比(loss_final/loss_start)衡量,核与 Operon 量级相当 —— 而非二元 improved% 给出的虚高印象(核几乎每棵都微调下降)。",
+    "en": "[apples-to-apples efficacy] By the neutral loss-ratio (loss_final/loss_start), the kernel and Operon are of comparable magnitude — unlike the inflated picture from binary improved% (the kernel nudges almost every tree down a hair)."
+   },
+   "evidence": {
+    "zh": "各代中位损失比 — Operon: g0: 0.4465; g4: 0.0671; g16: 0.0016; g64: 0.0014; g100: 0.0035; FD: g0: 0.4142; g4: 0.081; g16: 0.003; g64: 0.0063; g100: 0.0097; AD: g0: 0.4046; g4: 0.0801; g16: 0.0031; g64: 0.0043; g100: 0.0062（越低越好,<1=改进）。",
+    "en": "median loss-ratio by gen — Operon: g0: 0.4465; g4: 0.0671; g16: 0.0016; g64: 0.0014; g100: 0.0035; FD: g0: 0.4142; g4: 0.081; g16: 0.003; g64: 0.0063; g100: 0.0097; AD: g0: 0.4046; g4: 0.0801; g16: 0.0031; g64: 0.0043; g100: 0.0062 (lower is better, <1 = improved)."
+   }
+  },
+  {
+   "claim": {
+    "zh": "【外部标尺】对成熟 fp64 LM 的稳健性差距随 bloat 增大,AD 缩小但未消除。",
+    "en": "[yardstick] The robustness gap to a mature fp64 LM widens with bloat; AD shrinks but does not close it."
+   },
+   "evidence": {
+    "zh": "Operon 显著改进(>1%)的树中,核未能显著改进的比例 — g0: FD 1.8% / AD 1.0%; g4: FD 1.2% / AD 0.5%; g16: FD 2.3% / AD 1.2%; g64: FD 6.3% / AD 1.6%; g100: FD 7.0% / AD 1.9%",
+    "en": "Of trees Operon improved >1%, fraction where the kernel did NOT improve >1% — g0: FD 1.8% / AD 1.0%; g4: FD 1.2% / AD 0.5%; g16: FD 2.3% / AD 1.2%; g64: FD 6.3% / AD 1.6%; g100: FD 7.0% / AD 1.9%"
+   }
+  },
+  {
+   "claim": {
+    "zh": "【fp32 诚实性·严抓项】核以 fast-math fp32 优化,少数树**自报收敛(status==0)却 fp64 更差**(占全部 340000 可优化树实例:FD 0.3%、AD 0.3%):FD 961 棵(其中真·fp32 谎报 367、严重 >2× 57),AD 1162 棵(谎报 785、严重 >2× 208)。AD 因精确导数更易冲进 fp32 奇点,严重案例约为 FD 的 3.6×。对照 Operon worse-than-start = 33(同样非零,但少 1–2 个数量级)。",
+    "en": "[fp32 honesty · anti-cheat] The kernel optimizes a fast-math fp32 proxy; a small fraction of the 340000 optimizable tree-instances (FD 0.3%, AD 0.3%) CLAIM converged (status==0) yet are WORSE in fp64: FD 961 (genuine fp32-lies 367, serious >2× 57), AD 1162 (lies 785, serious >2× 208). AD's exact derivatives drive harder into fp32 singularities — ~3.6× the serious cases of FD. Operon worse-than-start = 33 (also nonzero, 1–2 orders fewer)."
+   },
+   "evidence": {
+    "zh": "中立 fp64 重算每个引擎返回系数;status==0 且 fp64 损失 > 起点 即 converged-but-worsened;核自身 fp32 损失 ≤ 起点 的子集 = 真·fp32 谎报(被 fast-math 欺骗,已抽查 >100× 子集证实);>2× 子集 = 不可能是 fp32 噪声的严重案例。",
+    "en": "Neutral fp64 re-score of every engine's coefficients; status==0 with fp64 loss > start = converged-but-worsened; the subset whose kernel fp32 loss ≤ start = genuine fp32-lie (verified on the >100× subset); the >2× subset = serious cases that cannot be fp32 noise."
+   }
+  },
+  {
+   "claim": {
+    "zh": "【外部标尺】在双方都显著改进的子集上,质量与 Operon 互有胜负(中位接近打平),核劣化尾更长。",
+    "en": "[yardstick] On trees both genuinely improved, quality vs Operon is mixed (near-tie median); the kernel has a longer degradation tail."
+   },
+   "evidence": {
+    "zh": "FD/Operon: 中位 log10 0.0, p90 2.4104(n=255068); AD/Operon: 中位 0.0, p10 -0.9003, p90 2.3139(n=262239)。log10>0=核损失更高。",
+    "en": "FD/Operon: median log10 0.0, p90 2.4104 (n=255068); AD/Operon: median 0.0, p10 -0.9003, p90 2.3139 (n=262239). log10>0 = kernel loss higher."
+   }
+  }
+ ],
+ "tables": [
+  {
+   "name": "Per-generation (pooled over 17 problems, K>0 trees)",
+   "columns": [
+    "gen",
+    "opt",
+    "Op med-ratio",
+    "FD med-ratio",
+    "AD med-ratio",
+    "Op >1%↓%",
+    "FD >1%↓%",
+    "AD >1%↓%",
+    "FD Chol%",
+    "AD Chol%",
+    "FD cw/lie",
+    "AD cw/lie"
+   ],
+   "rows": [
+    [
+     "gen 0",
+     68000,
+     0.4465,
+     0.4142,
+     0.4046,
+     52.2,
+     89.8,
+     89.7,
+     11.4,
+     4.1,
+     "807/290",
+     "783/509"
+    ],
+    [
+     "gen 4",
+     68000,
+     0.0671,
+     0.081,
+     0.0801,
+     75.8,
+     96.5,
+     97.0,
+     16.9,
+     6.2,
+     "60/27",
+     "89/66"
+    ],
+    [
+     "gen 16",
+     68000,
+     0.0016,
+     0.003,
+     0.0031,
+     87.7,
+     96.5,
+     97.5,
+     22.5,
+     9.2,
+     "20/11",
+     "67/58"
+    ],
+    [
+     "gen 64",
+     68000,
+     0.0014,
+     0.0063,
+     0.0043,
+     87.9,
+     92.5,
+     96.6,
+     31.6,
+     12.8,
+     "49/30",
+     "109/82"
+    ],
+    [
+     "gen 100",
+     68000,
+     0.0035,
+     0.0097,
+     0.0062,
+     86.9,
+     91.0,
+     95.8,
+     31.5,
+     14.7,
+     "25/9",
+     "114/70"
+    ]
+   ]
+  },
+  {
+   "name": "Per-problem at gen 100 (most-bloated, hardest end; K>0 trees)",
+   "columns": [
+    "problem",
+    "opt",
+    "Op >1%↓",
+    "FD conv",
+    "AD conv",
+    "FD Chol-fail",
+    "AD Chol-fail"
+   ],
+   "rows": [
+    [
+     "feynman/I.12.1",
+     4000,
+     3883,
+     2189,
+     3242,
+     1372,
+     90
+    ],
+    [
+     "feynman/I.18.12",
+     4000,
+     3657,
+     2821,
+     3275,
+     1085,
+     570
+    ],
+    [
+     "feynman/I.27.6",
+     4000,
+     3817,
+     2921,
+     2995,
+     877,
+     789
+    ],
+    [
+     "feynman/I.6.2",
+     4000,
+     3902,
+     2481,
+     2904,
+     1315,
+     1080
+    ],
+    [
+     "feynman/I.12.2",
+     4000,
+     3798,
+     1376,
+     1522,
+     2553,
+     2302
+    ],
+    [
+     "feynman/I.13.12",
+     4000,
+     3648,
+     3601,
+     3675,
+     354,
+     250
+    ],
+    [
+     "feynman/II.3.24",
+     4000,
+     3693,
+     1099,
+     1309,
+     2757,
+     2207
+    ],
+    [
+     "nguyen/1",
+     4000,
+     3744,
+     2172,
+     2349,
+     1519,
+     1355
+    ],
+    [
+     "nguyen/2",
+     4000,
+     3801,
+     3157,
+     3106,
+     422,
+     67
+    ],
+    [
+     "nguyen/3",
+     4000,
+     2133,
+     2170,
+     3397,
+     1549,
+     63
+    ],
+    [
+     "nguyen/4",
+     4000,
+     3671,
+     2825,
+     3411,
+     662,
+     209
+    ],
+    [
+     "nguyen/5",
+     4000,
+     2809,
+     2459,
+     3749,
+     1468,
+     74
+    ],
+    [
+     "nguyen/6",
+     4000,
+     3789,
+     2859,
+     3776,
+     884,
+     43
+    ],
+    [
+     "nguyen/7",
+     4000,
+     3561,
+     1969,
+     3759,
+     1897,
+     108
+    ],
+    [
+     "nguyen/8",
+     4000,
+     3313,
+     2575,
+     3235,
+     1116,
+     357
+    ],
+    [
+     "nguyen/9",
+     4000,
+     3135,
+     3096,
+     3747,
+     442,
+     71
+    ],
+    [
+     "nguyen/10",
+     4000,
+     2734,
+     2511,
+     2790,
+     1138,
+     383
+    ]
+   ]
+  }
+ ],
+ "caveats": [
+  {
+   "zh": "核跑在 **Operon 分布**的树上(每叶一个系数,K≈叶子数,比 evogp 密 ~2.8×)—— 对核是压力测试,非其目标工况。如实披露。",
+   "en": "The kernel runs on the OPERON distribution (every leaf a coefficient, K≈#leaves, ~2.8× denser than evogp) — a STRESS test for the kernel, not its design workload."
+  },
+  {
+   "zh": "**核 vs Operon 是外部标尺,非受控实验**:核是 fp32+fast-math+简单 λ-damping,Operon 是 fp64+成熟 trust-region,Jacobian 也不同 —— 差异无法归因到单一因素。**AD vs FD 才是受控对比**(同 fp32 LM,仅 Jacobian 不同),可归因。",
+   "en": "kernel-vs-Operon is an EXTERNAL YARDSTICK, not controlled: fp32+fast-math+simple λ-damping vs fp64+mature trust-region, different Jacobian — gap not attributable to one factor. Only AD-vs-FD is controlled (same fp32 LM, only the Jacobian differs)."
+  },
+  {
+   "zh": "“收敛率”不可跨引擎直比:Operon 的 Success 与核的 status==0 判据不同。正文用中立的损失比分布(loss_final/loss_start)与 >1% 显著改进率作同口径指标。",
+   "en": "'Convergence rate' is not cross-engine comparable (Operon Success vs kernel status==0 differ). The apples-to-apples metrics are the neutral loss-ratio distribution and the >1% meaningful-improvement rate."
+  },
+  {
+   "zh": "收敛上限:Operon 在 500 内收敛(最大 498,0.08% 接近上限);核用 1000(给足,避免低估核)。即便如此,个别 nguyen 高代 cell 仍有最多 11.1% 的核树触顶——这些是振荡/慢收敛树。中立 achieved-loss 头条指标对残留 maxiter 稳健(触顶树仍贡献其 best-so-far 损失);受影响的是核“收敛率”诊断,非损失比。",
+   "en": "Convergence caps: Operon converges within 500 (max 498, 0.08% near cap); the kernel gets 1000 (generous, to avoid understating it). Even so, a few high-gen nguyen cells leave up to 11.1% of kernel trees at maxiter — oscillating/slow-converging trees. The neutral achieved-loss headline is robust to residual maxiter (those trees still contribute their best-so-far loss); only the kernel 'convergence rate' diagnostic is affected."
+  },
+  {
+   "zh": "中立评分用精确 fp64;核用 fast-math fp32 —— 在奇点附近二者可差 10^数十×(核的 fast-math 倒数 vs 精确 fp64)。质量比较仅在双方都显著改进的子集上,并单独报告 converged-but-worsened 率。",
+   "en": "Neutral scoring is exact fp64; the kernel uses fast-math fp32 — near singularities the two can differ by 10^tens× (fast-math reciprocal vs exact fp64). Quality is compared only where both genuinely improved; the converged-but-worsened rate is reported separately."
+  }
+ ],
+ "reproduce": [
+  "/home/weish/hao/operon-venv/bin/python results/operon_baseline__20260617/probes/probe_lm_gates.py  # Probe A/B",
+  "python results/operon_baseline__20260617/driver.py --phase operon --max-iter 500   # Operon converges within 500",
+  "python results/operon_baseline__20260617/driver.py --phase kernel --max-iter 1000  # generous cap for the kernel",
+  "python results/operon_baseline__20260617/analyze.py",
+  "python results/operon_baseline__20260617/build_report.py",
+  "/home/weish/hao/CuSR/.venv/bin/python results/operon_baseline__20260617/plots.py",
+  "uv run python scripts/make_report.py results/operon_baseline__20260617/report.json"
+ ]
+}

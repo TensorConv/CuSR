@@ -108,11 +108,21 @@ def _grammar_int():
             | int(NT.Constant) | int(NT.Variable))
 
 
-def run_cell(*, dataset, pop, N, seed, noise, cap, checkpoint_gens, out, threads):
+def run_cell(*, dataset, pop, N, seed, noise, cap, checkpoint_gens, out, threads,
+             _return_internals=False):
     """Run one Operon GP cell and dump pre-CO population snapshots.
 
     Returns ``(manifest_dict, manifest_path)``. Dumps one ``pop_gen{g:04d}.bin`` per
     checkpoint generation into ``out.parent`` and writes ``manifest.json`` there.
+
+    If ``_return_internals=True`` returns a third element: a dict with the live
+    snapshot ``Tree`` objects (``snaps`` = ``{gen: [Tree, ...]}``) plus the
+    ``hash2idx`` / ``X`` / ``y`` / ``prob`` used to build them. This is the
+    single-source-of-truth code path for the Operon-LMOptimizer baseline harness:
+    it regenerates the *exact* corpus trees (same seed/config) so the harness can
+    run Operon's own CO on them AND prove ``convert(regenerated) == committed bin``
+    byte-for-byte. The flag does NOT change any dumped bytes (default keeps the
+    2-tuple return), so existing callers are unaffected.
 
     Reproducibility contract: a snapshot is reproducible from the committed
     ``manifest.json`` **plus the ``operon_dump.py`` source at the recorded ``git_sha``**
@@ -378,6 +388,8 @@ def run_cell(*, dataset, pop, N, seed, noise, cap, checkpoint_gens, out, threads
     tmp_path.write_text(json.dumps(manifest, indent=2))
     tmp_path.replace(manifest_path)
     print(f"[operon_dump] manifest: {manifest_path}  ({len(snap_records)} snapshots)", flush=True)
+    if _return_internals:
+        return manifest, manifest_path, dict(snaps=snaps, hash2idx=hash2idx, X=X, y=y, prob=prob)
     return manifest, manifest_path
 
 
