@@ -25,6 +25,14 @@ batch_lm: batch_lm.cu loader.c loader.h pop_format.h
 batch_lm_fusedfd_prof: batch_lm_fusedfd.cu loader.c loader.h pop_format.h
 	$(NVCC) $(NVCC_FLAGS) -DPROFILE -o $@ batch_lm_fusedfd.cu loader.c
 
+# v4: forward-mode AD Jacobian (drop-in J producer, replaces fd_jacobian).
+# See docs/kernel/AD_JACOBIAN_V4.md. AD_W = chunk width (default 8 in source).
+batch_lm_ad: batch_lm_ad.cu loader.c loader.h pop_format.h ad_interp.cuh
+	$(NVCC) $(NVCC_FLAGS) -o $@ batch_lm_ad.cu loader.c
+
+batch_lm_ad_prof: batch_lm_ad.cu loader.c loader.h pop_format.h ad_interp.cuh
+	$(NVCC) $(NVCC_FLAGS) -DPROFILE -o $@ batch_lm_ad.cu loader.c
+
 show: inspect
 	@if [ -f data/pop.bin ]; then ./inspect data/pop.bin; else echo "data/pop.bin 不存在, 先跑 dump_evogp.py"; fi
 

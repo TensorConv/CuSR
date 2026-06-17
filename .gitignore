@@ -50,6 +50,7 @@ experiments/*/logs/
 data/workload/snapshots/**/*.bin
 data/workload/snapshots/**/*.meta.txt
 data/workload/snapshots/harvest_log.txt
+data/workload/snapshots/operon_harvest_log.txt
 data/workload/synth/
 # results/ is TRACKED — structured experiment archive (report.html/json, csv, plots,
 # manifest, small logs). Keep bulk binaries OUT of it (raw pop.bin/npy live under data/).
@@ -89,3 +90,12 @@ results/**/*.npy
 legacy/bench_c_kernels/third_party_install/
 legacy/bench_c_kernels/build/
 legacy/bench_c_kernels/**/build/
+
+# --- CUDA kernel binaries (built on demand via cusr/kernel/Makefile) ---
+cusr/kernel/batch_lm_ad
+cusr/kernel/batch_lm_ad_prof
+cusr/kernel/batch_lm_fusedfd
+cusr/kernel/test_jvp_host
+cusr/kernel/tests/test_jvp_host
+cusr/kernel/tests/test_ad_jac
+cusr/kernel/*.o

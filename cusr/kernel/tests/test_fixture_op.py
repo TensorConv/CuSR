@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -14,7 +15,8 @@ import numpy as np
 
 HERE = Path(__file__).resolve().parent
 PROJ = HERE.parent
-BATCH_LM = PROJ / "batch_lm"
+# BATCH_LM=../batch_lm_ad 可指定变体二进制 (默认 baseline), 与 test_fixture_scale.py 一致
+BATCH_LM = Path(os.environ.get("BATCH_LM", PROJ / "batch_lm"))
 FIXTURE = HERE / "pop_fixture_op.bin"
 TRUTH = HERE / "pop_fixture_op_truth.json"
 
