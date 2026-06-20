@@ -1,0 +1,124 @@
+{
+  "generated_utc": "2026-06-17T12:46:50.363360+00:00",
+  "max_iter": 50,
+  "nvcc_flags": "-O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math",
+  "note": "byte-parity reference for P1 in-process CO (docs/kernel/INPROCESS_CO_PLAN.md)",
+  "variants": {
+    "fd": {
+      "pop1000": {
+        "pop": "data/fixtures/pop.bin",
+        "header": {
+          "magic": "0x4d4c344d",
+          "version": 1,
+          "M_prob": 1000,
+          "total_nodes": 19613,
+          "total_c": 2567,
+          "N": 1000,
+          "n_vars": 3,
+          "K_max": 8,
+          "max_stack": 11
+        },
+        "blobs": {
+          "c_final.bin": {
+            "bytes": 10268,
+            "sha256": "48ae6f099cf9a0b68dbf62ab2ea693ce3a4e8ec7d172dad1648198a790a8fa66"
+          },
+          "status.bin": {
+            "bytes": 4000,
+            "sha256": "69066b75b3d7061249b6be19f66c4b4fd41ceafbd761069a8da0430ac0c20baa"
+          }
+        }
+      },
+      "operon4000_g100": {
+        "pop": "data/workload/snapshots/operon_feynman_I.12.1_pop4000_noise0_len64_seed0/pop_gen0100.bin",
+        "header": {
+          "magic": "0x4d4c344d",
+          "version": 1,
+          "M_prob": 4000,
+          "total_nodes": 218315,
+          "total_c": 57710,
+          "N": 1000,
+          "n_vars": 2,
+          "K_max": 28,
+          "max_stack": 13
+        },
+        "blobs": {
+          "c_final.bin": {
+            "bytes": 230840,
+            "sha256": "4a07cf7ba79a9b50d89aa5845e5c7567e2934f5a4ef13e40056583fccd9a5449"
+          },
+          "status.bin": {
+            "bytes": 16000,
+            "sha256": "2b56c2d8d1db9a9e433b9aa5850590f97c35c4c387f667ce32a50f34077fc423"
+          }
+        }
+      }
+    },
+    "ad": {
+      "pop1000": {
+        "pop": "data/fixtures/pop.bin",
+        "header": {
+          "magic": "0x4d4c344d",
+          "version": 1,
+          "M_prob": 1000,
+          "total_nodes": 19613,
+          "total_c": 2567,
+          "N": 1000,
+          "n_vars": 3,
+          "K_max": 8,
+          "max_stack": 11
+        },
+        "blobs": {
+          "c_final.bin": {
+            "bytes": 10268,
+            "sha256": "87db1c52318f6f2c46bd2a64143f3213d779919f32fa945b9c956ef677b5e82a"
+          },
+          "status.bin": {
+            "bytes": 4000,
+            "sha256": "c63e10d5bbcd94995e737220a0e2bc8e30f11ca98d6eebe4121beba6499e16fe"
+          },
+          "loss_init.bin": {
+            "bytes": 4000,
+            "sha256": "56a1bc82ab60f728c0b334e56e9a229e376b56c80e40eb77c7bdae2ac414e580"
+          },
+          "loss_final.bin": {
+            "bytes": 4000,
+            "sha256": "6ca4f0f1f6a3910ff24768d5fc0a7a87fe3acaac899b82960025eec2ec3b921b"
+          }
+        }
+      },
+      "operon4000_g100": {
+        "pop": "data/workload/snapshots/operon_feynman_I.12.1_pop4000_noise0_len64_seed0/pop_gen0100.bin",
+        "header": {
+          "magic": "0x4d4c344d",
+          "version": 1,
+          "M_prob": 4000,
+          "total_nodes": 218315,
+          "total_c": 57710,
+          "N": 1000,
+          "n_vars": 2,
+          "K_max": 28,
+          "max_stack": 13
+        },
+        "blobs": {
+          "c_final.bin": {
+            "bytes": 230840,
+            "sha256": "babb8509712c6d238ec6b3b3fa777d5a737892803be19bee58b7d8efb25d153b"
+          },
+          "status.bin": {
+            "bytes": 16000,
+            "sha256": "4980cf50dddb2d80da81edab6b3cb4c8bdfa06ee983172e51b7d88e1fbc5e9df"
+          },
+          "loss_init.bin": {
+            "bytes": 16000,
+            "sha256": "9d127e90848424457d33f67000b6ba50d3ac7e52add679067aecfa569062543e"
+          },
+          "loss_final.bin": {
+            "bytes": 16000,
+            "sha256": "c94715b25950146e8789e70ad989484d838d1de7307a9db5208c4db7986d6a11"
+          }
+        }
+      }
+    }
+  }
+}

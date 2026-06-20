@@ -242,10 +242,17 @@ class CudaKernelLM:
     """
     name = "cuda_kernel_lm"
 
-    def __init__(self, binary=None, max_iter: int = 50, fallback=None):
+    def __init__(self, binary=None, max_iter: int = 50, fallback=None,
+                 inproc: bool = False, device_id: int = 0):
         self.binary = binary
         self.max_iter = max_iter
         self.fallback = fallback
+        # inproc=True routes through the persistent in-process ctypes drop-in
+        # (co_inproc.get_inproc_co) instead of the per-gen subprocess, paying the
+        # CUDA primary-context init once per process (P1). device_id selects the
+        # GPU for that handle (0 under CUDA_VISIBLE_DEVICES pinning).
+        self.inproc = bool(inproc)
+        self.device_id = int(device_id)
         self.last_stats: dict = {}
         self.cum_stats: dict = {}  # accumulated across fit_batch calls (one run)
 
@@ -262,6 +269,8 @@ class CudaKernelLM:
             binary=self.binary or DEFAULT_BINARY,
             max_iter=self.max_iter,
             fallback=self.fallback,
+            inproc=self.inproc,
+            device_id=self.device_id,
         )
         self.last_stats = stats
         for k, v in stats.items():

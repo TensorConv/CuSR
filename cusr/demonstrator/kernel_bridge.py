@@ -110,6 +110,33 @@ def _run_kernel(pop: dict, binary, max_iter):
     return c_final, raw_status
 
 
+def _variant_for_binary(binary) -> str:
+    """The in-process .so variant that matches the standalone `binary`.
+
+    Byte-parity is per-variant (the FD .so single-sources the FD device kernels;
+    the AD .so the AD ones). The inproc drop-in must use the SAME variant as the
+    subprocess it replaces, so `fit_natives(inproc=True)` is byte-identical to
+    `inproc=False` for whatever `binary` the caller passed. `batch_lm_ad` -> 'ad';
+    everything else (incl. the default `batch_lm`) -> 'fd'."""
+    return "ad" if pathlib.Path(binary).name.endswith("_ad") else "fd"
+
+
+def _run_kernel_inproc(pop: dict, binary, max_iter, device_id):
+    """In-process twin of `_run_kernel`: same (c_final float64, raw_status int32)
+    contract, but via the persistent ctypes handle (no subprocess, no disk). The
+    CUDA primary context is paid ONCE per process (get_inproc_co singleton)."""
+    from cusr.kernel.co_inproc import get_inproc_co
+
+    variant = _variant_for_binary(binary)
+    co = get_inproc_co(device_id=device_id, variant=variant)
+    out = co.optimize(pop, max_iter=max_iter)
+    # optimize() returns float32 c_final; match _run_kernel's float64 cast so the
+    # downstream slot/loss math is bit-identical to the subprocess path.
+    c_final = np.asarray(out["c_final"], dtype=np.float32).astype(np.float64)
+    raw_status = np.asarray(out["status"], dtype=np.int32)
+    return c_final, raw_status
+
+
 def fit_natives(
     skeletons,
     inits,
@@ -120,6 +147,8 @@ def fit_natives(
     binary=DEFAULT_BINARY,
     max_iter: int = 50,
     fallback=None,
+    inproc: bool = False,
+    device_id: int = 0,
 ) -> tuple[list[COResult], dict]:
     """Fit each skeleton's constants via the 008 kernel; return (results, stats).
 
@@ -128,7 +157,14 @@ def fit_natives(
     kernel-final loss is recomputed fp64 via `skel.residual` to match the scipy /
     torch loss convention exactly (apples-to-apples). `stats` reports how many
     trees went to the kernel vs the fallback (and why).
-    """
+
+    `inproc=True` replaces the per-gen subprocess (`_run_kernel`) with the
+    persistent in-process ctypes handle (`co_inproc.get_inproc_co(device_id)`),
+    paying the CUDA primary-context init ONCE per process (P1). The variant tracks
+    `binary` (FD/AD), so the inproc result is byte-identical to the subprocess it
+    replaces. `inproc=False` keeps the subprocess baseline path. The per-tree
+    eligibility filtering + scipy-fallback routing is identical on both paths, so
+    no candidate is dropped either way (MUST-FIX #7)."""
     X = np.asarray(X, dtype=float)
     y = np.asarray(y, dtype=float).ravel()
     n_vars = X.shape[1]
@@ -165,7 +201,10 @@ def fit_natives(
         trees = [ext for _, ext in kernel_slots]
         ym = np.tile(y, (len(trees), 1))
         pop = popio.build_pop(trees, X, ym)
-        c_final, raw_status = _run_kernel(pop, binary, max_iter)
+        if inproc:
+            c_final, raw_status = _run_kernel_inproc(pop, binary, max_iter, device_id)
+        else:
+            c_final, raw_status = _run_kernel(pop, binary, max_iter)
         for slot, (j, _ext) in enumerate(kernel_slots):
             _, _, c_off, K = pop["metas"][slot].tolist()
             c = np.asarray(c_final[c_off:c_off + K], dtype=float)
