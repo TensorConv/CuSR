@@ -395,7 +395,8 @@ def main():
 
     out = HERE / "out"
     out.mkdir(exist_ok=True)
-    fn = out / ("smoke.jsonl" if args.smoke else "study_b_results.jsonl")
+    tag = args.out or ("smoke" if args.smoke else "study_b_results")
+    fn = out / f"{tag}.jsonl"
     sink = fn.open("w")
 
     print(f"Study B  problems={[p.id for p in probs]}  arms={arm_names}  seeds={n_seeds}")
@@ -432,7 +433,7 @@ def main():
     summary = summarize(rows, arm_names)
     report = {"config": cfg, "arms": {a.name: a.label for a in arm_list},
               "n_seeds": n_seeds, "summary": summary}
-    rep_fn = out / ("smoke_report.json" if args.smoke else "report.json")
+    rep_fn = out / f"{tag}_report.json"
     rep_fn.write_text(json.dumps(report, indent=2))
 
     # --- console summary ---
