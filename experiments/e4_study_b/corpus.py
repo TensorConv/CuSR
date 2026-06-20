@@ -30,10 +30,12 @@ import pathlib
 
 from cusr.demonstrator.seed_bench import Problem
 
-MANIFEST = (
-    pathlib.Path(__file__).resolve().parents[1]
-    / "e3_admit_criterion" / "out" / "corpus_manifest.json"
-)
+_HERE = pathlib.Path(__file__).resolve()
+MANIFEST = _HERE.parents[1] / "e3_admit_criterion" / "out" / "corpus_manifest.json"
+# The frozen multi-inner EXTENSION (build_extension.py), run through the SAME
+# unchanged e3 criterion — its ADMITs join the instrument, its canonical siblings
+# join the controls. Absent until build_extension has been run.
+EXT_MANIFEST = _HERE.parent / "out" / "extension_manifest.json"
 
 
 def _to_problem(rec: dict) -> Problem | None:
@@ -59,12 +61,23 @@ def _to_problem(rec: dict) -> Problem | None:
     )
 
 
-def load(include_controls: bool = True) -> tuple[list[Problem], list[Problem]]:
-    """Returns (admitted, controls). `admitted` = the 21-problem instrument;
-    `controls` = the runnable REJECT records (validity check)."""
-    recs = json.loads(MANIFEST.read_text())["records"]
-    admitted, controls = [], []
+def load(include_controls: bool = True, include_extension: bool = True
+         ) -> tuple[list[Problem], list[Problem]]:
+    """Returns (admitted, controls). `admitted` = e3's 21 + (if present) the 12
+    multi-inner extension ADMITs; `controls` = the runnable REJECT validity checks.
+    Records are deduped by id (the extension re-runs the global controls)."""
+    recs = list(json.loads(MANIFEST.read_text())["records"])
+    if include_extension and EXT_MANIFEST.exists():
+        for r in json.loads(EXT_MANIFEST.read_text())["records"]:
+            # take the extension's own families + in-family canon controls; the
+            # global nguyen/feynman controls already come from the e3 manifest.
+            if r.get("role") in ("extension", "control_canon"):
+                recs.append(r)
+    admitted, controls, seen = [], [], set()
     for r in recs:
+        if r["id"] in seen:
+            continue
+        seen.add(r["id"])
         p = _to_problem(r)
         if p is None:
             continue

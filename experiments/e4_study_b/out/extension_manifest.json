@@ -1,0 +1,1165 @@
+{
+  "summary": {
+    "n_extension_candidates": 12,
+    "n_extension_admitted": 12,
+    "n_extension_rejected": 0,
+    "extension_admitted_ids": [
+      "ext_freq_product_1.3_2.7",
+      "ext_freq_product_0.7_1.9",
+      "ext_freq_product_2.3_3.7",
+      "ext_gauss_freq_0.3_2.7",
+      "ext_gauss_freq_0.7_1.9",
+      "ext_gauss_freq_0.4_3.3",
+      "ext_twovar_df_1.3_0.7",
+      "ext_twovar_df_2.3_0.9",
+      "ext_lorentzian_0.8_1.3",
+      "ext_lorentzian_1.4_2.3",
+      "ext_sigmoid_1.3_0.7",
+      "ext_sigmoid_2.3_1.9"
+    ],
+    "extension_rejected": [],
+    "n_canon_controls": 2,
+    "n_canon_leaked": 0,
+    "n_global_controls": 11,
+    "n_global_leaked": 0,
+    "n_admit_over_cap": 0,
+    "power_floor_min_multi": 8,
+    "total_multi_inner_after_extension": 15
+  },
+  "records": [
+    {
+      "id": "ext_freq_product_1.3_2.7",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0007 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*sin(1.3*x0)*cos(2.7*x0)",
+      "skeleton": "c0*sin(c1*x0)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        1.3,
+        2.7
+      ],
+      "domain": [
+        [
+          -4.0,
+          4.0
+        ]
+      ],
+      "R2_LS": 0.0007079496123452156,
+      "R2_LS_best": 0.5130669054591428,
+      "R2_full": 1.0,
+      "R2_full_random": 0.59409801609128,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 6,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_freq_product_0.7_1.9",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*sin(0.7*x0)*cos(1.9*x0)",
+      "skeleton": "c0*sin(c1*x0)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        0.7,
+        1.9
+      ],
+      "domain": [
+        [
+          -4.0,
+          4.0
+        ]
+      ],
+      "R2_LS": 3.111786199305744e-05,
+      "R2_LS_best": 0.9062378175252316,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 6,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_freq_product_2.3_3.7",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0149 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*sin(2.3*x0)*cos(3.7*x0)",
+      "skeleton": "c0*sin(c1*x0)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        2.3,
+        3.7
+      ],
+      "domain": [
+        [
+          -4.0,
+          4.0
+        ]
+      ],
+      "R2_LS": 0.014935750447551577,
+      "R2_LS_best": 0.3512998794128678,
+      "R2_full": 1.0,
+      "R2_full_random": 0.5136803082189623,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 6,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_gauss_freq_0.3_2.7",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0002 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-0.3*x0**2)*cos(2.7*x0)",
+      "skeleton": "c0*exp(-c1*x0**2)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        0.3,
+        2.7
+      ],
+      "domain": [
+        [
+          -3.5,
+          3.5
+        ]
+      ],
+      "R2_LS": 0.0001586858391694479,
+      "R2_LS_best": 0.7025881467557213,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 7,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_gauss_freq_0.7_1.9",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0001 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-0.7*x0**2)*cos(1.9*x0)",
+      "skeleton": "c0*exp(-c1*x0**2)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        0.7,
+        1.9
+      ],
+      "domain": [
+        [
+          -3.5,
+          3.5
+        ]
+      ],
+      "R2_LS": 6.315272561718821e-05,
+      "R2_LS_best": 0.9853025908272431,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 7,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_gauss_freq_0.4_3.3",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-0.4*x0**2)*cos(3.3*x0)",
+      "skeleton": "c0*exp(-c1*x0**2)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        0.4,
+        3.3
+      ],
+      "domain": [
+        [
+          -3.5,
+          3.5
+        ]
+      ],
+      "R2_LS": 2.0428095038882432e-06,
+      "R2_LS_best": 0.4816352680424686,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 7,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_twovar_df_1.3_0.7",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0033 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-0.7*x1)*sin(1.3*x0)",
+      "skeleton": "c0*exp(-c2*x1)*sin(c1*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        1.3,
+        0.7
+      ],
+      "domain": [
+        [
+          -3.0,
+          3.0
+        ],
+        [
+          0.1,
+          4.0
+        ]
+      ],
+      "R2_LS": 0.0033352926808351002,
+      "R2_LS_best": 0.6376086676703173,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 6,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_twovar_df_2.3_0.9",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0001 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-0.9*x1)*sin(2.3*x0)",
+      "skeleton": "c0*exp(-c2*x1)*sin(c1*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        2.3,
+        0.9
+      ],
+      "domain": [
+        [
+          -3.0,
+          3.0
+        ],
+        [
+          0.1,
+          4.0
+        ]
+      ],
+      "R2_LS": 7.1989232359293e-05,
+      "R2_LS_best": 0.7137562904531043,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 6,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_lorentzian_0.8_1.3",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7/((x0 - 1.3)**2 + 0.8)",
+      "skeleton": "c0/(c1 + (-c2 + x0)**2)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        0.8,
+        1.3
+      ],
+      "domain": [
+        [
+          -4.0,
+          6.0
+        ]
+      ],
+      "R2_LS": 3.4058748927812132e-06,
+      "R2_LS_best": 0.9045725945706353,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 4,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_lorentzian_1.4_2.3",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7/((x0 - 2.3)**2 + 1.4)",
+      "skeleton": "c0/(c1 + (-c2 + x0)**2)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        1.4,
+        2.3
+      ],
+      "domain": [
+        [
+          -4.0,
+          6.0
+        ]
+      ],
+      "R2_LS": 1.0456445689310812e-05,
+      "R2_LS_best": 0.9349873451013743,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 4,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_sigmoid_1.3_0.7",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.4822 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7/(1 + 2.48432253338482*exp(-1.3*x0))",
+      "skeleton": "c0/(1 + exp(-c1*(-c2 + x0)))",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        1.3,
+        0.7
+      ],
+      "domain": [
+        [
+          -3.0,
+          5.0
+        ]
+      ],
+      "R2_LS": 0.4821583167561334,
+      "R2_LS_best": 0.9951923568585355,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 1.5860328923216523e-15,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 6,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ext_sigmoid_2.3_1.9",
+      "role": "extension",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.2418 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7/(1 + 79.0436316995644*exp(-2.3*x0))",
+      "skeleton": "c0/(1 + exp(-c1*(-c2 + x0)))",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        2.3,
+        1.9
+      ],
+      "domain": [
+        [
+          -3.0,
+          5.0
+        ]
+      ],
+      "R2_LS": 0.24180497087792185,
+      "R2_LS_best": 0.9980176461358445,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "count_ops": 6,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ctrl_freq_product_canon_1_2",
+      "role": "control_canon",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c1': 1.0, 'c2': 2.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "formula": "1.7*sin(1.0*x0)*cos(2.0*x0)",
+      "skeleton": "c0*sin(c1*x0)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        1.0,
+        2.0
+      ],
+      "domain": [
+        [
+          -4.0,
+          4.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": true,
+      "seeding": "n/a",
+      "count_ops": 6,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "ctrl_gauss_freq_canon_0.5_2",
+      "role": "control_canon",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c1': 0.5, 'c2': 2.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "formula": "1.7*exp(-0.5*x0**2)*cos(2.0*x0)",
+      "skeleton": "c0*exp(-c1*x0**2)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        0.5,
+        2.0
+      ],
+      "domain": [
+        [
+          -3.5,
+          3.5
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": true,
+      "seeding": "n/a",
+      "count_ops": 7,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "nguyen_1",
+      "role": "control_nguyen",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0**3 + 1.0*x0**2 + 1.0*x0",
+      "skeleton": "c0*x0**3 + c1*x0**2 + c2*x0",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "domain": [
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "n/a",
+      "count_ops": 7,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "nguyen_2",
+      "role": "control_nguyen",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0**4 + 1.0*x0**3 + 1.0*x0**2 + 1.0*x0",
+      "skeleton": "c0*x0**4 + c1*x0**3 + c2*x0**2 + c3*x0",
+      "constants": [
+        "c0",
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "gt": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "domain": [
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 4,
+      "structural": false,
+      "seeding": "n/a",
+      "count_ops": 10,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "nguyen_3",
+      "role": "control_nguyen",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0**5 + 1.0*x0**4 + 1.0*x0**3 + 1.0*x0**2 + 1.0*x0",
+      "skeleton": "c0*x0**5 + c1*x0**4 + c2*x0**3 + c3*x0**2 + c4*x0",
+      "constants": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "gt": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "domain": [
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 5,
+      "structural": false,
+      "seeding": "n/a",
+      "count_ops": 13,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "nguyen_4",
+      "role": "control_nguyen",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0**6 + 1.0*x0**5 + 1.0*x0**4 + 1.0*x0**3 + 1.0*x0**2 + 1.0*x0",
+      "skeleton": "c0*x0**6 + c1*x0**5 + c2*x0**4 + c3*x0**3 + c4*x0**2 + c5*x0",
+      "constants": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5"
+      ],
+      "gt": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "domain": [
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 6,
+      "structural": false,
+      "seeding": "n/a",
+      "count_ops": 16,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "nguyen_5",
+      "role": "control_nguyen",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c1': 1.0, 'c2': 1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "formula": "1.0*sin(1.0*x0**2)*cos(1.0*x0) - 1.0",
+      "skeleton": "c0*sin(c1*x0**2)*cos(c2*x0) + c3",
+      "constants": [
+        "c0",
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "gt": [
+        1.0,
+        1.0,
+        1.0,
+        -1.0
+      ],
+      "domain": [
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 4,
+      "n_consts": 4,
+      "structural": true,
+      "seeding": "n/a",
+      "count_ops": 8,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "korns_8",
+      "role": "control_korns8_absorbable",
+      "verdict": "REJECT",
+      "reason_code": "fold",
+      "reason": "all 1 positional-inner const(s) absorbable via fold ('c2',) \u2014 linear scaling absorbs them (e.g. sqrt(c\u00b7g)=sqrt(c)\u00b7sqrt(g))",
+      "formula": "29.5775252514473*sqrt(x0*x1*x2) + 6.87",
+      "skeleton": "c0 + c1*sqrt(c2*x0*x1*x2)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        6.87,
+        11.0,
+        7.23
+      ],
+      "domain": [
+        [
+          0.1,
+          10.0
+        ],
+        [
+          0.1,
+          10.0
+        ],
+        [
+          0.1,
+          10.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [
+        "c2"
+      ],
+      "n_inner_positional": 1,
+      "rank": -1,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "n/a",
+      "count_ops": 7,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "feynman_I.11.19",
+      "role": "control_feynman_outer_only",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0*x3 + 1.0*x1*x4 + 1.0*x2*x5",
+      "skeleton": "c0*(x0*x3 + x1*x4 + x2*x5)",
+      "constants": [
+        "c0"
+      ],
+      "gt": [
+        1.0
+      ],
+      "domain": [
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 1,
+      "structural": false,
+      "seeding": "n/a",
+      "count_ops": 6,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "feynman_I.12.1",
+      "role": "control_feynman_outer_only",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0*x1",
+      "skeleton": "c0*x0*x1",
+      "constants": [
+        "c0"
+      ],
+      "gt": [
+        1.0
+      ],
+      "domain": [
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 1,
+      "structural": false,
+      "seeding": "n/a",
+      "count_ops": 2,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "feynman_I.12.2",
+      "role": "control_feynman_outer_only",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "0.0795774715459477*x0*x1/(x2*x3**2)",
+      "skeleton": "c0*x0*x1/(c1*x2*x3**2)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        0.25,
+        3.141592653589793
+      ],
+      "domain": [
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "n/a",
+      "count_ops": 6,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "feynman_I.12.4",
+      "role": "control_feynman_outer_only",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "0.0795774715459477*x0/(x1*x2**2)",
+      "skeleton": "c0*x0/(c1*x1*x2**2)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        0.25,
+        3.141592653589793
+      ],
+      "domain": [
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "n/a",
+      "count_ops": 5,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "feynman_I.12.5",
+      "role": "control_feynman_outer_only",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0*x1",
+      "skeleton": "c0*x0*x1",
+      "constants": [
+        "c0"
+      ],
+      "gt": [
+        1.0
+      ],
+      "domain": [
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 1,
+      "structural": false,
+      "seeding": "n/a",
+      "count_ops": 2,
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    }
+  ]
+}
