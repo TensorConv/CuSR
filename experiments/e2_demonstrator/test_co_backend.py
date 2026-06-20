@@ -143,6 +143,47 @@ def test_pathological_skeleton_no_crash(backend):
     assert isinstance(res, COResult)  # finite-or-inf loss, but no exception
 
 
+@pytest.mark.parametrize("backend", BACKENDS, ids=IDS)
+def test_complexinfinity_skeleton_no_crash(backend):
+    """A skeleton whose SYMBOLIC form folds to ComplexInfinity (zoo) — e.g. a GP
+    subtree like c0/(x0-x0) — cannot be lambdified: sympy's printer raises
+    KeyError('ComplexInfinity') at BUILD time, before residual's runtime 1e10
+    guard can act. Such a tree must demote to inf loss, never crash the batch.
+
+    Regression: Study B seed-4 cpu_every crashed 17 cells this way — ScipyLM's
+    except handler re-called skel.residual, which re-raised the same KeyError
+    inside the except block (double-fault), killing the whole cell to R2=0 and
+    biasing the CPU arm down. Must return a COResult with a non-finite loss."""
+    x0, c0 = sp.symbols("x0 c0")
+    zoo_skel = Skeleton(expr=c0 / (x0 - x0), variables=(x0,), constants=(c0,))
+    assert zoo_skel.expr.has(sp.zoo)  # sanity: it really is ComplexInfinity
+    X = np.linspace(-2.0, 2.0, 50).reshape(-1, 1)
+    y = np.ones(len(X))
+    res = backend.fit_batch([zoo_skel], [np.array([1.0])], X, y, max_iter=50)[0]
+    assert isinstance(res, COResult)
+    assert res.final_loss >= 1e6  # demoted (inf for torch, ~1e10 sentinel for scipy)
+    # and a heterogeneous batch where only ONE member is pathological must still
+    # return a result for the GOOD member (one bad tree can't poison the batch).
+    good, Xg, yg = make("c0*x0", ["x0"], ["c0"], [2.0])
+    out = backend.fit_batch([zoo_skel, good], [np.array([1.0]), np.array([0.0])],
+                            Xg, yg, max_iter=50)
+    assert len(out) == 2 and np.isfinite(out[1].final_loss)
+
+
+def test_skeleton_residual_on_zoo_no_raise():
+    """Root-cause guard at the Skeleton level: residual/jacobian on a zoo expr
+    must return the 1e10 / zero sentinels (matching the NaN/inf policy), not
+    raise — so neither the optimizer call NOR any fallback path can fault."""
+    x0, c0 = sp.symbols("x0 c0")
+    zoo_skel = Skeleton(expr=c0 / (x0 - x0), variables=(x0,), constants=(c0,))
+    X = np.linspace(-2.0, 2.0, 10).reshape(-1, 1)
+    y = np.ones(len(X))
+    r = zoo_skel.residual(np.array([1.0]), X, y)
+    J = zoo_skel.jacobian(np.array([1.0]), X)
+    assert np.all(np.isfinite(r)) and r.shape == (10,)  # 1e10 sentinel, not NaN/raise
+    assert np.all(np.isfinite(J)) and J.shape == (10, 1)
+
+
 @pytest.mark.skipif(not __import__("torch").cuda.is_available(), reason="needs GPU for EvoGP")
 def test_cross_check_on_real_evogp_skeletons():
     """The corpus check: skeletons that forest_member_to_skeleton ACTUALLY emits

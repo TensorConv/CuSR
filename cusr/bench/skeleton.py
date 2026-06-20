@@ -57,15 +57,36 @@ class Skeleton:
         return fn(self.expr)
 
     @cached_property
+    def _is_pathological(self) -> bool:
+        # A tree whose SYMBOLIC form folds to ComplexInfinity (zoo) / ±oo / nan
+        # — e.g. a GP subtree c0/(x0-x0) — cannot be lambdified: sympy's
+        # NumPyPrinter raises KeyError('ComplexInfinity') at BUILD time, before
+        # residual's runtime 1e10 guard can ever act. Detect it once here so
+        # _eval_fn/_jac_fn demote it to the existing sentinels instead of raising
+        # (which, caught and re-raised in a backend's except handler, double-faults
+        # and crashes the whole CO batch).
+        return self.expr.has(sp.zoo, sp.oo, sp.S.NegativeInfinity, sp.nan)
+
+    @cached_property
     def _eval_fn(self) -> Callable:
         args = (self.constants, self.variables)
+        if self._is_pathological:
+            return lambda c, v: np.inf  # residual's nan_to_num -> 1e10 sentinel
         return sp.lambdify(args, self.expr, modules="numpy")
 
     @cached_property
     def _jac_fn(self) -> Callable:
         if self.n_constants == 0:
             return lambda c, X: np.zeros((X.shape[0], 0))
+        n = self.n_constants
+        if self._is_pathological:  # zero Jacobian -> LM avoids the direction
+            return lambda c, X: np.zeros((np.asarray(X).shape[0], n))
         jac_exprs = [sp.diff(self.expr, c) for c in self.constants]
+        # Differentiation can introduce a ComplexInfinity/±oo/nan atom even when
+        # self.expr was finite (so _is_pathological missed it) — same lambdify
+        # KeyError. Guard the derivative exprs too: zero Jacobian, never raise.
+        if any(je.has(sp.zoo, sp.oo, sp.S.NegativeInfinity, sp.nan) for je in jac_exprs):
+            return lambda c, X: np.zeros((np.asarray(X).shape[0], n))
         args = (self.constants, self.variables)
         f = sp.lambdify(args, jac_exprs, modules="numpy")
 

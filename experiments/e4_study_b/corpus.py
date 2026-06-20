@@ -17,11 +17,15 @@ deliverable, so Study B inherits e3's pre-registration discipline verbatim.
                       4.1}). The 7 self-rejects are the anti-cherry-pick evidence.
 
 `difficulty` carries the inner-constant COUNT bucket ("single_inner" /
-"multi_inner") so the harness can report the gain split that Claim 2's
-"largest gains on problems requiring multiple internal constants" needs.
-NOTE (measured 2026-06-20): only 3 of the 21 ADMIT problems are multi_inner
-(all the exp*cos damped family) — that sub-claim is thinly powered until the
-corpus is extended; reported honestly, not hidden.
+"multi_inner") so the harness can report the gain split.
+NOTE (post-extension + audit, 2026-06-21): with the frozen multi-inner EXTENSION
+the ADMIT set is 33 (18 single_inner + 15 multi_inner). The adversarial audit
+(run wf_3916912b-830) found the multi_inner comparison is UNDERPOWERED — near-
+zero discordant gpu-vs-no_co pairs (lenient 0, solved 7) — so the multi-inner
+sub-claim is UNTESTED, NOT refuted: do not claim "CO does/doesn't help multi-
+inner". C2's supported scope is single-inner (and within that, the gain
+concentrates on the polynomial-NON-absorbable subset). See aggregate.py
+[B6]/[B7] and the Study B findings doc.
 """
 from __future__ import annotations
 

@@ -190,6 +190,12 @@ def run_arm(prob: sb.Problem, arm: ARMS.Arm, seed: int, cfg: dict) -> dict:
 # kernel's "context paid once" amortization is a wallclock-phase concern).
 
 def _timeout_row(prob, arm, seed, reason: str, wall: float) -> dict:
+    # fail_kind separates a SIGKILL wallclock timeout ("killed>...") from an
+    # in-budget CRASH (an exception repr, e.g. a sympy lambdify KeyError). They
+    # mean different things: a timeout is a real "couldn't finish in budget"
+    # signal; a crash is a backend-robustness bug that floors the cell to R2=0
+    # and must NOT be miscounted as a timeout when framing the GPU-value claim.
+    fail_kind = "timeout" if reason.startswith("killed>") else "crash"
     return {
         "id": prob.id, "arm": arm.name, "seed": seed,
         "is_control": prob.is_control, "n_inner": prob.n_inner_consts,
@@ -200,7 +206,7 @@ def _timeout_row(prob, arm, seed, reason: str, wall: float) -> dict:
         "wall_s": round(wall, 1),   # a killed cell consumed >= timeout, NOT 0
         "n_kernel": 0, "n_fallback": 0, "n_capped": 0, "kernel_frac": 0.0,
         "uses_kernel": arm.uses_kernel, "best_expr": None, "true_expr": prob.true_expr,
-        "_failed": reason,
+        "_failed": reason, "fail_kind": fail_kind,
     }
 
 
@@ -365,6 +371,10 @@ def main():
     ap.add_argument("--smoke", action="store_true",
                     help="2 problems (1 single + 1 multi inner) x 2 seeds x 4 arms, small config + cost projection")
     ap.add_argument("--seeds", type=int, default=5)
+    ap.add_argument("--seed-list", default=None,
+                    help="comma-separated explicit seeds (overrides --seeds); lets the "
+                         "launcher shard by (problem,seed) so a timeout-problem's seeds "
+                         "spread across GPUs instead of serializing 5x150s on one shard")
     ap.add_argument("--problems", nargs="*", default=None, help="restrict to these ids")
     ap.add_argument("--controls", action="store_true", help="also run the REJECT controls")
     ap.add_argument("--device", type=int, default=0, help="device_id for the kernel arms")
@@ -388,6 +398,9 @@ def main():
     else:
         n_seeds = args.seeds
 
+    seed_iter = ([int(s) for s in args.seed_list.split(",") if s != ""]
+                 if args.seed_list else list(range(n_seeds)))
+
     timeout = args.timeout or (60 if args.smoke else 150)
     arm_list = ARMS.make_arms(device_id=args.device, kernel_max_iter=cfg["co_max_iter"],
                               scipy_max_nfev=cfg["co_max_iter"])
@@ -399,7 +412,7 @@ def main():
     fn = out / f"{tag}.jsonl"
     sink = fn.open("w")
 
-    print(f"Study B  problems={[p.id for p in probs]}  arms={arm_names}  seeds={n_seeds}")
+    print(f"Study B  problems={[p.id for p in probs]}  arms={arm_names}  seeds={seed_iter}")
     print(f"  cfg={cfg}")
     print(f"\n{'id':30}{'arm':12}{'seed':>5}{'r2_test':>9}{'len':>5}{'gens':>5}"
           f"{'co_fits':>8}{'kf':>6}{'wall':>8}")
@@ -407,7 +420,7 @@ def main():
     kernel_checked = False
     for prob in probs:
         for arm in arm_list:
-            for seed in range(n_seeds):
+            for seed in seed_iter:
                 r = run_cell_guarded(prob, arm, seed, cfg, device=args.device,
                                      kmi=cfg["co_max_iter"], timeout=timeout)
                 rows.append(r)

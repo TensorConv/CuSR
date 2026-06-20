@@ -78,7 +78,14 @@ class ScipyLM:
                 out.append(COResult(np.asarray(r.x, dtype=float), int(r.nfev),
                                     bool(r.success), loss))
             except Exception:  # noqa: BLE001 — never raise into the GP loop
-                loss = float(np.mean(skel.residual(c0, X, y) ** 2))
+                # The fallback must not double-fault: if skel.residual itself
+                # raises (e.g. a zoo expr whose lambdify build throws), catching
+                # here is the difference between demoting one tree and crashing
+                # the whole CO batch to R2=0.
+                try:
+                    loss = float(np.mean(skel.residual(c0, X, y) ** 2))
+                except Exception:  # noqa: BLE001
+                    loss = float("inf")
                 out.append(COResult(c0.copy(), 0, False, loss))
         return out
 
