@@ -1,0 +1,187 @@
+% Batched, fp64-honest Levenberg--Marquardt constant optimisation for
+% heterogeneous symbolic-regression forests. FD and AD Jacobian variants.
+%
+% Faithful to the implementation:
+%   cusr/kernel/batch_lm_fusedfd.cu  (fd_jacobian_fused_kernel, solve_kernel)
+%   cusr/kernel/ad_interp.cuh        (ad_jacobian_kernel)
+%   cusr/kernel/lm_core.cuh          (fp64_boundary_audit, eval/residual/loss kernels)
+%   cusr/kernel/co_lib.cu            (the in-process LM-loop body)
+%
+% Compile: pdflatex lm_algorithm.tex
+\documentclass[11pt]{article}
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{xcolor}
+\usepackage{float}
+\usepackage[ruled,vlined,linesnumbered]{algorithm2e}
+
+% ---- notation -------------------------------------------------------------
+\newcommand{\cinit}{\mathbf{c}^{\mathrm{init}}}
+\newcommand{\ctry}{\mathbf{c}^{\mathrm{try}}}
+\newcommand{\yhat}{\hat{\mathbf{y}}}
+\newcommand{\fn}[1]{\operatorname{#1}}                 % function name in math
+\newcommand{\lfp}[1]{\ell^{\mathrm{fp64}}\!\left(#1\right)}
+\newcommand{\fdonly}[1]{\textcolor{blue!70!black}{#1}}
+\newcommand{\adonly}[1]{\textcolor{orange!80!black}{#1}}
+\SetKwComment{Comment}{$\triangleright$\ }{}
+
+\begin{document}
+
+\section*{Batched fp64-honest LM for heterogeneous SR forests}
+
+\noindent\textbf{Setting.} A forest of $M$ candidate trees fits one shared dataset
+$X\!\in\!\mathbb{R}^{N\times d}$, $\mathbf{y}\!\in\!\mathbb{R}^{N}$. Tree $m$ is a postfix
+(RPN) program with $K_m$ free constants; $K_{\max}\!=\!\max_m K_m$. Constants are stored
+flattened as $\mathbf{c}$; $\mathbf{c}_m$ is tree~$m$'s slice. Predictions
+$\yhat_m\!\in\!\mathbb{R}^N$, residual $\mathbf{r}_m\!=\!\yhat_m-\mathbf{y}$, loss
+$\ell_m=\tfrac12\lVert\mathbf{r}_m\rVert^2$, Jacobian $J_m\!\in\!\mathbb{R}^{N\times K_m}$,
+damping $\lambda_m$. \emph{Every tree carries its own $K_m$, $\lambda_m$, and status;}
+the loop runs in fp32 (\texttt{--use\_fast\_math} on) and the \emph{delivery audit}
+(line~\ref{ln:guard}) runs in IEEE fp64, which fast-math cannot affect.
+\fdonly{Blue}\,=\,FD-only, \adonly{orange}\,=\,AD-only; all else is shared.
+
+% ===========================================================================
+\begin{algorithm}[H]
+\caption{\textsc{BatchedHonestLM} (host driver; per-tree quantities are processed
+in parallel, warp-per-tree, by the named device kernels)}
+\label{alg:driver}
+\DontPrintSemicolon
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}\SetKwInOut{Param}{const}
+\Input{forest $\{(\mathrm{prog}_m,K_m)\}_{m=1}^{M}$, data $(X,\mathbf{y})$, init $\mathbf{c}_0$}
+\Output{$\mathrm{status}\in\{\textsc{Converged},\textsc{MaxIter},\textsc{Fail\_NaN},\textsc{Fail\_Chol},\textsc{K0\_Skip}\}^{M}$, \ $\mathbf{c}$}
+\Param{$\varepsilon\!=\!10^{-3}$ (FD rel.\ step), $\lambda_0\!=\!10^{-3}$,
+       $x_{\mathrm{tol}}\!=\!10^{-6}$, $\lambda\!\in\![10^{-12},10^{12}]$, $T$ iters}
+\BlankLine
+$\mathbf{c}\leftarrow\mathbf{c}_0$;\ \ $\lambda_m\leftarrow\lambda_0\ \forall m$;\ \
+  set $\mathrm{status}_m\leftarrow\textsc{K0\_Skip}$ for every $m$ with $K_m=0$\;
+$\yhat\leftarrow\fn{Eval}(\mathbf{c})$;\ \ $\mathbf{r}\leftarrow\yhat-\mathbf{y}$;\ \
+  $\boldsymbol{\ell}\leftarrow\tfrac12\lVert\mathbf{r}\rVert^2$;\ \
+  $\boldsymbol{\ell}^{\mathrm{init}}\leftarrow\boldsymbol{\ell}$
+  \Comment*[r]{snapshot init loss for the guard}
+mark every $m$ with non-finite $\ell_m$ as \textsc{Fail\_NaN}\;
+\For{$t\leftarrow 1$ \KwTo $T$ \textbf{\emph{while}} any tree active}{
+  $J \leftarrow \fn{BuildJacobian}(\mathbf{c},\yhat)$
+    \Comment*[r]{\fdonly{FD: Alg.\ref{alg:fd}}~/~\adonly{AD: Alg.\ref{alg:ad}}}
+  $(J^{\!\top}\!J,\ J^{\!\top}\mathbf{r}) \leftarrow \fn{Assemble}(J,\mathbf{r})$
+    \Comment*[r]{per-tree normal equations}
+  \ForEach{tree $m$ \textbf{\emph{in parallel}}}{
+    $(\boldsymbol{\delta}_m,\ \mathrm{chol}_m) \leftarrow
+       \fn{SolveDamped}\bigl((J^{\!\top}\!J)_m\ \text{with}\ \mathrm{diag}\!\times\!(1{+}\lambda_m),\ -(J^{\!\top}\mathbf{r})_m\bigr)$
+    \Comment*[r]{register Cholesky; $\mathrm{chol}{=}\textsc{fail}$ if not SPD}
+  }
+  $\ctry\leftarrow\mathbf{c}+\boldsymbol{\delta}$;\ \
+    $\yhat^{\mathrm{try}}\leftarrow\fn{Eval}(\ctry)$;\ \
+    $\boldsymbol{\ell}^{\mathrm{try}}\leftarrow\tfrac12\lVert\yhat^{\mathrm{try}}-\mathbf{y}\rVert^2$\;
+  \ForEach{active tree $m$}{
+    \uIf{$\mathrm{chol}_m=\textsc{fail}$}{$\lambda_m\mathrel{*}=10$;\ \ \lIf{$\lambda_m>10^{12}$}{$\mathrm{status}_m\leftarrow\textsc{Fail\_Chol}$} \Comment*[r]{reject: not SPD}}
+    \uElseIf{$\ell^{\mathrm{try}}_m$ \textnormal{not finite}}{$\mathrm{status}_m\leftarrow\textsc{Fail\_NaN}$\Comment*[r]{step hit a singularity}}
+    \uElseIf{$\ell^{\mathrm{try}}_m \le \ell_m$ \textnormal{\textbf{(improvement-first)}}}{
+       $\mathbf{c}_m\leftarrow\ctry_m$;\ \ $\ell_m\leftarrow\ell^{\mathrm{try}}_m$
+         \Comment*[r]{accept: loss non-increasing}
+       \eIf{$\lVert\boldsymbol{\delta}_m\rVert < x_{\mathrm{tol}}(\lVert\mathbf{c}_m\rVert+x_{\mathrm{tol}})$}{$\mathrm{status}_m\leftarrow\textsc{Converged}$}{$\lambda_m\leftarrow\max(\lambda_m/10,\,10^{-12})$}
+    }
+    \Else{$\lambda_m\mathrel{*}=10$;\ \ \lIf{$\lambda_m>10^{12}$}{$\mathrm{status}_m\leftarrow\textsc{Fail\_NaN}$} \Comment*[r]{reject: worsening --- never \textsc{Converged} on an uphill step}}
+  }
+  $\yhat\leftarrow\fn{Eval}(\mathbf{c})$;\ \ $\mathbf{r}\leftarrow\yhat-\mathbf{y}$
+    \Comment*[r]{refresh baseline at accepted $\mathbf{c}$}
+}
+any tree still active after $T$ iters $\rightarrow$ \textsc{MaxIter}\;
+\BlankLine
+\tcc{\textbf{fp64-honest delivery guard} — recompute the loss in IEEE double; revert any
+     tree that ended non-finite or above its honest starting loss.}
+\ForEach{tree $m$ with $K_m>0$\label{ln:guard}}{
+  \If{$\lfp{\mathbf{c}_m}$ \textnormal{non-finite} \textbf{\textnormal{or}} $\lfp{\mathbf{c}_m} > \lfp{\cinit_m}$}{
+     $\mathbf{c}_m\leftarrow\cinit_m$;\ \ $\ell_m\leftarrow\lfp{\cinit_m}$
+     \Comment*[r]{guarantee $\ell^{\mathrm{delivered}}_m \le \ell^{\mathrm{init}}_m$ in honest fp64}
+  }
+}
+\Return $\mathrm{status},\ \mathbf{c}$\;
+\end{algorithm}
+
+\paragraph{Convergence honesty (identical for both variants).}
+The accept/reject rule is \emph{improvement-first}: a tree is declared \textsc{Converged}
+only \emph{after} an accepted step whose loss did not increase, so a tiny step
+($\lVert\boldsymbol{\delta}\rVert$ small) is never mistaken for convergence when it is in
+fact uphill. This ordering is the same for FD and AD; the variants differ \emph{only} in
+how $J$ is built (Alg.~\ref{alg:fd} vs.~\ref{alg:ad}). Together with the fp64 guard
+(line~\ref{ln:guard}) it makes ``delivered loss $\le$ initial loss'' hold in honest
+double precision even when fp32 fast-math reports a spurious improvement near a singularity.
+
+% ===========================================================================
+\begin{figure}[H]
+\centering
+\begin{minipage}[t]{0.49\textwidth}
+\begin{algorithm}[H]
+\caption{\fdonly{\textsc{BuildJacobian} — FD (fused)}}
+\label{alg:fd}
+\DontPrintSemicolon
+\SetKwInOut{Input}{in}
+\Input{$\mathbf{c}$, baseline $\yhat$, step $\varepsilon$}
+\Comment{1 launch; warp $\equiv$ tree $m$; no extra global eval}
+\ForEach{tree $m$ \textbf{\emph{in parallel}}, $K_m\!>\!0$}{
+  load $\mathbf{c}_m$ into registers $\mathtt{cloc}$\;
+  \For{$j\leftarrow 0$ \KwTo $K_m-1$}{
+    $h\leftarrow\varepsilon\,\lvert c_{m,j}\rvert$;\ \lIf{$h{=}0$}{$h\leftarrow\varepsilon$}\;
+    $h\leftarrow(c_{m,j}{+}h)-c_{m,j}$ \Comment*[r]{representable fp32 step}
+    \lIf{$h{=}0$}{$h\leftarrow\varepsilon$}\Comment*[r]{FTZ guard}
+    $\mathtt{cloc}_j\mathrel{+}=h$\;
+    \For{$i\leftarrow\mathrm{lane}$ \KwTo $N{-}1$ \textbf{\emph{step}} $32$}{
+      $J_{m,j,i}\leftarrow\bigl(\fn{eval}(\mathtt{cloc},x_i)-\yhat_{m,i}\bigr)/h$
+    }
+    $\mathtt{cloc}_j\leftarrow c_{m,j}$ \Comment*[r]{restore}
+  }
+}
+\Return{$J$ \ ($K_m$ perturbed evals; approx.\ $\partial\yhat$)}\;
+\end{algorithm}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.49\textwidth}
+\begin{algorithm}[H]
+\caption{\adonly{\textsc{BuildJacobian} — AD (fwd JVP)}}
+\label{alg:ad}
+\DontPrintSemicolon
+\SetKwInOut{Input}{in}
+\Input{$\mathbf{c}$ \ (no $\varepsilon$, no baseline)}
+\Comment{1 launch; warp $\equiv$ tree $m$; tangent width $W_{\!A}$}
+\ForEach{tree $m$ \textbf{\emph{in parallel}}, $K_m\!>\!0$}{
+  \For{$c_{\mathrm{lo}}\leftarrow 0$ \KwTo $K_m-1$ \textbf{\emph{step}} $W_{\!A}$}{
+    $W\leftarrow\min(W_{\!A},\,K_m-c_{\mathrm{lo}})$\;
+    \For{$i\leftarrow\mathrm{lane}$ \KwTo $N{-}1$ \textbf{\emph{step}} $32$}{
+      $(v,\ \mathbf{t})\leftarrow\fn{jvp}(\mathbf{c}_m,x_i,c_{\mathrm{lo}},W)$
+        \Comment*[r]{one fwd pass: value $+$ $W$ tangents}
+      \For{$w\leftarrow 0$ \KwTo $W-1$}{
+        $J_{m,c_{\mathrm{lo}}+w,i}\leftarrow t_w$
+          \Comment*[r]{exact $\partial\yhat_{m,i}/\partial c_{m,c_{\mathrm{lo}}+w}$}
+      }
+    }
+  }
+}
+\Return{$J$ \ (exact; $\lceil K_m/W_{\!A}\rceil$ passes)}\;
+\end{algorithm}
+\end{minipage}
+\par\medskip
+\begin{minipage}{0.95\textwidth}\small
+\textbf{The only computational difference between the variants.}
+FD (Alg.~\ref{alg:fd}): each warp re-evaluates its tree $K_m$ times with one constant
+bumped, differencing against the cached baseline $\yhat$ --- approximate, cost
+$\propto K_m$ evals, no analytic-derivative code. AD (Alg.~\ref{alg:ad}): each warp makes
+$\lceil K_m/W_{\!A}\rceil$ forward-mode passes returning the value and a bundle of
+$W_{\!A}$ exact tangents --- exact, needs the per-operator JVP rules. Both write $J_m$ in
+place and feed the identical \textsc{Assemble}/\textsc{SolveDamped}/accept logic of
+Alg.~\ref{alg:driver}; measured quality is $\approx$\,equal, cost differs
+$\approx 1.25\text{--}1.3\times$.
+\end{minipage}
+\end{figure}
+
+\paragraph{Notes for the text.}
+(i) \textsc{SolveDamped} forms $J^{\!\top}\!J$ with its diagonal scaled by $(1{+}\lambda_m)$
+(Marquardt scaling, not $+\lambda I$) and applies a per-tree in-register Cholesky;
+a non-SPD pivot returns $\mathrm{chol}{=}\textsc{fail}$ and $\boldsymbol{\delta}_m{=}0$.
+(ii) The five-way status taxonomy is reported, not hidden.
+(iii) The guard (line~\ref{ln:guard}) is the correctness contribution: it makes
+``delivered loss $\le$ initial loss'' an \emph{unconditional, per-tree} guarantee under
+honest fp64, so a fast-math fp32 ``improvement'' near a singularity can never be shipped.
+(iv) Build constants: $K_m\!\le\!\textsc{max\_k}\!=\!32$ (register Cholesky $A\!\in\!\mathbb{R}^{K\times K}$
+and \texttt{cloc} are sized to this), RPN stack depth $\textsc{max\_stack}\!=\!64$, AD
+tangent-bundle width $W_{\!A}\!=\!8$.
+
+\end{document}
