@@ -1,0 +1,1693 @@
+{
+  "summary": {
+    "n_construction_candidates": 28,
+    "n_construction_admitted": 21,
+    "n_construction_rejected": 7,
+    "construction_rejected": [
+      [
+        "constructed_freq_sin_x2_1",
+        "structural"
+      ],
+      [
+        "constructed_freq_sin_x2_2",
+        "structural"
+      ],
+      [
+        "constructed_freq_cos_x3_1",
+        "structural"
+      ],
+      [
+        "constructed_freq_cos_x3_2",
+        "structural"
+      ],
+      [
+        "constructed_shift_quad_1.3",
+        "fold"
+      ],
+      [
+        "constructed_shift_quad_2.7",
+        "fold"
+      ],
+      [
+        "constructed_shift_quad_4.1",
+        "fold"
+      ]
+    ],
+    "n_controls": 11,
+    "n_controls_leaked": 0,
+    "corpus_size": 21,
+    "corpus_ids": [
+      "constructed_freq_cos_x_1.5",
+      "constructed_freq_cos_x_3",
+      "constructed_freq_cos_x_5",
+      "constructed_freq_cos_x_7",
+      "constructed_freq_sin_x2_3",
+      "constructed_decay_exp_0.4",
+      "constructed_decay_exp_0.9",
+      "constructed_decay_exp_1.7",
+      "constructed_decay_exp_3",
+      "constructed_saturation_0.55",
+      "constructed_saturation_1.3",
+      "constructed_saturation_2.5",
+      "constructed_shift_recip_6.5",
+      "constructed_shift_recip_8",
+      "constructed_shift_recip_9.5",
+      "constructed_power_1.3",
+      "constructed_power_2.4",
+      "constructed_power_3.7",
+      "constructed_damped_0.4_4",
+      "constructed_damped_0.7_6",
+      "constructed_damped_1.2_9"
+    ]
+  },
+  "records": [
+    {
+      "id": "constructed_freq_cos_x_1.5",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.3421 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*cos(1.5*x0)",
+      "skeleton": "c0*cos(c1*x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        1.5
+      ],
+      "domain": [
+        [
+          -3.0,
+          3.0
+        ]
+      ],
+      "R2_LS": 0.3420686555017318,
+      "R2_LS_best": 0.7190659714477383,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_freq_cos_x_3",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0021 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*cos(3.0*x0)",
+      "skeleton": "c0*cos(c1*x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        3.0
+      ],
+      "domain": [
+        [
+          -3.0,
+          3.0
+        ]
+      ],
+      "R2_LS": 0.0020989003599067857,
+      "R2_LS_best": 0.010891354712980528,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_freq_cos_x_5",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0057 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*cos(5.0*x0)",
+      "skeleton": "c0*cos(c1*x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        5.0
+      ],
+      "domain": [
+        [
+          -3.0,
+          3.0
+        ]
+      ],
+      "R2_LS": 0.005682266952772075,
+      "R2_LS_best": 0.009041785641523581,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_freq_cos_x_7",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0023 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*cos(7.0*x0)",
+      "skeleton": "c0*cos(c1*x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        7.0
+      ],
+      "domain": [
+        [
+          -3.0,
+          3.0
+        ]
+      ],
+      "R2_LS": 0.0023315887918140543,
+      "R2_LS_best": 0.013818587816402106,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_freq_sin_x2_1",
+      "role": "construction",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c1': 1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "formula": "1.7*sin(1.0*x0**2)",
+      "skeleton": "c0*sin(c1*x0**2)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        1.0
+      ],
+      "domain": [
+        [
+          -2.5,
+          2.5
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_freq_sin_x2_2",
+      "role": "construction",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c1': 2.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "formula": "1.7*sin(2.0*x0**2)",
+      "skeleton": "c0*sin(c1*x0**2)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        2.0
+      ],
+      "domain": [
+        [
+          -2.5,
+          2.5
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_freq_sin_x2_3",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0016 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*sin(3.0*x0**2)",
+      "skeleton": "c0*sin(c1*x0**2)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        3.0
+      ],
+      "domain": [
+        [
+          -2.5,
+          2.5
+        ]
+      ],
+      "R2_LS": 0.001601293395700365,
+      "R2_LS_best": 0.029317316045230912,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_freq_cos_x3_1",
+      "role": "construction",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c1': 1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "formula": "1.7*cos(1.0*x0**3)",
+      "skeleton": "c0*cos(c1*x0**3)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        1.0
+      ],
+      "domain": [
+        [
+          -2.0,
+          2.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_freq_cos_x3_2",
+      "role": "construction",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c1': 2.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "formula": "1.7*cos(2.0*x0**3)",
+      "skeleton": "c0*cos(c1*x0**3)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        2.0
+      ],
+      "domain": [
+        [
+          -2.0,
+          2.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_decay_exp_0.4",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.3047 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-0.4*x0)",
+      "skeleton": "c0*exp(-c1*x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        0.4
+      ],
+      "domain": [
+        [
+          0.1,
+          5.0
+        ]
+      ],
+      "R2_LS": 0.30470807299401814,
+      "R2_LS_best": 0.9967563469715987,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_decay_exp_0.9",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.1657 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-0.9*x0)",
+      "skeleton": "c0*exp(-c1*x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        0.9
+      ],
+      "domain": [
+        [
+          0.1,
+          5.0
+        ]
+      ],
+      "R2_LS": 0.165664693316945,
+      "R2_LS_best": 0.998145012796281,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_decay_exp_1.7",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0795 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-1.7*x0)",
+      "skeleton": "c0*exp(-c1*x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        1.7
+      ],
+      "domain": [
+        [
+          0.1,
+          5.0
+        ]
+      ],
+      "R2_LS": 0.07951816506649467,
+      "R2_LS_best": 0.9940457742762159,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_decay_exp_3",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0407 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-3.0*x0)",
+      "skeleton": "c0*exp(-c1*x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        3.0
+      ],
+      "domain": [
+        [
+          0.1,
+          5.0
+        ]
+      ],
+      "R2_LS": 0.040700582178015865,
+      "R2_LS_best": 0.962851485514061,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_saturation_0.55",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0997 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7 - 1.7*exp(-0.55*x0)",
+      "skeleton": "c0*(1 - exp(-c1*x0))",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        0.55
+      ],
+      "domain": [
+        [
+          0.1,
+          8.0
+        ]
+      ],
+      "R2_LS": 0.09974703693096287,
+      "R2_LS_best": 0.998630285084563,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_saturation_1.3",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0351 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7 - 1.7*exp(-1.3*x0)",
+      "skeleton": "c0*(1 - exp(-c1*x0))",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        1.3
+      ],
+      "domain": [
+        [
+          0.1,
+          8.0
+        ]
+      ],
+      "R2_LS": 0.03505880701423825,
+      "R2_LS_best": 0.9846016849797783,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_saturation_2.5",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0167 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7 - 1.7*exp(-2.5*x0)",
+      "skeleton": "c0*(1 - exp(-c1*x0))",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        2.5
+      ],
+      "domain": [
+        [
+          0.1,
+          8.0
+        ]
+      ],
+      "R2_LS": 0.016651657210942417,
+      "R2_LS_best": 0.9887615256916492,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_shift_quad_1.3",
+      "role": "construction",
+      "verdict": "REJECT",
+      "reason_code": "fold",
+      "reason": "all 1 positional-inner const(s) absorbable via fold ('c1',) \u2014 linear scaling absorbs them (e.g. sqrt(c\u00b7g)=sqrt(c)\u00b7sqrt(g))",
+      "formula": "1.7*(x0 - 1.3)**2",
+      "skeleton": "c0*(-c1 + x0)**2",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        1.3
+      ],
+      "domain": [
+        [
+          -5.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [
+        "c1"
+      ],
+      "n_inner_positional": 1,
+      "rank": -1,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_shift_quad_2.7",
+      "role": "construction",
+      "verdict": "REJECT",
+      "reason_code": "fold",
+      "reason": "all 1 positional-inner const(s) absorbable via fold ('c1',) \u2014 linear scaling absorbs them (e.g. sqrt(c\u00b7g)=sqrt(c)\u00b7sqrt(g))",
+      "formula": "1.7*(x0 - 2.7)**2",
+      "skeleton": "c0*(-c1 + x0)**2",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        2.7
+      ],
+      "domain": [
+        [
+          -5.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [
+        "c1"
+      ],
+      "n_inner_positional": 1,
+      "rank": -1,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_shift_quad_4.1",
+      "role": "construction",
+      "verdict": "REJECT",
+      "reason_code": "fold",
+      "reason": "all 1 positional-inner const(s) absorbable via fold ('c1',) \u2014 linear scaling absorbs them (e.g. sqrt(c\u00b7g)=sqrt(c)\u00b7sqrt(g))",
+      "formula": "1.7*(x0 - 4.1)**2",
+      "skeleton": "c0*(-c1 + x0)**2",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        4.1
+      ],
+      "domain": [
+        [
+          -5.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [
+        "c1"
+      ],
+      "n_inner_positional": 1,
+      "rank": -1,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_shift_recip_6.5",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7/(x0 - 6.5)",
+      "skeleton": "c0/(-c1 + x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        6.5
+      ],
+      "domain": [
+        [
+          -4.0,
+          4.0
+        ]
+      ],
+      "R2_LS": 1.2683780620248442e-05,
+      "R2_LS_best": 0.0030997301011752576,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_shift_recip_8",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7/(x0 - 8.0)",
+      "skeleton": "c0/(-c1 + x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        8.0
+      ],
+      "domain": [
+        [
+          -4.0,
+          4.0
+        ]
+      ],
+      "R2_LS": 3.327575698885976e-05,
+      "R2_LS_best": 0.003757034995666264,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_shift_recip_9.5",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7/(x0 - 9.5)",
+      "skeleton": "c0/(-c1 + x0)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        9.5
+      ],
+      "domain": [
+        [
+          -4.0,
+          4.0
+        ]
+      ],
+      "R2_LS": 3.109327193162592e-05,
+      "R2_LS_best": 0.004188962496398108,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_power_1.3",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.2474 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*x0**1.3",
+      "skeleton": "c0*x0**c1",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        1.3
+      ],
+      "domain": [
+        [
+          0.2,
+          4.0
+        ]
+      ],
+      "R2_LS": 0.2474114467268781,
+      "R2_LS_best": 0.9936956805269131,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_power_2.4",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.1426 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*x0**2.4",
+      "skeleton": "c0*x0**c1",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        2.4
+      ],
+      "domain": [
+        [
+          0.2,
+          4.0
+        ]
+      ],
+      "R2_LS": 0.1426099146005576,
+      "R2_LS_best": 0.99494120280765,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_power_3.7",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0916 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*x0**3.7",
+      "skeleton": "c0*x0**c1",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        1.7,
+        3.7
+      ],
+      "domain": [
+        [
+          0.2,
+          4.0
+        ]
+      ],
+      "R2_LS": 0.091562389177268,
+      "R2_LS_best": 0.9389593080193082,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 1,
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_damped_0.4_4",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-0.4*x0)*cos(4.0*x0)",
+      "skeleton": "c0*exp(-c1*x0)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        0.4,
+        4.0
+      ],
+      "domain": [
+        [
+          0.1,
+          6.0
+        ]
+      ],
+      "R2_LS": 1.448817620430809e-06,
+      "R2_LS_best": 0.12239903758839787,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_damped_0.7_6",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-0.7*x0)*cos(6.0*x0)",
+      "skeleton": "c0*exp(-c1*x0)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        0.7,
+        6.0
+      ],
+      "domain": [
+        [
+          0.1,
+          6.0
+        ]
+      ],
+      "R2_LS": 6.106858035925811e-07,
+      "R2_LS_best": 0.005887552777706251,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "constructed_damped_1.2_9",
+      "role": "construction",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "formula": "1.7*exp(-1.2*x0)*cos(9.0*x0)",
+      "skeleton": "c0*exp(-c1*x0)*cos(c2*x0)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.7,
+        1.2,
+        9.0
+      ],
+      "domain": [
+        [
+          0.1,
+          6.0
+        ]
+      ],
+      "R2_LS": 1.1710266958120386e-05,
+      "R2_LS_best": 0.044153490944486395,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "GT+jitter+scale-grid multistart (construction certification)",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "nguyen_1",
+      "role": "control_nguyen",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0**3 + 1.0*x0**2 + 1.0*x0",
+      "skeleton": "c0*x0**3 + c1*x0**2 + c2*x0",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "domain": [
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "nguyen_2",
+      "role": "control_nguyen",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0**4 + 1.0*x0**3 + 1.0*x0**2 + 1.0*x0",
+      "skeleton": "c0*x0**4 + c1*x0**3 + c2*x0**2 + c3*x0",
+      "constants": [
+        "c0",
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "gt": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "domain": [
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 4,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "nguyen_3",
+      "role": "control_nguyen",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0**5 + 1.0*x0**4 + 1.0*x0**3 + 1.0*x0**2 + 1.0*x0",
+      "skeleton": "c0*x0**5 + c1*x0**4 + c2*x0**3 + c3*x0**2 + c4*x0",
+      "constants": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "gt": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "domain": [
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 5,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "nguyen_4",
+      "role": "control_nguyen",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0**6 + 1.0*x0**5 + 1.0*x0**4 + 1.0*x0**3 + 1.0*x0**2 + 1.0*x0",
+      "skeleton": "c0*x0**6 + c1*x0**5 + c2*x0**4 + c3*x0**3 + c4*x0**2 + c5*x0",
+      "constants": [
+        "c0",
+        "c1",
+        "c2",
+        "c3",
+        "c4",
+        "c5"
+      ],
+      "gt": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "domain": [
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 6,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "nguyen_5",
+      "role": "control_nguyen",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c1': 1.0, 'c2': 1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "formula": "1.0*sin(1.0*x0**2)*cos(1.0*x0) - 1.0",
+      "skeleton": "c0*sin(c1*x0**2)*cos(c2*x0) + c3",
+      "constants": [
+        "c0",
+        "c1",
+        "c2",
+        "c3"
+      ],
+      "gt": [
+        1.0,
+        1.0,
+        1.0,
+        -1.0
+      ],
+      "domain": [
+        [
+          -1.0,
+          1.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "n_inner_positional": 2,
+      "rank": 4,
+      "n_consts": 4,
+      "structural": true,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "korns_8",
+      "role": "control_korns8_absorbable",
+      "verdict": "REJECT",
+      "reason_code": "fold",
+      "reason": "all 1 positional-inner const(s) absorbable via fold ('c2',) \u2014 linear scaling absorbs them (e.g. sqrt(c\u00b7g)=sqrt(c)\u00b7sqrt(g))",
+      "formula": "29.5775252514473*sqrt(x0*x1*x2) + 6.87",
+      "skeleton": "c0 + c1*sqrt(c2*x0*x1*x2)",
+      "constants": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "gt": [
+        6.87,
+        11.0,
+        7.23
+      ],
+      "domain": [
+        [
+          0.1,
+          10.0
+        ],
+        [
+          0.1,
+          10.0
+        ],
+        [
+          0.1,
+          10.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [
+        "c2"
+      ],
+      "n_inner_positional": 1,
+      "rank": -1,
+      "n_consts": 3,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "feynman_I.11.19",
+      "role": "control_feynman_outer_only",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0*x3 + 1.0*x1*x4 + 1.0*x2*x5",
+      "skeleton": "c0*(x0*x3 + x1*x4 + x2*x5)",
+      "constants": [
+        "c0"
+      ],
+      "gt": [
+        1.0
+      ],
+      "domain": [
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 1,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "feynman_I.12.1",
+      "role": "control_feynman_outer_only",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0*x1",
+      "skeleton": "c0*x0*x1",
+      "constants": [
+        "c0"
+      ],
+      "gt": [
+        1.0
+      ],
+      "domain": [
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 1,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "feynman_I.12.2",
+      "role": "control_feynman_outer_only",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "0.0795774715459477*x0*x1/(x2*x3**2)",
+      "skeleton": "c0*x0*x1/(c1*x2*x3**2)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        0.25,
+        3.141592653589793
+      ],
+      "domain": [
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "feynman_I.12.4",
+      "role": "control_feynman_outer_only",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "0.0795774715459477*x0/(x1*x2**2)",
+      "skeleton": "c0*x0/(c1*x1*x2**2)",
+      "constants": [
+        "c0",
+        "c1"
+      ],
+      "gt": [
+        0.25,
+        3.141592653589793
+      ],
+      "domain": [
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 2,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    },
+    {
+      "id": "feynman_I.12.5",
+      "role": "control_feynman_outer_only",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "formula": "1.0*x0*x1",
+      "skeleton": "c0*x0*x1",
+      "constants": [
+        "c0"
+      ],
+      "gt": [
+        1.0
+      ],
+      "domain": [
+        [
+          1.0,
+          5.0
+        ],
+        [
+          1.0,
+          5.0
+        ]
+      ],
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "surviving_inner": [],
+      "absorbable": [],
+      "n_inner_positional": 0,
+      "rank": -1,
+      "n_consts": 1,
+      "structural": false,
+      "seeding": "n/a",
+      "data_seed": 0,
+      "multistart_seed": 12345,
+      "n_samples": 2000
+    }
+  ]
+}

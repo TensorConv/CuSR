@@ -1,0 +1,880 @@
+{
+  "summary": {
+    "n_positional_inner": 34,
+    "n_admit": 2,
+    "admit_ids": [
+      "feynman_II.11.27",
+      "feynman_II.11.28"
+    ],
+    "reject_breakdown": {
+      "structural": 32,
+      "admit": 2
+    },
+    "elapsed_s": 2.6
+  },
+  "rows": [
+    {
+      "id": "feynman_I.6.2a",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c3': -0.5} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 1,
+      "surviving_inner": [
+        "c3"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 4,
+      "structural": true,
+      "skeleton": "c0*sqrt(c1)*exp(c3*x0**2)/sqrt(c2)",
+      "gt": [
+        0.5,
+        2.0,
+        3.141592653589793,
+        -0.5
+      ]
+    },
+    {
+      "id": "feynman_I.6.2",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c3': -0.5} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 1,
+      "surviving_inner": [
+        "c3"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 4,
+      "structural": true,
+      "skeleton": "c0*sqrt(c1)*exp(c3*x1**2/x0**2)/(sqrt(c2)*x0)",
+      "gt": [
+        0.5,
+        2.0,
+        3.141592653589793,
+        -0.5
+      ]
+    },
+    {
+      "id": "feynman_I.6.2b",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c3': -0.5, 'c4': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c3",
+        "c4"
+      ],
+      "absorbable": [],
+      "rank": 3,
+      "n_consts": 5,
+      "structural": true,
+      "skeleton": "c0*sqrt(c1)*exp(c3*(c4*x2 + x1)**2/x0**2)/(sqrt(c2)*x0)",
+      "gt": [
+        0.5,
+        2.0,
+        3.141592653589793,
+        -0.5,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.8.14",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "sqrt((c0*x0 + x1)**2 + (c1*x2 + x3)**2)",
+      "gt": [
+        -1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.9.18",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -1.0, 'c1': -1.0, 'c2': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 3,
+      "surviving_inner": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "rank": 3,
+      "n_consts": 3,
+      "structural": true,
+      "skeleton": "x0*x1*x2/((c0*x3 + x4)**2 + (c1*x5 + x6)**2 + (c2*x7 + x8)**2)",
+      "gt": [
+        -1.0,
+        -1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.10.7",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "x0/sqrt(c0 + c1*x1**2/x2**2)",
+      "gt": [
+        1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.15.3x",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 3,
+      "n_consts": 3,
+      "structural": true,
+      "skeleton": "(c2*x1*x3 + x0)/sqrt(c0 + c1*x1**2/x2**2)",
+      "gt": [
+        1.0,
+        -1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.15.3t",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 3,
+      "n_consts": 3,
+      "structural": true,
+      "skeleton": "(c2*x0*x2/x1**2 + x3)/sqrt(c0 + c1*x2**2/x1**2)",
+      "gt": [
+        1.0,
+        -1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.15.1",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "x0*x1/sqrt(c0 + c1*x1**2/x2**2)",
+      "gt": [
+        1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.16.6",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 1,
+      "surviving_inner": [
+        "c0"
+      ],
+      "absorbable": [],
+      "rank": 1,
+      "n_consts": 1,
+      "structural": true,
+      "skeleton": "(x1 + x2)/(c0 + x1*x2/x0**2)",
+      "gt": [
+        1.0
+      ]
+    },
+    {
+      "id": "feynman_I.29.16",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -2.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "sqrt(c0*x0*x1*cos(c1*x3 + x2) + x0**2 + x1**2)",
+      "gt": [
+        -2.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.30.3",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 0.5, 'c1': 0.5} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "x0*sin(c1*x1*x2)**2/sin(c0*x1)**2",
+      "gt": [
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "id": "feynman_I.32.17",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c2': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 1,
+      "surviving_inner": [
+        "c2"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 3,
+      "structural": true,
+      "skeleton": "c0*c1*x0*x1*x2**2*x3**2*x4**4/(c2*x5**2 + x4**2)**2",
+      "gt": [
+        1.3333333333333333,
+        3.141592653589793,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.34.1",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "x2/(c0 + c1*x1/x0)",
+      "gt": [
+        1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.34.14",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 3,
+      "n_consts": 3,
+      "structural": true,
+      "skeleton": "x2*(c2 + x1/x0)/sqrt(c0 + c1*x1**2/x0**2)",
+      "gt": [
+        1.0,
+        -1.0,
+        1.0
+      ]
+    },
+    {
+      "id": "feynman_I.39.11",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 1,
+      "surviving_inner": [
+        "c0"
+      ],
+      "absorbable": [],
+      "rank": 1,
+      "n_consts": 1,
+      "structural": true,
+      "skeleton": "x1*x2/(c0 + x0)",
+      "gt": [
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.40.1",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 1,
+      "surviving_inner": [
+        "c0"
+      ],
+      "absorbable": [],
+      "rank": 1,
+      "n_consts": 1,
+      "structural": true,
+      "skeleton": "x0*exp(c0*x1*x2*x4/(x3*x5))",
+      "gt": [
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.41.16",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c2': -1.0, 'c3': 0.5, 'c4': 3.141592653589793} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 3,
+      "surviving_inner": [
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "absorbable": [],
+      "rank": 3,
+      "n_consts": 5,
+      "structural": true,
+      "skeleton": "c0*x0**3*x2/(c1**3*x4**2*(c2 + exp(c3*x0*x2/(c4*x1*x3))))",
+      "gt": [
+        0.5,
+        3.141592653589793,
+        -1.0,
+        0.5,
+        3.141592653589793
+      ]
+    },
+    {
+      "id": "feynman_I.43.43",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 1,
+      "surviving_inner": [
+        "c0"
+      ],
+      "absorbable": [],
+      "rank": 1,
+      "n_consts": 1,
+      "structural": true,
+      "skeleton": "x1*x3/(x2*(c0 + x0))",
+      "gt": [
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_I.48.2",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "x0*x2**2/sqrt(c0 + c1*x1**2/x2**2)",
+      "gt": [
+        1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_II.10.9",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 1,
+      "surviving_inner": [
+        "c0"
+      ],
+      "absorbable": [],
+      "rank": 1,
+      "n_consts": 1,
+      "structural": true,
+      "skeleton": "x0/(x1*(c0 + x2))",
+      "gt": [
+        1.0
+      ]
+    },
+    {
+      "id": "feynman_II.11.3",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 1,
+      "surviving_inner": [
+        "c0"
+      ],
+      "absorbable": [],
+      "rank": 1,
+      "n_consts": 1,
+      "structural": true,
+      "skeleton": "x0*x1/(x4*(c0*x3**2 + x2**2))",
+      "gt": [
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_II.11.27",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "R2_LS": 4.070046100146385e-08,
+      "R2_LS_best": 0.9993091720612888,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 8.326672684688674e-16,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": false,
+      "skeleton": "x0*x1*x2*x3/(c0 + c1*x0*x1)",
+      "gt": [
+        1.0,
+        -0.3333333333333333
+      ]
+    },
+    {
+      "id": "feynman_II.11.28",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "R2_LS": 1.598544244962863e-05,
+      "R2_LS_best": 0.999286413559948,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 8.326672684688674e-16,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "rank": 3,
+      "n_consts": 3,
+      "structural": false,
+      "skeleton": "c0 + x0*x1/(c1 + c2*x0*x1)",
+      "gt": [
+        1.0,
+        1.0,
+        -0.3333333333333333
+      ]
+    },
+    {
+      "id": "feynman_II.13.23",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "x0/sqrt(c0 + c1*x1**2/x2**2)",
+      "gt": [
+        1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_II.13.34",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "x0*x1/sqrt(c0 + c1*x1**2/x2**2)",
+      "gt": [
+        1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_II.21.32",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c2': 1.0, 'c3': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c2",
+        "c3"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 4,
+      "structural": true,
+      "skeleton": "c0*x0/(c1*x1*x2*(c2 + c3*x3/x4))",
+      "gt": [
+        0.25,
+        3.141592653589793,
+        1.0,
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_II.24.17",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -1.0, 'c1': 3.141592653589793} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 1,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "sqrt(c0*c1**2/x2**2 + x0**2/x1**2)",
+      "gt": [
+        -1.0,
+        3.141592653589793
+      ]
+    },
+    {
+      "id": "feynman_II.35.18",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 1,
+      "surviving_inner": [
+        "c0"
+      ],
+      "absorbable": [],
+      "rank": 1,
+      "n_consts": 1,
+      "structural": true,
+      "skeleton": "x0/(exp(x3*x4/(x1*x2)) + exp(c0*x3*x4/(x1*x2)))",
+      "gt": [
+        -1.0
+      ]
+    },
+    {
+      "id": "feynman_II.38.14",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 2.0, 'c1': 2.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "x0/(c0 + c1*x1)",
+      "gt": [
+        2.0,
+        2.0
+      ]
+    },
+    {
+      "id": "feynman_III.4.32",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -1.0, 'c1': 0.5, 'c2': 3.141592653589793} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 3,
+      "surviving_inner": [
+        "c0",
+        "c1",
+        "c2"
+      ],
+      "absorbable": [],
+      "rank": 2,
+      "n_consts": 3,
+      "structural": true,
+      "skeleton": "1/(c0 + exp(c1*x0*x1/(c2*x2*x3)))",
+      "gt": [
+        -1.0,
+        0.5,
+        3.141592653589793
+      ]
+    },
+    {
+      "id": "feynman_III.4.33",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c2': -1.0, 'c3': 0.5, 'c4': 3.141592653589793} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 3,
+      "surviving_inner": [
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "absorbable": [],
+      "rank": 3,
+      "n_consts": 5,
+      "structural": true,
+      "skeleton": "c0*x0*x1/(c1*(c2 + exp(c3*x0*x1/(c4*x2*x3))))",
+      "gt": [
+        0.5,
+        3.141592653589793,
+        -1.0,
+        0.5,
+        3.141592653589793
+      ]
+    },
+    {
+      "id": "feynman_III.8.54",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': 2.0, 'c1': 3.141592653589793} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 2,
+      "surviving_inner": [
+        "c0",
+        "c1"
+      ],
+      "absorbable": [],
+      "rank": 1,
+      "n_consts": 2,
+      "structural": true,
+      "skeleton": "sin(c0*c1*x0*x1/x2)**2",
+      "gt": [
+        2.0,
+        3.141592653589793
+      ]
+    },
+    {
+      "id": "feynman_III.9.52",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c2': -1.0, 'c3': 0.5, 'c4': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "R2_LS": NaN,
+      "R2_LS_best": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "n_inner_positional": 3,
+      "surviving_inner": [
+        "c2",
+        "c3",
+        "c4"
+      ],
+      "absorbable": [],
+      "rank": 4,
+      "n_consts": 5,
+      "structural": true,
+      "skeleton": "c0*c1*x0*x1*sin(c3*x2*(c4*x5 + x4))**2/(x2*x3*(c2*x5 + x4)**2)",
+      "gt": [
+        8.0,
+        3.141592653589793,
+        -1.0,
+        0.5,
+        -1.0
+      ]
+    }
+  ]
+}

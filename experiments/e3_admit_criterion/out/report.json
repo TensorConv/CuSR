@@ -1,0 +1,376 @@
+{
+  "thresholds": {
+    "TAU_LOW": 0.7,
+    "TAU_HIGH": 0.999,
+    "RECOVERY_TOL": 0.01,
+    "STRUCT_TOL": 0.02,
+    "GENERIC_REF_GRID": [
+      -2.0,
+      -1.0,
+      -0.5,
+      0.5,
+      1.0,
+      2.0
+    ],
+    "N_SAMPLES": 2000
+  },
+  "validation_set": [
+    {
+      "id": "korns_7",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "R2_LS": 0.060444071137511934,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "inner": [
+        "c1"
+      ],
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0604 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "expected": "ADMIT",
+      "frozen_anchor": true,
+      "match": true
+    },
+    {
+      "id": "korns_11",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "R2_LS": 0.00883448726345093,
+      "R2_full": 1.0,
+      "R2_full_random": 0.06044669486512244,
+      "recovery_err": 0.0,
+      "inner": [
+        "c2"
+      ],
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0088 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "expected": "ADMIT",
+      "frozen_anchor": true,
+      "match": true
+    },
+    {
+      "id": "korns_12",
+      "verdict": "ADMIT",
+      "reason_code": "admit",
+      "R2_LS": 1.2790356740399744e-05,
+      "R2_full": 1.0,
+      "R2_full_random": 1.0,
+      "recovery_err": 0.0,
+      "inner": [
+        "c2",
+        "c3"
+      ],
+      "reason": "linear-scaling gap: R\u00b2_LS(worst)=0.0000 < \u03c4_low=0.7, R\u00b2_full=1.0000 > \u03c4_high=0.999, recovery_err=0.0000 < 0.01",
+      "expected": "ADMIT",
+      "frozen_anchor": true,
+      "match": true
+    },
+    {
+      "id": "korns_8",
+      "verdict": "REJECT",
+      "reason_code": "fold",
+      "R2_LS": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "inner": [],
+      "reason": "all 1 positional-inner const(s) absorbable via fold ('c2',) \u2014 linear scaling absorbs them (e.g. sqrt(c\u00b7g)=sqrt(c)\u00b7sqrt(g))",
+      "expected": "REJECT",
+      "frozen_anchor": true,
+      "match": true
+    },
+    {
+      "id": "nguyen_1",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "R2_LS": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "inner": [],
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "expected": "REJECT",
+      "frozen_anchor": true,
+      "match": true
+    },
+    {
+      "id": "nguyen_5",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "R2_LS": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "inner": [
+        "c1",
+        "c2"
+      ],
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c1': 1.0, 'c2': 1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "expected": "REJECT",
+      "frozen_anchor": false,
+      "match": true
+    },
+    {
+      "id": "feynman_I.8.14",
+      "verdict": "REJECT",
+      "reason_code": "structural",
+      "R2_LS": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "inner": [
+        "c0",
+        "c1"
+      ],
+      "reason": "structural: surviving inner const(s) are GP-grammar-reachable canonical values {'c0': -1.0, 'c1': -1.0} (R\u00b2@canon=1.0000 \u2265 \u03c4_high=0.999); reachable without nonlinear CO",
+      "expected": "REJECT",
+      "frozen_anchor": true,
+      "match": true
+    },
+    {
+      "id": "feynman_I.11.19",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "R2_LS": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "inner": [],
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "expected": "REJECT",
+      "frozen_anchor": true,
+      "match": true
+    },
+    {
+      "id": "feynman_I.12.1",
+      "verdict": "REJECT",
+      "reason_code": "no_inner",
+      "R2_LS": NaN,
+      "R2_full": NaN,
+      "R2_full_random": NaN,
+      "recovery_err": NaN,
+      "inner": [],
+      "reason": "no positional-inner constant (outer-only / constant-free)",
+      "expected": "REJECT",
+      "frozen_anchor": true,
+      "match": true
+    }
+  ],
+  "anticheat_demos": {
+    "korns8_outer_absorption": {
+      "skeleton": "c0 + c1*sqrt(c2*x0*x1*x2)",
+      "wrong_inner": "c2=1.0 (true 7.23)",
+      "faked_R2_via_outer_absorption": 1.0,
+      "verdict": "REJECT",
+      "reason_code": "fold",
+      "note": "OLS outer absorbs any fixed c2 to R\u00b2\u22481, but the fold detects sqrt(c2\u00b7g)=sqrt(c2)\u00b7sqrt(g) -> REJECT"
+    },
+    "trig_phase_linear_span": {
+      "skeleton": "c0*sin(c1 + x0)",
+      "R2_on_fixed_sin_cos_basis_no_CO": 1.0,
+      "verdict": "REJECT",
+      "reason_code": "fold",
+      "note": "angle addition makes sin(x+c) linear in {sin x, cos x} for ANY phase -> REJECT (fold via expand_trig)"
+    }
+  },
+  "tau_low_sensitivity": [
+    {
+      "id": "korns_7",
+      "expected": "ADMIT",
+      "R2_LS": 0.060444071137511934,
+      "stable": true,
+      "per_tau": {
+        "0.1": "ADMIT",
+        "0.3": "ADMIT",
+        "0.5": "ADMIT",
+        "0.7": "ADMIT",
+        "0.9": "ADMIT",
+        "0.95": "ADMIT"
+      }
+    },
+    {
+      "id": "korns_11",
+      "expected": "ADMIT",
+      "R2_LS": 0.00883448726345093,
+      "stable": true,
+      "per_tau": {
+        "0.1": "ADMIT",
+        "0.3": "ADMIT",
+        "0.5": "ADMIT",
+        "0.7": "ADMIT",
+        "0.9": "ADMIT",
+        "0.95": "ADMIT"
+      }
+    },
+    {
+      "id": "korns_12",
+      "expected": "ADMIT",
+      "R2_LS": 1.2790356740399744e-05,
+      "stable": true,
+      "per_tau": {
+        "0.1": "ADMIT",
+        "0.3": "ADMIT",
+        "0.5": "ADMIT",
+        "0.7": "ADMIT",
+        "0.9": "ADMIT",
+        "0.95": "ADMIT"
+      }
+    },
+    {
+      "id": "korns_8",
+      "expected": "REJECT",
+      "R2_LS": NaN,
+      "stable": true,
+      "per_tau": {
+        "0.1": "REJECT",
+        "0.3": "REJECT",
+        "0.5": "REJECT",
+        "0.7": "REJECT",
+        "0.9": "REJECT",
+        "0.95": "REJECT"
+      }
+    }
+  ],
+  "struct_tol_sensitivity": {
+    "admit_ids": [
+      "feynman_II.11.27",
+      "feynman_II.11.28"
+    ],
+    "minus_third_nearest_canon_reldist": 0.04507034144862787,
+    "nearest_is": "-1/pi=-0.3183",
+    "struct_tol": 0.02,
+    "admits_survive_iff_struct_tol_below": 0.04507034144862787,
+    "reldist_excluding_pi_members": 0.5000000000000001,
+    "note": "-1/pi is NOT smuggled to catch -1/3: removing 1/pi-family from CANON leaves -1/3 0.50 from canonical, still >> STRUCT_TOL. The admits survive for any STRUCT_TOL < 0.045; -1/3 != -1/pi are genuinely distinct constants."
+  },
+  "canon_membership_sensitivity": [
+    {
+      "canon_set": "pm1_only          (subtraction sign only)",
+      "n_canon": 3,
+      "n_admit": 11,
+      "admit_ids": [
+        "feynman_I.6.2a",
+        "feynman_I.6.2",
+        "feynman_I.6.2b",
+        "feynman_I.29.16",
+        "feynman_I.30.3",
+        "feynman_I.41.16",
+        "feynman_II.11.27",
+        "feynman_II.11.28",
+        "feynman_II.38.14",
+        "feynman_III.8.54",
+        "feynman_III.9.52"
+      ]
+    },
+    {
+      "canon_set": "ints_half_no_pi   (\u00b11,\u00b12,\u00b10.5)",
+      "n_canon": 7,
+      "n_admit": 4,
+      "admit_ids": [
+        "feynman_I.41.16",
+        "feynman_II.11.27",
+        "feynman_II.11.28",
+        "feynman_III.8.54"
+      ]
+    },
+    {
+      "canon_set": "REGISTERED (frozen default)",
+      "n_canon": 17,
+      "n_admit": 2,
+      "admit_ids": [
+        "feynman_II.11.27",
+        "feynman_II.11.28"
+      ]
+    },
+    {
+      "canon_set": "registered_no_pi",
+      "n_canon": 7,
+      "n_admit": 4,
+      "admit_ids": [
+        "feynman_I.41.16",
+        "feynman_II.11.27",
+        "feynman_II.11.28",
+        "feynman_III.8.54"
+      ]
+    },
+    {
+      "canon_set": "registered_plus_simple_rationals (+\u00b11/3,\u00b11/4,\u00b12/3,\u00b13/4)",
+      "n_canon": 25,
+      "n_admit": 0,
+      "admit_ids": []
+    }
+  ],
+  "corpus_summary": {
+    "n_construction_candidates": 28,
+    "n_construction_admitted": 21,
+    "n_construction_rejected": 7,
+    "construction_rejected": [
+      [
+        "constructed_freq_sin_x2_1",
+        "structural"
+      ],
+      [
+        "constructed_freq_sin_x2_2",
+        "structural"
+      ],
+      [
+        "constructed_freq_cos_x3_1",
+        "structural"
+      ],
+      [
+        "constructed_freq_cos_x3_2",
+        "structural"
+      ],
+      [
+        "constructed_shift_quad_1.3",
+        "fold"
+      ],
+      [
+        "constructed_shift_quad_2.7",
+        "fold"
+      ],
+      [
+        "constructed_shift_quad_4.1",
+        "fold"
+      ]
+    ],
+    "n_controls": 11,
+    "n_controls_leaked": 0,
+    "corpus_size": 21,
+    "corpus_ids": [
+      "constructed_freq_cos_x_1.5",
+      "constructed_freq_cos_x_3",
+      "constructed_freq_cos_x_5",
+      "constructed_freq_cos_x_7",
+      "constructed_freq_sin_x2_3",
+      "constructed_decay_exp_0.4",
+      "constructed_decay_exp_0.9",
+      "constructed_decay_exp_1.7",
+      "constructed_decay_exp_3",
+      "constructed_saturation_0.55",
+      "constructed_saturation_1.3",
+      "constructed_saturation_2.5",
+      "constructed_shift_recip_6.5",
+      "constructed_shift_recip_8",
+      "constructed_shift_recip_9.5",
+      "constructed_power_1.3",
+      "constructed_power_2.4",
+      "constructed_power_3.7",
+      "constructed_damped_0.4_4",
+      "constructed_damped_0.7_6",
+      "constructed_damped_1.2_9"
+    ]
+  },
+  "feynman34_summary": {
+    "n_positional_inner": 34,
+    "n_admit": 2,
+    "admit_ids": [
+      "feynman_II.11.27",
+      "feynman_II.11.28"
+    ],
+    "reject_breakdown": {
+      "structural": 32,
+      "admit": 2
+    },
+    "elapsed_s": 2.6
+  }
+}
