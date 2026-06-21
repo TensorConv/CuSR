@@ -31,3 +31,9 @@ INTERNAL.md
 # batch_lm.cu step by step. Personal study material, not shipped publicly.
 /walkthrough/
 batch_lm_fusedfd_*
+
+# clangd (clangd-lsp plugin) tooling — machine-specific, not shipped.
+# compile_commands.json holds absolute paths (/home/.../cuda, host-math shim);
+# .cache/clangd is the background index. Regenerate per-machine.
+compile_commands.json
+.cache/
