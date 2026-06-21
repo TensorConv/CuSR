@@ -1,0 +1,33 @@
+CONFIRMATION 2026-06-21: the e5 sweep benchmarked the WRONG (slow host-FD) kernel.
+
+The sweep's in-process path = libcusr_co_fd.so, built from co_lib.cu which shares
+lm_core.cuh with batch_lm.cu = the HOST-FD baseline (every FD step does a H<->D
+round-trip => serial, ~1.3-2k t/s flat, doesn't scale). The FAST kernel is
+batch_lm_fusedfd.cu (fused on-device FD) and exists ONLY as a subprocess binary;
+there is NO libcusr_co_fusedfd.so, so the in-process sweep never touched it.
+
+Measured (M=64000, N=1000, seed=0, A100 GPU2, clocks UNLOCKED/draft, max_iter=50):
+
+  early-gen
+    in-proc fd      wall=31.14s  tput= 2055 t/s  med_loss=0.1937
+    fusedfd(binary) wall= 1.46s  tput=43746 t/s  med_loss=0.1936   -> 21.3x, SAME quality
+  inner-const-heavy
+    in-proc fd      wall=43.24s  tput= 1480 t/s  med_loss=5.485
+    fusedfd(binary) wall= 3.45s  tput=18529 t/s  med_loss=5.481    -> 12.5x, SAME quality
+
+vs the sweep's MEASURED Operon at M=64k:
+  early-gen : fusedfd 43746 vs op-32 7764 (5.6x) vs op-64 6680 (6.5x)  -> GPU WINS
+  inner     : fusedfd 18529 vs op-32 7320 (2.5x) vs op-64 8824 (2.1x)  -> GPU WINS (but quality ceiling, see below)
+
+CONSEQUENCES:
+1. SPEED conclusion FLIPS: with the deployed fused kernel the GPU beats the 64-core
+   EPYC by 2-6.5x at M=64k. The "29x" was real (fused); we accidentally measured the
+   host-FD baseline (the "1277 t/s" point of the original 29x ratio).
+2. QUALITY ceiling on inner-const-heavy is UNCHANGED (fused == fd numerically: 5.481 vs
+   5.485). Kernel 5.48 still > Operon 3.60. That gap is the fp32/Marquardt-damping issue
+   (multiplicative diagonal damping can't regularize rank-deficient JtJ), NOT the variant.
+   So: early/late-gen = clean speed win; inner-const = 2x faster but to a worse optimum.
+
+FIX (next action): build libcusr_co_fusedfd.so (point co_lib.cu at the fused kernel, add
+Makefile target) so co_inproc can use it, then RE-RUN sweep.py in-process. The FINDINGS.md
+throughput conclusions are valid ONLY for the host-FD variant until then.

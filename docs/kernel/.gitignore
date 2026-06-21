@@ -1,0 +1,6 @@
+# TeX build artifacts (regenerate: tectonic FILE.tex ; see cusr-tex-figure-env memory)
+*.aux
+*.log
+*.xdv
+*.pdf
+*.png

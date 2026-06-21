@@ -1,0 +1,11 @@
+# Track only the canonical, small artifacts. Everything else here is bulk/scratch
+# (60 GB: *.npy loss sidecars, pop.bin, *_scratch/ dirs, _probe*, run logs) and
+# regenerates from sweep_e6.py. Per-loss .npy are also globally ignored (root .gitignore).
+*
+!.gitignore
+!FINDINGS_e6.md
+!report.json
+!sweep_e6.jsonl
+!gpu_phase_a.csv
+!gpu_phase_a.json
+!gpu_phase_a_summary.md

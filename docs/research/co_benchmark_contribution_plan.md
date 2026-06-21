@@ -10,6 +10,8 @@ Feynman-34→2 audit). This changes the *promissory* objections, not the *novelt
 Honesty discipline (carried verbatim): `access_level` reported and never upgraded; never bare
 "first"; absence-of-evidence stays absence-of-evidence; every elevation is bounded by named prior art.
 
+> **对齐说明 (2026-06-21).** 贡献陈述以 [`contributions.md`](contributions.md) 为准。本文的"两支柱(kernel + benchmark)+ 由 FORCEFUL EMPIRICAL FINDING 驱动的升格"结论与之**一致**;contributions.md 只是把它**显式化为三条**(系统 kernel / 选题判据 / 实证发现),并把诚实性收为贡献①的特性(本文已记 Kronberger 2022 占轴)。Kozax = **de Vries 2025**(非 de Wolff)。
+
 ---
 
 ## 0. 一句话结论 (Bottom line up front)

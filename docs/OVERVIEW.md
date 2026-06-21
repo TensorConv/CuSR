@@ -1,5 +1,10 @@
 # 012 op-bench — 人话版总览
 
+> 🛑 **过时提醒(2026-06-21)**:本页是 2026-06-13 的笔记本版总览,**下方"跑出来的结果"
+> 表里的 2.4–12× / 23–29× 是笔记本 fp32-vs-fp64 sanity,已被 A100 同质口径取代,别再当现状引用。**
+> A100 正式扫描(e5→e6)**已完成**:吞吐头条看 [`../experiments/e6_kernel_sweep/out/FINDINGS_e6.md`](../experiments/e6_kernel_sweep/out/FINDINGS_e6.md),
+> 全实验现状看 [`../experiments/RESULTS.md`](../experiments/RESULTS.md)。本页其余"在做什么/手上有什么"的人话介绍仍可读。
+>
 > 给想快速搞懂这块在干啥的人看。术语和细节在 README / PROTOCOL / RESULTS_laptop。
 > 数字都是笔记本(5070Ti)初步结果,正式数字要等 A100。最后更新 2026-06-13。
 

@@ -1,0 +1,9 @@
+# Track only the canonical, small artifacts. Everything else is bulk/scratch
+# (sweep_losses/*.npy, *_stdout.txt, smoke/prelim runs, .DONE markers) and
+# regenerates from sweep.py. NOTE: e5's throughput headline is SUPERSEDED by e6
+# (see ../FINDINGS.md banner); fused_vs_fd_confirm.txt is the overturning evidence.
+*
+!.gitignore
+!sweep.jsonl
+!sweep_report.json
+!fused_vs_fd_confirm.txt
