@@ -1,0 +1,10 @@
+  FWD-NAN(rev correct, scipy-validated) m=1247 j=0 i=0  fwd=nan rev=0
+  FWD-NAN(rev correct, scipy-validated) m=1247 j=0 i=1  fwd=nan rev=0
+  FWD-NAN(rev correct, scipy-validated) m=1247 j=0 i=2  fwd=nan rev=0
+  FWD-NAN(rev correct, scipy-validated) m=1247 j=0 i=3  fwd=nan rev=0
+  FWD-NAN(rev correct, scipy-validated) m=1247 j=0 i=4  fwd=nan rev=0
+  FWD-NAN(rev correct, scipy-validated) m=1247 j=0 i=5  fwd=nan rev=0
+  FWD-NAN(rev correct, scipy-validated) m=1247 j=0 i=6  fwd=nan rev=0
+  FWD-NAN(rev correct, scipy-validated) m=1247 j=0 i=7  fwd=nan rev=0
+  FWD-NAN(rev correct, scipy-validated) m=1247 j=0 i=8  fwd=nan rev=0
+  FWD-NAN(rev correct, scipy-validated) m=1247 j=0 i=9  fwd=nan rev=0

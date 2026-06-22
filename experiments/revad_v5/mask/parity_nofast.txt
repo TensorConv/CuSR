@@ -1,0 +1,4 @@
+  both-non-finite (OK):                0
+  fwd-nan/rev-finite (fwd defect, scipy-validated OK): 26000
+  FAIL rev-worse (rev nan/fwd finite): 0
+RESULT: PASS

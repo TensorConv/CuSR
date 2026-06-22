@@ -1,0 +1,22 @@
+loaded 13 sample trees from jac_sample_fixed.jsonl
+
+=== ALL elements, by finiteness category ===
+  total                = 404
+  both finite          = 300
+  disputed (1 finite)  = 104
+  shared non-finite    = 0   <-- auto-accepted by parity, unexamined by compare_scipy
+
+=== SHARED-NON-FINITE bucket vs scipy fp64 oracle ===
+  tree value non-finite (undefined; NaN defensible)        = 0
+  scipy also non-finite (true singularity; NaN defensible) = 0
+  value finite & scipy FINITE -> BOTH AD MODES WRONG       = 0
+        of which scipy == 0 exactly (0*inf signature)      = 0
+        of which scipy != 0 (a real nonzero deriv lost)    = 0
+
+=== overall reverse-AD vs scipy, across elements with finite value & finite truth ===
+  rev matches scipy = 404
+  rev WRONG vs scipy = 0   (these are the residual reverse NaN-contamination)
+
+=== sample BOTH-WRONG-FINITE elements  [m,i,k] value fwd rev scipy ===
+
+No shared-NaN elements with finite true derivative — Codex finding NOT reproduced.

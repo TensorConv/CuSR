@@ -29,11 +29,21 @@ MUTATIONS = [
      "case F_EXP:  r = expf(a);  d = r;",
      "case F_EXP:  r = expf(a);  d = -r;"),
     ("swap bfunc rv-adj / l-adj push order",
-     "            sa[asp++] = adj * d2[i];        // rv-adjoint (深)\n            sa[asp++] = adj * d1[i];        // l-adjoint  (顶); 镜像 forward 弹序 (l 在顶)",
-     "            sa[asp++] = adj * d1[i];        // rv-adjoint (深)\n            sa[asp++] = adj * d2[i];        // l-adjoint  (顶); 镜像 forward 弹序 (l 在顶)"),
+     "            sa[asp++] = revad_safe_mul(adj, d2[i]);     // rv-adjoint (深)\n            sa[asp++] = revad_safe_mul(adj, d1[i]);     // l-adjoint  (顶); 镜像 forward 弹序 (l 在顶)",
+     "            sa[asp++] = revad_safe_mul(adj, d1[i]);     // rv-adjoint (深)\n            sa[asp++] = revad_safe_mul(adj, d2[i]);     // l-adjoint  (顶); 镜像 forward 弹序 (l 在顶)"),
     ("flip F_TANH derivative (1-r^2 -> 1+r^2)",
      "case F_TANH: r = tanhf(a); d = 1.0f - r * r;",
      "case F_TANH: r = tanhf(a); d = 1.0f + r * r;"),
+    # --- mask fix + gate fixtures (must be caught by NaNsafe_A/B, dupci, poisonbuf) ---
+    ("disable safe_mul (NaN-safety off -> return a*b)",
+     "    return (a == 0.0f || b == 0.0f) ? 0.0f : a * b;",
+     "    return a * b;"),
+    ("CONST accum += -> = (overwrite; breaks duplicated ci)",
+     "            out_grad[ci[i]] += adj;",
+     "            out_grad[ci[i]] = adj;"),
+    ("delete out_grad zero-init (breaks poisoned buffer)",
+     "    for (int k = 0; k < K; k++) out_grad[k] = 0.0f;",
+     "    ;"),
 ]
 
 def setup():

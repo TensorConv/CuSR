@@ -1,0 +1,7 @@
+[check_residual] pop=/home/weish/hao/CuSR/data/workload/synth/synth_early-gen_M16000_N1000_seed0.bin
+  elements compared            = 45409000
+  reverse non-finite (any)     = 0
+  rev NaN & value FINITE       = 0   <-- contamination (MUST be 0)
+  rev Inf & value finite       = 0   (true infinite-slope singularity; OK)
+  value non-finite (genuine)   = 0   (function undefined; both AD non-finite OK)
+RESULT: PASS (no finite-value NaN contamination)

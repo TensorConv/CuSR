@@ -1,0 +1,6 @@
+[corpus_silent] pop=/home/weish/hao/CuSR/data/workload/synth/synth_early-gen_M16000_N1000_seed0.bin
+  elements                         = 45409000
+  affected (plain nan -> safe finite) = 3000
+  of affected, oracle FD finite    = 3000
+  SILENT-WRONG (safe!=FD, FD nonzero) = 0
+RESULT: no silent-wrong entries in this corpus

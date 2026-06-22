@@ -1,0 +1,16 @@
+[fuzz_safe_mul] adversarial soundness property-test
+  [SING] MUL(x-x,sqrt(c0))@0  0*inf val=0         ad=[0] want=[0]  OK
+  [SING] sqrt(c0*(x-x))     inf*0   val=0         ad=[0] want=[0]  OK
+  [SING] MUL(x-x,pow(c0,c1))@0  0*inf val=0         ad=[0,0] want=[0,0]  OK
+  [SING] MUL(x-x,pow(-1,2))  0*nan  val=0         ad=[0,0] want=[0,0]  OK
+  [SING] MAX(x0,sqrt(c0))@0 deadbr  val=0.7       ad=[0] want=[0]  OK
+  [NORM] c0*x0                      max_rel=1.745e-05  OK
+  [NORM] c0/(c1+x0)                 max_rel=6.488e-05  OK
+  [NORM] sin(c0*x0)                 max_rel=3.226e-05  OK
+  [NORM] tanh(c0*x0)                max_rel=1.137e-04  OK
+  [NORM] pow(c0*x0,c1)              max_rel=2.092e-04  OK
+  [NORM] (c0*x0)/(c1*x0)            max_rel=2.220e-05  OK
+  [NORM] (c0x+c1)*sin(c2x+c3) K4    max_rel=1.152e-04  OK
+
+[fuzz_safe_mul] 12 tested, 0 WRONG
+RESULT: SOUND (no counterexample across battery)
