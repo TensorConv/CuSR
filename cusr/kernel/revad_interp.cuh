@@ -11,7 +11,10 @@
 //   - eval_tree_jvp_d / ad_jacobian_kernel  (forward 参照, 给单测对拍用)
 //   - eval_tree_val_host         (value-only 中心差分 oracle)
 // **绝不修改 ad_interp.cuh** —— 仅 include 复用。算子规则逐条镜像 ad_interp.cuh (同 math、
-// 同奇点行为), 使 reverse 的值与偏导和 forward 在有限处逐元素一致 (奇点处两边均 NaN/Inf)。
+// 同奇点行为), 使 reverse 的值与偏导和 forward 在有限处逐元素一致。
+// 例外 (NaN-safety, 2026-06-22): 反向乘法用 revad_safe_mul 做 0-湮灭, 故在**值有限**的奇点
+// (真梯度有限, 但朴素 AD 出 0*inf/inf*0=NaN) 处, reverse 给正确有限值而 forward 仍 NaN —— 这是
+// 蓄意的、scipy 证实更正确的发散 (parity 测试归入已接受的 fwd-nan/rev-finite 桶, rev-worse 仍 0)。
 
 #ifndef REVAD_INTERP_CUH
 #define REVAD_INTERP_CUH
@@ -25,6 +28,23 @@
 #ifndef MAX_NODES
 #define MAX_NODES 128
 #endif
+
+// adjoint × local-partial, 带 0-湮灭 (NaN-safety)。见 experiments/revad_v5/
+// FINDINGS_codex_review_shared_nan.md: 若任一因子**恰为 0.0f**, 该边对梯度的真实贡献为 0
+// (0 伴随 ⟹ 该节点不影响输出; 0 偏导 ⟹ 该操作数不影响其父节点), 故返回 0 —— 不让
+// 0*inf / inf*0 / 0*nan 把该列毒化成 NaN。数学上 true-zero 因子湮灭乘积, 与另一 (可能非有限)
+// 因子的取值/极限无关。仅"恰为 0.0f"时湮灭: denormal/微小非零仍走 a*b (此时积也微小, 在容差内),
+// 真正 inf 偏导配非零 adjoint (真奇点, 真梯度确为 inf) 仍给 inf。
+// **已知局限 (Codex P2)**: 可去奇点 —— 若 0·∞ 实际收敛到非零有限极限 (如 pow(sqrt(c0),2) 在 c0=0,
+// 真右导=1), 本 mask 会**沉默地给 0** 而非真值。这是一阶 AD 的固有局限: forward AD、未加 mask 的
+// reverse、中心差分 在此点同样失败 (全给 NaN); 只有符号化简/单侧差分能得真值。实测我们的语料
+// (inner-const 27.4M + early-gen 45.4M) **0 例** (tests/_probe_corpus_silent.cu): 全部被 mask 影响的
+// 9000+3000 个元素真梯度均为 0, mask 给 0 是对的。保留 mask: 对真实语料全对, 且 0 比 NaN 对 LM 更安全
+// (NaN 毒化整列; 0 仅少计该点)。纯局部无法区分"真零"与"可去非零"(局部都是 0·∞)。
+// scipy fp64 oracle + Python fp32 mirror 证实: 修掉样本全部 36 个 shared-NaN 残留, broke=0。
+__host__ __device__ inline float revad_safe_mul(float a, float b) {
+    return (a == 0.0f || b == 0.0f) ? 0.0f : a * b;
+}
 
 // ============================================================================
 // Reverse-mode VJP 解释器 — 单点, 一次 pass 产出全部 K 列 ∂y/∂c_j
@@ -126,12 +146,12 @@ __host__ __device__ inline void eval_tree_vjp_d(
             float adj = sa[--asp];
             out_grad[ci[i]] += adj;
         } else if (t == N_UFUNC) {
-            float adj = sa[--asp];          // 该节点输出的 adjoint
-            sa[asp++] = adj * d1[i];        // operand a 的 adjoint
+            float adj = sa[--asp];                      // 该节点输出的 adjoint
+            sa[asp++] = revad_safe_mul(adj, d1[i]);     // operand a 的 adjoint (0-湮灭防 0*inf)
         } else if (t == N_BFUNC) {
-            float adj = sa[--asp];          // 输出 o 的 adjoint
-            sa[asp++] = adj * d2[i];        // rv-adjoint (深)
-            sa[asp++] = adj * d1[i];        // l-adjoint  (顶); 镜像 forward 弹序 (l 在顶)
+            float adj = sa[--asp];                      // 输出 o 的 adjoint
+            sa[asp++] = revad_safe_mul(adj, d2[i]);     // rv-adjoint (深)
+            sa[asp++] = revad_safe_mul(adj, d1[i]);     // l-adjoint  (顶); 镜像 forward 弹序 (l 在顶)
         }
     }
 }

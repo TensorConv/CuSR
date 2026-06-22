@@ -83,6 +83,26 @@ static void report(const char *name, const Tree &T, const float *x, const float 
     printf("  %-26s K=%d  max_rel_err=%.3e  %s\n", name, K, worst, ok ? "PASS" : "FAIL");
 }
 
+// 解析式断言 (不用中心差分 oracle): 给奇点 fixture 用 —— 中心差分在 sqrt/log 定义域边界
+// 自己会变 NaN (步长跨进负域), 故这些 case 直接比手算的已知真梯度。要求 value 有限 (确认
+// 这是"有限值奇点", 真梯度有意义); 任一被检列出现 NaN/Inf = FAIL; |g[k]-expect[k]| 超 tol = FAIL。
+static void report_analytic(const char *name, const Tree &T, const float *x,
+                            const float *c, int K, const float *expect, int k_lo, int k_hi) {
+    std::vector<float> g(K, 0.0f);
+    eval_tree_vjp_d(T.nt.data(), T.nv.data(), (int)T.nt.size(), T.ci.data(), x, c, K, g.data());
+    float val = eval_tree_val_host(T.nt.data(), T.nv.data(), (int)T.nt.size(), T.ci.data(), x, c);
+    float worst = 0.0f; bool any_bad = false;
+    for (int k = k_lo; k < k_hi; k++) {
+        bool bad = !isfinite(g[k]);
+        float rel = fabsf(g[k] - expect[k]) / (fabsf(expect[k]) + 1e-4f);
+        if (bad) any_bad = true;
+        if (bad || rel > worst) worst = bad ? HUGE_VALF : rel;
+    }
+    bool ok = isfinite(val) && !any_bad && (worst < 1e-3f);
+    if (!ok) g_fail++; else g_pass++;
+    printf("  %-26s K=%d val=%.4g max_rel_err=%.3e  %s\n", name, K, val, worst, ok ? "PASS" : "FAIL");
+}
+
 // ---- 树构造助手 (镜像 test_jvp_host.cu) --------------------------------------
 // op(c0*x0), K=1, var x0。 pre-order: [UFUNC(op), BFUNC(MUL), CONST(c0), VAR(x0)]
 static Tree ufunc_of_c0x(int op) {
@@ -337,6 +357,66 @@ int main() {
             bool ok = (worst < TOLm); if (!ok) g_fail++; else g_pass++;
             printf("  %-30s max_rel_err=%.3e  %s\n", cs.nm, worst, ok ? "PASS" : "FAIL");
         }
+    }
+
+    // ============================================================================
+    // NaN-safety (mask 修复): 有限值奇点处真梯度有限, 但朴素 reverse 出 0*inf / inf*0 = NaN。
+    // 真梯度 = 0 经 scipy fp64 oracle + Python fp32 mirror 证实 (FINDINGS_codex_review_shared_nan.md
+    // + reverse_vjp_py.py)。这两条在加 safe-multiply 之前 RED (NaN), 之后 GREEN (0)。
+    // ============================================================================
+    {
+        // Fixture A (m=1247 类: adj==0 × inf-partial): y = (x0-x0)*sqrt(c0), c0=0。
+        //   value = 0*0 = 0 (有限); 真 ∂/∂c0 = (x0-x0)*sqrt'(c0) = 0 ∀c0。
+        //   朴素: SQRT 子树 adjoint=0, ×sqrt'(0)=inf → 0*inf = NaN。
+        Tree A;
+        A.nt = {N_BFUNC, N_BFUNC, N_VAR, N_VAR, N_UFUNC, N_CONST};
+        A.nv = {(float)F_MUL, (float)F_SUB, 0.0f, 0.0f, (float)F_SQRT, 0.0f};
+        A.ci = {-1, -1, -1, -1, -1, 0};
+        float cA[1] = {0.0f}; float xA[1] = {0.7f}; float eA[1] = {0.0f};
+        report_analytic("NaNsafe_A_zeroXinf", A, xA, cA, 1, eA, 0, 1);
+
+        // Fixture B (inf-adj × 0-partial; 卡 "只 mask adj==0" 不够, 必须 safe-multiply 双侧):
+        //   y = sqrt(c0*(x0-x0)), c0=2。 value = sqrt(2*0)=0 (有限); 真 ∂/∂c0 = 0。
+        //   朴素: sqrt'(0)=inf 带 adj=1 → inf; 到 MUL 的 c0 支 ×0 → inf*0 = NaN。
+        Tree B;
+        B.nt = {N_UFUNC, N_BFUNC, N_CONST, N_BFUNC, N_VAR, N_VAR};
+        B.nv = {(float)F_SQRT, (float)F_MUL, 0.0f, (float)F_SUB, 0.0f, 0.0f};
+        B.ci = {-1, -1, 0, -1, -1, -1};
+        float cB[1] = {2.0f}; float xB[1] = {0.7f}; float eB[1] = {0.0f};
+        report_analytic("NaNsafe_B_infXzero", B, xB, cB, 1, eB, 0, 1);
+    }
+
+    // ============================================================================
+    // 闸门补洞 #5a: 重复 ci (同一常数用两次) — 卡 CONST 累加必须 += 而非 = 。
+    //   y = c0*x0 + c0, ∂/∂c0 = x0 + 1。 += → x0+1 (对); = → 1 (错, 后写覆盖前写)。
+    //   real-pop 无重复 ci (survivorB 等价变异), 此条让 +=/= 可区分 (mutation 见证)。
+    // ============================================================================
+    {
+        Tree T;
+        T.nt = {N_BFUNC, N_BFUNC, N_CONST, N_VAR, N_CONST};
+        T.nv = {(float)F_ADD, (float)F_MUL, 0.0f, 0.0f, 0.0f};
+        T.ci = {-1, -1, 0, -1, 0};   // ci[2]=ci[4]=0: 同一个 c0 用两次
+        float c[1] = {1.3f}; float xv[1] = {0.7f};
+        float e[1] = {xv[0] + 1.0f};   // ∂/∂c0 = x0 + 1
+        report_analytic("dupci_c0x_plus_c0", T, xv, c, 1, e, 0, 1);
+    }
+
+    // ============================================================================
+    // 闸门补洞 #5b: 投毒 out_grad — 卡 eval_tree_vjp_d 必须内部清零 out_grad。
+    //   host 调用点此前都预清零, 删 zero-init 是 host 盲点 (survivorA); 这条传非零垃圾进去,
+    //   若无内部清零 → 结果 = 垃圾 + 真值 (错)。 y = c0*x0, ∂/∂c0 = x0 (= 0.7, 非 999.7)。
+    // ============================================================================
+    {
+        Tree T; T.nt = {N_BFUNC, N_CONST, N_VAR}; T.nv = {(float)F_MUL, 0.0f, 0.0f}; T.ci = {-1, 0, -1};
+        float c[1] = {0.9f}; float xv[1] = {0.7f};
+        float g[1] = {999.0f};   // 投毒: 非零垃圾入
+        eval_tree_vjp_d(T.nt.data(), T.nv.data(), (int)T.nt.size(), T.ci.data(), xv, c, 1, g);
+        float want = xv[0];
+        float rel = fabsf(g[0] - want) / (fabsf(want) + 1e-4f);
+        bool ok = isfinite(g[0]) && (rel < 1e-3f);
+        if (!ok) g_fail++; else g_pass++;
+        printf("  %-26s g=%.4g want=%.4g rel=%.3e  %s\n",
+               "poisonbuf_zeroinit", g[0], want, rel, ok ? "PASS" : "FAIL");
     }
 
     // ---------------- 总结 ----------------

@@ -59,10 +59,19 @@ int main(int argc, char **argv) {
     printf("  M_prob=%d total_nodes=%d total_c=%d N=%d n_vars=%d K_max=%d max_stack=%d\n",
            M_prob, total_nodes, total_c, N, n_vars, K_max, h->max_stack);
 
-    // max n_nodes over metas (供 GREEN 期排查 reverse tape MAX_NODES 溢出; 见 SPEC).
+    // max n_nodes over metas. reverse tape d1/d2 是 [MAX_NODES] local 数组, n_nodes>MAX_NODES
+    // 会在 launch 后静默越界写 local mem (UB)。**launch 前**就 fail-fast (镜像驱动 batch_lm_revad.cu
+    // 的 load 期断言); 任何直接调 rev_jacobian_kernel 的测试/调用者都该有这道守卫 (Codex review #4)。
     int max_nn = 0;
     for (int m = 0; m < M_prob; m++) if (pop.metas[m].n_nodes > max_nn) max_nn = pop.metas[m].n_nodes;
     printf("  max n_nodes over metas = %d\n", max_nn);
+    if (max_nn > MAX_NODES) {
+        fprintf(stderr, "max n_nodes=%d > MAX_NODES=%d — reverse tape would overflow; refusing to launch.\n",
+                max_nn, MAX_NODES);
+        free_pop_data(&pop);
+        printf("RESULT: FAIL\n");
+        return 2;
+    }
 
     if (K_max > MAX_K) {
         fprintf(stderr, "K_max=%d > MAX_K=%d (corpus 超出编译期上界)\n", K_max, MAX_K);

@@ -12,6 +12,9 @@ inspect
 tests/test_revad_host
 tests/test_revad_jac
 tests/test_revad_parity
+tests/test_revad_parity_tiny
+tests/test_revad_parity_nofast
+tests/_check_residual
 
 # in-process CO drop-in shared libs (P1) — build artifacts (make libcusr_co_*.so)
 libcusr_co_fd.so
@@ -43,3 +46,6 @@ batch_lm_fusedfd_*
 # .cache/clangd is the background index. Regenerate per-machine.
 compile_commands.json
 .cache/
+tests/_fuzz_safe_mul
+tests/_probe_removable
+tests/_probe_corpus_silent
