@@ -37,6 +37,15 @@ batch_lm_ad: batch_lm_ad.cu loader.c loader.h pop_format.h ad_interp.cuh lm_core
 batch_lm_ad_prof: batch_lm_ad.cu loader.c loader.h pop_format.h ad_interp.cuh
 	$(NVCC) $(NVCC_FLAGS) -DPROFILE -o $@ batch_lm_ad.cu loader.c
 
+# v5: reverse-mode AD Jacobian (drop-in J producer, replaces ad_jacobian_kernel).
+# One forward (tape) + one backward sweep → all K columns per point-pass (K-flat).
+# See revad_interp.cuh. _prof adds -DPROFILE for the C_FDJAC bucket timing.
+batch_lm_revad: batch_lm_revad.cu loader.c loader.h pop_format.h revad_interp.cuh ad_interp.cuh lm_core.cuh
+	$(NVCC) $(NVCC_FLAGS) -o $@ batch_lm_revad.cu loader.c
+
+batch_lm_revad_prof: batch_lm_revad.cu loader.c loader.h pop_format.h revad_interp.cuh ad_interp.cuh lm_core.cuh
+	$(NVCC) $(NVCC_FLAGS) -DPROFILE -o $@ batch_lm_revad.cu loader.c
+
 # fp64-honesty guard is ON by default in batch_lm / batch_lm_ad. These -DNO_FP64_GUARD
 # builds disable it (byte-identical to the pre-guard kernel) — used by the honesty
 # regression tests to demonstrate the gap the guard closes, and for guard A/B timing.
@@ -82,4 +91,8 @@ show: inspect
 	@if [ -f data/pop.bin ]; then ./inspect data/pop.bin; else echo "data/pop.bin 不存在, 先跑 dump_evogp.py"; fi
 
 clean:
-	rm -f inspect batch_lm
+	rm -f inspect batch_lm batch_lm_fusedfd batch_lm_fusedfd_prof batch_lm_fusedfd_tr batch_lm_fusedfd_tr_prof \
+	      batch_lm_ad batch_lm_ad_prof batch_lm_ad_noguard batch_lm_ad_tr batch_lm_ad_tr_prof \
+	      batch_lm_revad batch_lm_revad_prof \
+	      batch_lm_noguard \
+	      libcusr_co_fd.so libcusr_co_fd_prof.so libcusr_co_ad.so libcusr_co_ad_prof.so

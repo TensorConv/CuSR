@@ -5,7 +5,13 @@ batch_lm_ad_*
 batch_lm_noguard
 batch_lm_devjac
 batch_lm_fusedfd
+batch_lm_revad
+batch_lm_revad_*
+_dump_jac_sample
 inspect
+tests/test_revad_host
+tests/test_revad_jac
+tests/test_revad_parity
 
 # in-process CO drop-in shared libs (P1) — build artifacts (make libcusr_co_*.so)
 libcusr_co_fd.so
