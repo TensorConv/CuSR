@@ -1,0 +1,56 @@
+### MUTATION: M4_backward_pushorder_swap
+--- diff vs canonical (mutated copy) ---
+133,134c133,134
+<             sa[asp++] = adj * d2[i];        // rv-adjoint (深)
+<             sa[asp++] = adj * d1[i];        // l-adjoint  (顶); 镜像 forward 弹序 (l 在顶)
+---
+>             sa[asp++] = adj * d1[i];        // SWAPPED: l-adj pushed deep
+>             sa[asp++] = adj * d2[i];        // SWAPPED: rv-adj pushed top
+--- compile: nvcc -O2 -std=c++17 -o t test_revad_host.cu ---
+--- compile exit: 0 ---
+[test_revad_host] reverse-mode VJP vs central difference (tol rel < 1e-3)
+  seed_CONST                 K=1  max_rel_err=1.746e-05  PASS
+  seed_VAR(c0*x0)            K=1  max_rel_err=2.857e-01  FAIL
+  UFUNC_SIN                  K=1  max_rel_err=5.714e-01  FAIL
+  UFUNC_COS                  K=1  max_rel_err=5.714e-01  FAIL
+  UFUNC_TAN                  K=1  max_rel_err=1.429e-01  FAIL
+  UFUNC_SINH                 K=1  max_rel_err=2.857e-01  FAIL
+  UFUNC_COSH                 K=1  max_rel_err=2.857e-01  FAIL
+  UFUNC_TANH                 K=1  max_rel_err=8.568e-01  FAIL
+  UFUNC_LOG                  K=1  max_rel_err=9.999e-01  FAIL
+  UFUNC_EXP                  K=1  max_rel_err=4.285e-01  FAIL
+  UFUNC_INV                  K=1  max_rel_err=7.143e-01  FAIL
+  UFUNC_NEG                  K=1  max_rel_err=1.428e+00  FAIL
+  UFUNC_ABS                  K=1  max_rel_err=1.143e+00  FAIL
+  UFUNC_SQRT                 K=1  max_rel_err=8.570e-01  FAIL
+  BFUNC_ADD                  K=2  max_rel_err=7.142e-01  FAIL
+  BFUNC_SUB                  K=2  max_rel_err=2.714e+00  FAIL
+  BFUNC_MUL                  K=2  max_rel_err=9.206e-01  FAIL
+  BFUNC_DIV                  K=2  max_rel_err=4.449e+00  FAIL
+  BFUNC_MAX                  K=2  max_rel_err=5.000e+03  FAIL
+  BFUNC_MIN                  K=2  max_rel_err=1.500e+04  FAIL
+  BFUNC_LT                   K=2  max_rel_err=0.000e+00  PASS
+  BFUNC_GT                   K=2  max_rel_err=0.000e+00  PASS
+  BFUNC_LE                   K=2  max_rel_err=0.000e+00  PASS
+  BFUNC_GE                   K=2  max_rel_err=0.000e+00  PASS
+  POW_c0sq(base+exp)         K=2  max_rel_err=3.245e+00  FAIL
+  POW_c0sq(d/dc0 only)       K=2  max_rel_err=7.644e-01  FAIL
+  POW_x_pow_c0               K=1  max_rel_err=8.205e+00  FAIL
+  POW_base+exp_param         K=2  max_rel_err=1.961e+01  FAIL
+  LOG_sing(c0x<0)val         val=-nan (isfinite=0)  PASS(NaN/inf)
+  LOG_sing(c0x<0)grad        grad=1.42857 want=-1 rel=2.428e+00  FAIL
+  LOG_sing(c0x==0)val        val=-inf (isfinite=0)  PASS(NaN/inf)
+  DIV_c0_over_c1x            K=2  max_rel_err=2.388e+00  FAIL
+  nested_sin+exp_K3          K=3  max_rel_err=2.335e+00  FAIL
+  nested_mul_sin_K4          K=4  max_rel_err=1.294e+00  FAIL
+  MAG_lin_c0x  c0=1e6            max_rel_err=1.428e+06  FAIL
+  MAG_lin_c0x  c0=1e-6           max_rel_err=9.999e-01  FAIL
+  MAG_MUL_d/dc0 c0=1e6           max_rel_err=1.587e+12  FAIL
+  MAG_MUL_d/dc0 c0=1e-6          max_rel_err=9.998e-01  FAIL
+  MAG_DIV_c0/x c0=1e6            max_rel_err=1.428e+06  FAIL
+  MAG_DIV_c0/x c0=1e-6           max_rel_err=9.999e-01  FAIL
+  MAG_EXP_small c0=1e-6 x=1e3    max_rel_err=1.000e+00  FAIL
+
+[test_revad_host] 7 PASS, 34 FAIL
+RESULT: FAIL
+--- run exit: 1 ---

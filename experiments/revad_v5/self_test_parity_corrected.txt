@@ -1,0 +1,8 @@
+
+[test_revad_parity] compared 27429000 elements across 4000 trees
+  both-non-finite (OK):                9052
+  fwd-nan/rev-finite (fwd defect, scipy-validated OK): 17048
+  FAIL rel>=1e-03:                      0
+  FAIL rev-worse (rev nan/fwd finite): 0
+  max rel err = 5.144e-07  at m=74 j=6 i=141 (fwd=4.63479 rev=4.63479)
+RESULT: PASS

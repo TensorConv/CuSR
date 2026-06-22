@@ -1,0 +1,6 @@
+nvcc -O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math -o batch_lm_revad batch_lm_revad.cu loader.c
+nvcc -O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math -DPROFILE -o batch_lm_revad_prof batch_lm_revad.cu loader.c
+make: 'batch_lm_ad_prof' is up to date.
+nvcc -O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math -o batch_lm_revad batch_lm_revad.cu loader.c
+nvcc -O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math -DPROFILE -o batch_lm_revad_prof batch_lm_revad.cu loader.c
+nvcc -O2 -arch=sm_80 -std=c++17 -lineinfo --use_fast_math -DPROFILE -o batch_lm_ad_prof batch_lm_ad.cu loader.c

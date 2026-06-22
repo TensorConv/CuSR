@@ -1,0 +1,3 @@
+M_prob=4000 total CONST nodes=27429 max CONST/tree=13
+trees with a DUPLICATED ci among CONST nodes = 0
+=> survivor B (+= -> =) is an EQUIVALENT MUTANT on this corpus (no repeated ci; 0+adj==adj)

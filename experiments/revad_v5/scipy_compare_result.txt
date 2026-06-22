@@ -1,0 +1,30 @@
+loaded 13 sample trees from /home/weish/hao/CuSR/experiments/revad_v5/jac_sample.jsonl
+
+=== AGREED elements (fwd & rev both finite) — sanity vs scipy ===
+  n=300  rev~scipy=300  fwd~scipy=300
+
+=== DISPUTED elements (fwd vs rev differ in finiteness) ===
+  n_disputed                 = 68
+  rev matches scipy          = 68
+  fwd matches scipy          = 0
+  neither matches scipy      = 0
+  -> value FINITE & rev=scipy & fwd nonfinite (REVERSE correct) = 68
+  -> value NON-finite (function undefined; fwd NaN defensible)  = 0
+
+=== sample disputed elements  [m,i,k] value  fwd  rev  scipy  (val_finite) ===
+  m=1247  i=0    k=0  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=0    k=1  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=0    k=2  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=0    k=5  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=1    k=0  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=1    k=1  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=1    k=2  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=1    k=5  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=2    k=0  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=2    k=1  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=2    k=2  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=2    k=5  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=3    k=0  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+  m=1247  i=3    k=1  val=-0           fwd=nan        rev=0            scipy=0            valfin=True
+
+VERDICT: REVERSE-AD matches the scipy fp64 oracle; forward-AD over-NaNs (NaN-contamination). Reverse is MORE correct.

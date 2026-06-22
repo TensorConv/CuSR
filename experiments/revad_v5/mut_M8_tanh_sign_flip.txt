@@ -1,0 +1,54 @@
+### MUTATION: M8_tanh_sign_flip
+--- diff vs canonical (mutated copy) ---
+74c74
+<                 case F_TANH: r = tanhf(a); d = 1.0f - r * r;       break;
+---
+>                 case F_TANH: r = tanhf(a); d = -(1.0f - r * r);    break;
+--- compile: nvcc -O2 -std=c++17 -o t test_revad_host.cu ---
+--- compile exit: 0 ---
+[test_revad_host] reverse-mode VJP vs central difference (tol rel < 1e-3)
+  seed_CONST                 K=1  max_rel_err=1.746e-05  PASS
+  seed_VAR(c0*x0)            K=1  max_rel_err=1.388e-05  PASS
+  UFUNC_SIN                  K=1  max_rel_err=3.226e-05  PASS
+  UFUNC_COS                  K=1  max_rel_err=5.485e-05  PASS
+  UFUNC_TAN                  K=1  max_rel_err=5.262e-05  PASS
+  UFUNC_SINH                 K=1  max_rel_err=3.879e-05  PASS
+  UFUNC_COSH                 K=1  max_rel_err=2.620e-05  PASS
+  UFUNC_TANH                 K=1  max_rel_err=1.999e+00  FAIL
+  UFUNC_LOG                  K=1  max_rel_err=1.010e-05  PASS
+  UFUNC_EXP                  K=1  max_rel_err=1.624e-05  PASS
+  UFUNC_INV                  K=1  max_rel_err=4.392e-05  PASS
+  UFUNC_NEG                  K=1  max_rel_err=5.619e-06  PASS
+  UFUNC_ABS                  K=1  max_rel_err=4.342e-06  PASS
+  UFUNC_SQRT                 K=1  max_rel_err=2.777e-05  PASS
+  BFUNC_ADD                  K=2  max_rel_err=2.571e-05  PASS
+  BFUNC_SUB                  K=2  max_rel_err=2.571e-05  PASS
+  BFUNC_MUL                  K=2  max_rel_err=7.716e-05  PASS
+  BFUNC_DIV                  K=2  max_rel_err=2.220e-05  PASS
+  BFUNC_MAX                  K=2  max_rel_err=4.342e-06  PASS
+  BFUNC_MIN                  K=2  max_rel_err=3.814e-05  PASS
+  BFUNC_LT                   K=2  max_rel_err=0.000e+00  PASS
+  BFUNC_GT                   K=2  max_rel_err=0.000e+00  PASS
+  BFUNC_LE                   K=2  max_rel_err=0.000e+00  PASS
+  BFUNC_GE                   K=2  max_rel_err=0.000e+00  PASS
+  POW_c0sq(base+exp)         K=2  max_rel_err=1.518e-05  PASS
+  POW_c0sq(d/dc0 only)       K=2  max_rel_err=4.768e-06  PASS
+  POW_x_pow_c0               K=1  max_rel_err=2.690e-05  PASS
+  POW_base+exp_param         K=2  max_rel_err=2.092e-04  PASS
+  LOG_sing(c0x<0)val         val=-nan (isfinite=0)  PASS(NaN/inf)
+  LOG_sing(c0x<0)grad        grad=-1 want=-1 rel=0.000e+00  PASS
+  LOG_sing(c0x==0)val        val=-inf (isfinite=0)  PASS(NaN/inf)
+  DIV_c0_over_c1x            K=2  max_rel_err=6.488e-05  PASS
+  nested_sin+exp_K3          K=3  max_rel_err=8.049e-05  PASS
+  nested_mul_sin_K4          K=4  max_rel_err=1.152e-04  PASS
+  MAG_lin_c0x  c0=1e6            max_rel_err=8.514e-08  PASS
+  MAG_lin_c0x  c0=1e-6           max_rel_err=0.000e+00  PASS
+  MAG_MUL_d/dc0 c0=1e6           max_rel_err=0.000e+00  PASS
+  MAG_MUL_d/dc0 c0=1e-6          max_rel_err=0.000e+00  PASS
+  MAG_DIV_c0/x c0=1e6            max_rel_err=6.342e-06  PASS
+  MAG_DIV_c0/x c0=1e-6           max_rel_err=8.344e-08  PASS
+  MAG_EXP_small c0=1e-6 x=1e3    max_rel_err=1.476e-05  PASS
+
+[test_revad_host] 40 PASS, 1 FAIL
+RESULT: FAIL
+--- run exit: 1 ---

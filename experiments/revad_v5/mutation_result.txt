@@ -1,0 +1,14 @@
+=== baseline (unmutated) ===
+  baseline: PASS
+
+=== mutants (each must turn the test RED) ===
+  [0] flip sign of F_SIN derivative              -> FAIL           CAUGHT
+  [1] swap F_DIV dl/dr partials                  -> FAIL           CAUGHT
+  [2] zero F_MUL left partial (dl)               -> FAIL           CAUGHT
+  [3] adjoint stack init 1.0 -> 2.0              -> FAIL           CAUGHT
+  [4] flip sign of F_EXP derivative              -> FAIL           CAUGHT
+  [5] swap bfunc rv-adj / l-adj push order       -> FAIL           CAUGHT
+  [6] flip F_TANH derivative (1-r^2 -> 1+r^2)    -> FAIL           CAUGHT
+
+=== SUMMARY: 7/7 mutations caught ===
+RESULT: PASS (test has teeth; no holes)

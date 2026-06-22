@@ -1,0 +1,25 @@
+=== PROOF that deleting zero-init is a REAL kernel bug (non-equivalent), masked by host pre-zeroing ===
+
+--- [1] rev_jacobian_kernel: g is UNINITIALIZED stack; eval_tree_vjp_d is sole writer before read ---
+46:__host__ __device__ inline void eval_tree_vjp_d(
+145:// 与 forward 不同: 一次 point-pass (eval_tree_vjp_d) 即得全部 K 列 (无 col_lo+=AD_W 外层)。
+166:        float g[MAX_K];                               // 全部 K 列 ∂y_i/∂c_j
+167:        eval_tree_vjp_d(nt, nv, meta.n_nodes, ci, xs + (size_t)i * n_vars, c, K, g);
+169:            Jm[(size_t)j * N + i] = g[j];             // 精确 ∂y_i/∂c_j
+
+    -> kernel relies ENTIRELY on eval_tree_vjp_d zeroing out_grad[0..K). Delete the zero-init
+       loop and (for any tree whose root path does not touch every column via a CONST +=)
+       Jm gets GARBAGE. With '+=' on uninit memory it is undefined/garbage even for touched cols.
+
+--- [2] host test call sites PRE-ZERO the out buffer (so host cannot see the bug) ---
+    check_cols (test line ~64):
+64:    std::vector<float> g(K, 0.0f);
+    LOG_sing grad probe (test line ~239):
+239:        float g[1] = {0.0f};
+    (every host invocation hands eval_tree_vjp_d a buffer already set to 0 -> '+=' is correct there)
+
+--- [3] CONCLUSION ---
+    Host suite: 41 PASS with zero-init DELETED (survivor).
+    But the production kernel passes 'float g[MAX_K];' (uninit) -> deleting zero-init is a
+    genuine, non-equivalent, kernel-breaking defect the host test STRUCTURALLY cannot catch.
+    => counted as a SURVIVOR (real coverage gap in the host test).

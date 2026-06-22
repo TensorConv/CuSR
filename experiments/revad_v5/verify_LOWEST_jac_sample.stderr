@@ -1,0 +1,2 @@
+[dump] pop=/home/weish/hao/CuSR/data/workload/synth/synth_inner-const-heavy_M4000_N1000_seed0.bin M=4000 N=1000 n_vars=2 K_max=13
+[dump] dumped 5 singular + 8 clean trees

@@ -1,0 +1,50 @@
+REVERSE-AD v5 — INDEPENDENT ADVERSARIAL VERIFICATION (synthesis subagent, 2026-06-22)
+GPU used for independent re-run: GPU 0 (A100, sm_80). All builds force-rebuilt from source.
+
+== STRUCTURAL INTEGRITY ==
+- ad_interp.cuh: `git diff HEAD` EMPTY (exit 0) -> reused, NOT modified. CONFIRMED.
+- batch_lm_revad.cu vs batch_lm_ad.cu structural diff = EXACTLY: (1) #include revad_interp.cuh,
+  (2) load-time max(n_nodes)<=MAX_NODES assert, (3) Jacobian launch ad_jacobian_kernel -> rev_jacobian_kernel.
+  build_jtj/solve/eval/residual/fp64-guard identical -> perf compare is apples-to-apples. CONFIRMED.
+- fp64 guard ON in revad driver (NO_FP64_GUARD not defined). CONFIRMED.
+- d_J contract in rev kernel: Jm=J+m*K_max*N; Jm[j*N+i]=dy_i/dc_j; j>=K not written; K==0 returns. CONFIRMED (source lines 146-171).
+- No hardcoded PASS: all 3 tests gate RESULT:PASS behind real fail counter; NaN in j<K slot forces FAIL. CONFIRMED.
+- jac test analytic oracle = hand-derived closed-form (not copied from AD) -> non-circular. CONFIRMED.
+
+== TESTS (my independent re-run vs both re-runners HIGHEST/LOWEST) ==
+HOST  : 41 PASS / 0 FAIL, exit 0   -- matches both re-runners exactly.
+JAC   : 5/5 PASS, exit 0; rev_vs_analytic {0, 1.989e-6, 9.471e-8, 0, 5.685e-7}, rev_vs_fwd all PASS -- identical.
+PARITY: 27429000 elems; both-nonfinite=9052; fwd-nan/rev-finite=17048; FAIL rel>=1e-3 = 0;
+        FAIL rev-worse = 0; max rel err = 5.144e-7 @ m=74 j=6 i=141 -- byte-identical to artifacts.
+SCIPY : agreed 300/300 (rev & fwd both match); disputed 68/68 rev matches scipy, 0/68 fwd, all val_finite=True.
+        VERDICT: reverse-AD MORE correct (forward over-NaNs). Reproduced exactly.
+
+== PERF — Jacobian-bucket per-launch (cats.fd_jacobian.ms / launches), median of 5 ==
+                  rev jac/launch (ms)   ad jac/launch (ms)   speedup (ad/rev)
+inner_const(K=13)
+  HIGHEST                1.1256              2.0490             1.820
+  LOWEST                 1.1491              2.0482             1.782
+  INDEP (mine)           1.1424              2.0407             1.786
+early_gen(low-K)
+  HIGHEST                1.3990              2.0757             1.484
+  LOWEST                 1.3955              2.0769             1.488
+  INDEP (mine)           1.3944              2.0731             1.487
+
+== PERF — loop median (ms), speedup ad/rev ==
+inner_const: rev ~160-168, ad ~207-214 -> 1.27-1.29x
+early_gen  : rev ~228-246, ad ~260-281 -> 1.11-1.17x
+
+== MUTATION COVERAGE (host suite) ==
+Caught (host FAIL): M1 cos-sign(1F), M2 div-swap(4F), M3 adj-init2.0(35F), M4 pushorder-swap(34F),
+  M5 mul-zero-dl(28F), M6 drop-rv-adj(11F), M7 exp-sign(3F), M8 tanh-sign(1F) = 8/10 killed.
+Survivors (HONESTLY disclosed) = 2, with DISTINCT mechanisms (verified, not lumped):
+  A delete-zeroinit: REAL non-equivalent kernel bug. Kernel passes uninit `float g[MAX_K]`; host test
+    masks it by pre-zeroing the out buffer (evidence file). Genuine host-test coverage gap; production keeps zero-init.
+  B accum (+= -> =): EQUIVALENT MUTANT on this corpus, NOT a coverage gap. With out_grad zero-init and
+    UNIQUE ci per tree, 0+adj == adj. Verified read-only: scanned inner-const .bin, 0/4000 trees have a
+    duplicated ci among CONST nodes (indep/survivorB_classification.txt). (Not attributable to pre-zeroing.)
+
+== CONCLUSION ==
+Every gate PASSES on both re-runners AND on my fresh independent build/run. Numbers reproduce
+byte-for-byte (tests) / within run-to-run noise (perf). No fabrication, no tampering, no faked green.
+revWorse=0. Reverse-AD is faster (high-K ~1.8x, low-K ~1.5x Jacobian/launch) AND scipy-validated more correct.

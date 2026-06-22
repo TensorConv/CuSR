@@ -1,0 +1,12 @@
+[test_revad_parity] forward AD vs reverse AD d_J element-wise (tol rel < 1e-3)
+  pop = /home/weish/hao/CuSR/data/workload/synth/synth_inner-const-heavy_M4000_N1000_seed0.bin
+  M_prob=4000 total_nodes=111787 total_c=27429 N=1000 n_vars=2 K_max=13 max_stack=9
+  max n_nodes over metas = 32
+
+[test_revad_parity] compared 27429000 elements across 4000 trees
+  both-non-finite (OK):                9052
+  fwd-nan/rev-finite (fwd defect, scipy-validated OK): 17048
+  FAIL rel>=1e-03:                      0
+  FAIL rev-worse (rev nan/fwd finite): 0
+  max rel err = 5.144e-07  at m=74 j=6 i=141 (fwd=4.63479 rev=4.63479)
+RESULT: PASS

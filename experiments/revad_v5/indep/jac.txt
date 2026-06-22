@@ -1,0 +1,9 @@
+[test_revad_jac] rev_jacobian_kernel vs analytic + vs forward AD (tol rel < 1e-3)
+  T0 c0*x0+c1             K=2  rev_vs_analytic=0.000e+00 PASS  rev_vs_fwd=0.000e+00 PASS
+  T1 c0*sin(c1*x0)        K=2  rev_vs_analytic=1.989e-06 PASS  rev_vs_fwd=8.106e-08 PASS
+  T2 exp(c0*x0)           K=1  rev_vs_analytic=9.471e-08 PASS  rev_vs_fwd=0.000e+00 PASS
+  T3 sum cj*xj (K9)       K=9  rev_vs_analytic=0.000e+00 PASS  rev_vs_fwd=0.000e+00 PASS
+  T4 sum sin(ck*x0) (K16) K=16  rev_vs_analytic=5.685e-07 PASS  rev_vs_fwd=0.000e+00 PASS
+
+[test_revad_jac] 5/5 trees PASS
+RESULT: PASS
