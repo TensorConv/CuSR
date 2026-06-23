@@ -17,7 +17,7 @@ from pathlib import Path
 OUT = Path(__file__).resolve().parent / "out"
 SRC = OUT / "sweep_e6.jsonl"
 
-VAR = ["fusedfd", "ad"]
+VAR = ["fusedfd", "ad", "revad"]
 PRE = ["early-gen", "late-gen-bloated", "inner-const-heavy"]
 MS = [1000, 4000, 16000, 64000, 256000]
 NS = [100, 1000, 10000]

@@ -475,7 +475,7 @@ def smoke(gpu_id: int):
     tripwire_pass = True
     configs = [("early-gen", 2000, 1000, 0, 50),
                ("inner-const-heavy", 2000, 1000, 0, 50)]
-    for variant in ("fusedfd", "ad"):
+    for variant in GPU_VARIANTS:   # include revad in the end-to-end smoke, not just fusedfd/ad
         for preset, M, N, seed, mi in configs:
             pop = get_pop(preset, M, N, seed)
             K_max = int(pop["K_max"])
@@ -656,7 +656,7 @@ def mark_operon_time_skips(operon_plan, probe_s, probe_M, probe_N, probe_nc,
 # time scales with total WORK (M*N), NOT trees, so a trees/s model is N-blind and
 # undercounts high-N configs ~10x. Anchored near the low-M calibration (points/s
 # rises with M as occupancy saturates, so this is a conservative upper-ish budget).
-_POINTS_PER_S = {"fusedfd": 8.0e6, "ad": 1.4e7}
+_POINTS_PER_S = {"fusedfd": 8.0e6, "ad": 1.4e7, "revad": 1.4e7}  # revad≈ad speed (cost estimate only)
 _SMOKE_SETUP_MS = 380.0   # observed setup_ms (CUDA init+alloc) per subprocess rep
 
 

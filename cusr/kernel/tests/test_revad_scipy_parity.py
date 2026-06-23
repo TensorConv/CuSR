@@ -1,9 +1,16 @@
 """test_revad_scipy_parity.py — reverse-AD Jacobian vs scipy fp64 oracle.
 
-GPU-gated regression for the reverse-AD kernel. Re-dumps the ACTUAL forward +
-reverse AD gradients on the canonical fixture pop (via the prebuilt
-_dump_jac_sample) and compares them, element by element, to an independent scipy
-fp64 oracle — reusing classify() from experiments/revad_v5/compare_scipy.py.
+Dumps the ACTUAL forward + reverse AD gradients on the canonical fixture pop (via
+the prebuilt _dump_jac_sample) and compares them, element by element, to an
+independent scipy fp64 oracle — reusing classify() from
+experiments/revad_v5/compare_scipy.py.
+
+SCOPE: _dump_jac_sample runs the shared __host__ __device__ AD interpreter
+(revad_interp.cuh) ON THE HOST, so this verifies the reverse-AD *algorithm*, not
+the GPU kernel wrapper (rev_jacobian_kernel launch/layout/registers). The GPU
+kernel is verified end-to-end at loss level by test_parity_gate.py
+(BATCH_LM=batch_lm_revad). Gated on nvidia-smi only because _dump_jac_sample is a
+CUDA binary.
 
 Asserted (the ROBUST, unambiguous properties):
   - On AGREED elements (both AD modes finite), reverse-AD matches scipy 100%.
@@ -65,3 +72,7 @@ def test_revad_jacobian_matches_scipy(tmp_path):
     # finite-safety: reverse must never be the one that NaNs where forward is finite
     assert res["disp_fwd_fin_rev_nan"] == 0, (
         f"reverse-AD introduced {res['disp_fwd_fin_rev_nan']} NaNs where forward was finite")
+    # regression guard: reverse must never be NaN at a well-defined point (value & scipy finite),
+    # i.e. revad must not regress to forward-AD-style NaN-contamination on singular trees
+    assert res["rev_nan_val_finite"] == 0, (
+        f"reverse-AD is NaN at {res['rev_nan_val_finite']} well-defined points")

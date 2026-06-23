@@ -71,3 +71,5 @@ python experiments/revad_v5/compare_scipy.py <新 dump 的样本.jsonl>
 **对论文/后续**：可讲"反向求导 = 前向的更快、排序等价替代"（别写"逐位相同"）。AD vs FD 的 loss 差真实但**对选择无害**（两 regime 排序都保住），且 AD 不比 FD 差——质量评测里不是减分项。闸门 90% 阈值按贴合有限差分 oracle 定，对 AD 偏严；正式评测改用**排序指标**（Spearman/top-x%）比"贴 scipy 多近"更切题。**范围**：结论基于 1 个低 K 真实 pop + 1 个高 K synth pop；正式评测扩到多 pop/seed。
 
 **复现**：`uv run python experiments/revad_v5/analyze_ad_vs_fd_ranking.py <pop> <c_ad> <c_fd> [c_revad]`。
+
+> ⚠️ 两处需修正（codex 审查抓的，详见 `tasks/CODEX_REVIEW_section1.md`）：(a) 上面的 jacobian 对拍测的是 **host** AD 算法，不是 GPU kernel 外壳（kernel 由 `test_parity_gate.py` 端到端验证）；(b) "scipy-FD 度量假象"是最合理解释、但本排序脚本只比了 AD vs FD，**未独立坐实**该假象。

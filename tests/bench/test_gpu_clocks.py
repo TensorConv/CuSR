@@ -43,8 +43,10 @@ def test_verify_locked_false_when_far(monkeypatch):
 
 def test_lock_sm_clock_builds_lgc_command(monkeypatch):
     calls = {}
-    monkeypatch.setattr(gc.subprocess, "run",
-                        lambda cmd, *a, **k: calls.setdefault("cmd", cmd) or _FakeProc())
+    def _capture(cmd, *a, **k):
+        calls["cmd"] = cmd
+        return _FakeProc()
+    monkeypatch.setattr(gc.subprocess, "run", _capture)
     gc.lock_sm_clock(3, 1410)
     cmd = [str(x) for x in calls["cmd"]]
     assert "nvidia-smi" in cmd and "-lgc" in cmd and "1410" in cmd and "3" in cmd
@@ -52,8 +54,10 @@ def test_lock_sm_clock_builds_lgc_command(monkeypatch):
 
 def test_unlock_sm_clock_builds_rgc_command(monkeypatch):
     calls = {}
-    monkeypatch.setattr(gc.subprocess, "run",
-                        lambda cmd, *a, **k: calls.setdefault("cmd", cmd) or _FakeProc())
+    def _capture(cmd, *a, **k):
+        calls["cmd"] = cmd
+        return _FakeProc()
+    monkeypatch.setattr(gc.subprocess, "run", _capture)
     gc.unlock_sm_clock(3)
     cmd = [str(x) for x in calls["cmd"]]
     assert "-rgc" in cmd and "3" in cmd

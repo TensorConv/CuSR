@@ -100,6 +100,7 @@ def classify(path):
         fwd_right_valnan=0,      # value nonfinite -> function undefined, fwd's NaN defensible
         disp_fwd_fin_rev_nan=0,  # disputed where FORWARD finite but reverse NaN (reverse worse — should be 0)
         disp_fwd_nan_rev_fin=0,  # disputed where forward NaN but reverse finite (reverse finite-safe; the v5 win)
+        rev_nan_val_finite=0,    # REGRESSION GUARD: rev NaN at a well-defined point (value & scipy finite) — should be 0
         examples=[],
     )
     for T in trees:
@@ -114,6 +115,8 @@ def classify(path):
             val_finite = np.isfinite(val)
             for k in range(K):
                 f, rv, g = fwd[k], rev[k], ref[k]
+                if val_finite and np.isfinite(g) and not np.isfinite(rv):
+                    r["rev_nan_val_finite"] += 1   # rev wrongly NaN where the function is well-defined
                 disputed = (np.isfinite(f) != np.isfinite(rv))
                 if disputed:
                     r["n_disputed"] += 1

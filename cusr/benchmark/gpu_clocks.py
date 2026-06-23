@@ -18,7 +18,11 @@ import subprocess
 
 
 def _run(args, timeout: int = 15):
-    return subprocess.run(args, capture_output=True, text=True, timeout=timeout)
+    r = subprocess.run(args, capture_output=True, text=True, timeout=timeout)
+    if r.returncode != 0:  # never silently ignore a failed nvidia-smi / sudo -lgc
+        raise RuntimeError(f"command failed (rc={r.returncode}): {' '.join(map(str, args))}\n"
+                           f"{r.stderr.strip()}")
+    return r
 
 
 def _parse_clock(stdout: str) -> int:
