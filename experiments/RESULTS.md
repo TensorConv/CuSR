@@ -1,12 +1,14 @@
-# 实验结果总账 (e1–e6) — 单一现状入口
+# 实验结果总账 (e1–e6) — pilot ledger
 
-> **这是"我们的实验都测出了什么 + 现在算数的是哪一份"的唯一汇总页。**
-> 本页只做 **台账 + 链接**:每条实验给 用途 / 状态 / 头条 / 权威文档。**数字以各实验的
-> FINDINGS 为准**(本页只复述头条,细节点链接,避免二次抄录漂移)。最后整理 2026-06-21。
+> **2026-06-22 reset:** e1-e6 全部降级为 **pilot / infrastructure / failure-mode discovery**。
+> 它们告诉我们哪些变量重要、哪些测法会误导、哪些 claim 有希望; 但不再作为 paper 的最终主证据。
+> 最终 paper 实验必须按 [`../docs/research/experiment_plan.md`](../docs/research/experiment_plan.md) 重做。
+>
+> 本页只保留旧实验台账和 pilot lessons。旧数字可用于规划, 不能直接搬进 paper headline。
 
-实验目录是一条主线的几代地层(EvoGP SR + GPU 批量常数优化 CO,冲 HPEC 系统向)。
-配套的**论文主张**在 [`../docs/research/contributions.md`](../docs/research/contributions.md)(三条贡献 + 先验红线);
-本页是**实测数据**侧,把主张落到证据上。
+实验目录是一条主线的几代地层(EvoGP SR + GPU 批量常数优化 CO)。新的 paper 主张见
+[`../docs/research/contributions.md`](../docs/research/contributions.md)。本页只回答:
+旧实验各自还能作为哪类 pilot lesson。
 
 ---
 
@@ -26,36 +28,46 @@ e3 → [`e3_admit_criterion/REPORT.md`](e3_admit_criterion/REPORT.md) ·
 e4 → [`e4_study_b/STUDY_B_FINDINGS.md`](e4_study_b/STUDY_B_FINDINGS.md) ·
 e5 → [`e5_strong_baseline/FINDINGS.md`](e5_strong_baseline/FINDINGS.md)(**SUPERSEDED**,留作 host-FD 教训 + PE-by-K) ·
 e6 → [`e6_kernel_sweep/out/FINDINGS_e6.md`](e6_kernel_sweep/out/FINDINGS_e6.md)(当前权威) ·
-e1 laptop → [`../docs/RESULTS_laptop.md`](../docs/RESULTS_laptop.md)(**laptop sanity,吞吐已被 e6 取代**) ·
-e2 桥 → [`../docs/RESULTS_kernel_bridge.md`](../docs/RESULTS_kernel_bridge.md)。
+e1 laptop → [`../docs/archive/RESULTS_laptop.md`](../docs/archive/RESULTS_laptop.md)(**laptop sanity,吞吐已被 e6 取代**) ·
+e2 桥 → [`../docs/archive/RESULTS_kernel_bridge.md`](../docs/archive/RESULTS_kernel_bridge.md)。
 速度优化路线图 → [`../docs/kernel/OPTIMIZATION_BACKLOG.md`](../docs/kernel/OPTIMIZATION_BACKLOG.md)。
 
 ---
 
-## 1. 已坐实(settled)
+## 1. Pilot lessons after reset
 
-- **kernel 是健全的系统件**:fp32 迭代 + fp64 验收保证(交付解 ≤ 初值),1060 cell **0 崩**(e4 C1)。
-- **大 M 等质量吞吐胜势真实且大**:late-gen-bloated **~25× vs 16 核(Operon 最诚实配置)**,~31.7× vs 128 核,均 [ISO](e6)。
-- **胜势由 N 主导,M 是设计旋钮**:N 100→10k 胜势从 ~12× 崩到 ~1.3×;优势随 M 增(1k→256k:3.1×→31.7×)。GPU 让大 M 变便宜,而大 M 是 SR driver 设的旋钮,非问题固有(e6)。
-- **AD 是要部署的变体**:中位 1.25× 快过 fused-FD(范围 0.84–1.97),且 Jacobian 精确(e6)。
-- **inner-const 只快不等质量 = 内在 fp32 秩亏天花板**,非测量假象、非 Jacobian 精度问题;damping / 更高精度 / 更多迭代**都救不回**(e5/e6 + [`../docs/MIXED_PRECISION_PROBE.md`](../docs/MIXED_PRECISION_PROBE.md))。**别再提 damping 当解法。**
-- **准入判据建成并验证**;AI-Feynman **几乎不含**"需非线性内部 CO"的 regime(e3)。
-- **集成 CO 提升 single-inner 符号恢复**,且与 CPU 质量持平(e4 C2)。
-- **Operon 并行扩展随 K 升**:inner-const(高 K)16→64 核 **2.4×**,而 early/late(低 K)持平至反扩展(median 128/16:late 0.93,early 1.10,inner 2.39)。⟹ e6 "Operon 过 16 核几乎不扩展"(总中位 1.06×)是被两个低 K preset 拉的,inner-const 是例外——这正是 e5 PE-by-K 机制,已被 e6 更大扫描证实。
+- **Workload definition must come first.** e3 suggests that many nominal inner-constant problems are actually
+  foldable/canonical/linear-scaling-sufficient, but this must be rerun as a broader benchmark audit.
+- **Fixed-tree apples-to-apples is mandatory.** e4 and GP-vs-GP comparisons are useful deployment pilots, but
+  backend performance must be measured on the same frozen trees, same `X/y`, same `c_init`.
+- **Synthetic scaling is useful but not enough.** e6 shows which axes matter (M, N, K, nodes, quality gate),
+  but it used `gen_synth`, not real dumps.
+- **Parameter choices are not frozen.** `M`, `N`, `K`, tree size/depth, and `max_iter` need sensitivity sweeps;
+  especially `N`, because it can change both throughput and CPU/GPU ranking.
+- **High-K inner-heavy is a boundary, not an automatic win.** Pilot results suggest rank/conditioning can make
+  speed-only results fail quality gates.
+- **Iteration budget is unresolved.** Pilot discussion suggests `max_iter=50` may be conservative; paper needs
+  `iter.bin`, Operon iteration stats, and budget/warm-start sweeps.
+- **Measurement discipline matters.** e5 measured the wrong kernel path; future experiments need structural
+  binary/profile guards.
 
-## 2. 未决 / 本批未证(open — 别写成结论)
+## 2. Open items that must be rerun
 
-- **multi-inner 未测**(e4 在 15 道 multi-inner 上统计功效近零:lenient discordant=0)。**开放前沿**,既不能写"CO 帮 multi-inner"也不能写"不帮"。
-- **"大 M 改善 SR 端到端"未证**:e6 只测 CO kernel 吞吐 + 单次收敛,这是 demonstrator 级主张(e2/e4),e6 不证。
-- **ncu roofline 待 sudo 锁频**:决定 compute-vs-memory bound 与 reverse-AD 的可达天花板(OPTIMIZATION_BACKLOG §0.2)。
-- **reverse-mode AD 未实现**:已被 PROFILE 验证为 **#1 速度杠杆**(Jacobian 占 LM loop 60–66%),尚未动手。
-- **DRAFT,时钟未锁**:绝对吞吐/加速比 run-to-run 抖动,信形状不信第三位有效数字。锁频后重测待 sudo。
+- Benchmark audit table over standard suites.
+- Blind baseline validation for constructed admitted/control corpus.
+- Real-dump fixed-tree CO replay.
+- Locked synthetic scaling rerun.
+- Parameter sensitivity table/figure for `M`, `N`, `K`/tree size, and iteration budget.
+- Equal-wall-clock EvoGP deployment experiment.
+- Iteration diagnostics and warm-start/budget sweep.
 
-## 3. 结果 → 三条贡献的映射
+## 3. Pilot assets → new contribution plan
 
-- **贡献一(系统 kernel)** ← e1(harness/变体阶梯)+ e2(桥 parity)+ e6(A100 吞吐)+ e4 C1(健全性)。
-- **贡献二(准入判据 = 工具)** ← e3。
-- **贡献三(用判据量出的实证:Feynman 失效分析 + 对照验证的解锁)** ← e3(Feynman 34→2)+ e4 C2(single-inner 解锁、对照不解锁)。
+- **Contribution 1: workload/benchmark framework** ← e3 as prototype only. Needs benchmark audit + blind baselines.
+- **Contribution 2: GPU SR-CO primitive** ← e2/kernel/e6 as infrastructure and pilot. Needs real-dump replay +
+  locked synthetic scaling.
+- **Contribution 3: empirical characterization/deployment** ← e4/e6 as pilot. Needs equal-wall-clock loop +
+  iteration/warm-start diagnostics.
 
 详见 [`../docs/research/contributions.md`](../docs/research/contributions.md) 的逐条诚实边界。
 
@@ -63,7 +75,8 @@ e2 桥 → [`../docs/RESULTS_kernel_bridge.md`](../docs/RESULTS_kernel_bridge.md
 
 ## 4. 全局口径与红线(读任何头条前先看)
 
-- **e6 计时 setup-excluded 两侧对齐**:GPU `loop_ms`(代内 per-gen CO)vs Operon `wall_core`;都不计 CUDA init / .so load / marshaling。Operon 给 200 LM 迭代 vs kernel 50。等质量门 = GPU 末 loss ≤ Operon × 1.05,**fp64 重算**、seed0、单侧(只证"不显著更差")。
-- **e4 是固定代数协议**:**不出任何速度/硬件主张**,信号是**恢复率**(solved + symbolic),不是 R²(single-inner 上 R² 已饱和)。
-- **"first" 措辞守 `contributions.md` 红线**:LM 非新算法(系统贡献);诚实性轴归 Kronberger 2022;GPU 异构树 CO 的相邻先验是 Kozax(de Vries 2025,一阶 JAX)。
-- **laptop ≠ A100**:`RESULTS_laptop.md` 的 2.4–29× 是 fp32-vs-fp64 的笔记本 sanity,**不是论文数字**;论文吞吐口径以 e6(A100、同质 apples-to-apples、等质量门)为准。
+- **Do not cite old headline numbers as final.** Use them only to choose rerun points.
+- **Do not inherit old contribution order.** The reset order is workload/benchmark -> system primitive ->
+  empirical characterization/deployment.
+- **Do not treat e6 as real workload evidence.** It is calibrated synthetic pilot.
+- **Do not treat e4 as hardware performance evidence.** It is deployment pilot.

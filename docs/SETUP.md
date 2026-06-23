@@ -54,7 +54,7 @@ uv run python cusr/benchmark/workload/gen_synth.py --preset inner-const-heavy --
 ```
 
 The benchmark backends `scipy`, `torch`, and `kernel` need nothing beyond the
-minimal install. See `docs/benchmark_README.md` for the runner; the runner lives
+minimal install. See `docs/archive/benchmark_README.md` for the runner; the runner lives
 in `cusr/benchmark/`.
 
 ## Data: what ships vs. what you generate
@@ -104,4 +104,4 @@ BATCH_LM=cusr/kernel/batch_lm_devjac uv run python cusr/kernel/tests/test_fixtur
 ```
 
 For the throughput numbers that go in the paper and the full rerun checklist, see
-`docs/kernel/RERUN_A100.md`.
+`docs/archive/kernel/RERUN_A100.md`.

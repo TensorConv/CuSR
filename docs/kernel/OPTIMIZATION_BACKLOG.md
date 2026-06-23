@@ -128,8 +128,16 @@ saturation is ~0.1–0.2% of peak → **interpreter/instruction-bound, NOT FLOP-
    active set to restore occupancy. **Gated on §0.3** (only worth it if convergence is front-loaded).
 
 ### Cheap add-ons (low risk, opportunistic)
-9. **N → multiple of 32** — no partial-warp tail in lane-stride loops + 128B row alignment of
-   d_J/d_ym. Visible only at small N (~25% tail waste at N=100; negligible ≥1000).
+9. **N → multiple of 32** — **[refuted/measured 2026-06-22]** the "~25% tail waste" is NOT
+   recoverable for a fixed problem. Per-launch GPU time tracks `ceil(N/32)` warp-iterations: a
+   partial tail iteration costs full wall-time (masked lanes still issue) in this latency/
+   instruction-bound kernel, so **rounding N *up* to a multiple of 32 is a pure no-op** — measured
+   AD eval/launch N=100→128 = 0.0976→0.0974 ms (0.0%), jac −5.5% (slightly worse: 28 more real
+   points). The only "win" is rounding *down* (100→96 = +20%) which just drops 4% of the data
+   (smaller problem). 128B row alignment of d_J/d_ym is moot (roofline = <1% HBM peak). N is a
+   dataset property, not a free knob. ⇒ **dead as a kernel opt.** Where the size IS a free choice —
+   the subsampled/stochastic Jacobian subset (#5) — pick a multiple of 32 for free warp efficiency.
+   (artifacts: data/workload/synth/synth_early-gen_M16000_N{96,100,128,992,1000,1024}_seed0.bin)
 10. **Fuse residual+loss kernels** — one fewer launch/iter.
 
 ---

@@ -51,7 +51,7 @@
   = "fp32 追平 fp64 金标准的比例", 是有意义的诚实数字
 * **fp32 是 kernel 的既定目标不是妥协** (EvoGP/数据本就 fp32, 无 fp64 信号可恢复, 下游只需排序)
 * 推论: **tier-A (0.5%) 是 fp32 的数值天花板** — fp32 在最优档分辨不足, 不该当唯一主标尺;
-  详见 `008/RERUN_A100.md §0`
+  详见 `archive/kernel/RERUN_A100.md §0`
 
 ### 3c. 选择保真度 (CO 服务"选择"的 use-relevant 指标)
 
@@ -61,7 +61,7 @@
   - **top-K% 重合** = oracle 选出 loss 最低 K% 棵 vs 后端选出的交集比 (进化选择真正在意的粒度)
 * 读法: top-25/50% 高 = 粗筛 (淘汰差的一半/留好的四分之一) 保真; top-10% 低多因 fp32 在最优档
   洗牌, 但 memetic 每代重评估, 不需单代精排最优档
-* 合成 preset 另报**噪声地板** (已实现, 见 `NOISE_FLOOR.md`): `gen_synth` 落 `c_true` sidecar,
+* 合成 preset 另报**噪声地板** (已实现, 见 `archive/NOISE_FLOOR.md`): `gen_synth` 落 `c_true` sidecar,
   harness 算 `loss_pop(pop, c_true)` = 注入噪声能量 = 统计下界 (走同一条 fp64 loss 路径). 报
   oracle / 各后端"够到地板"的比例 —— 是相对 tier 的**绝对兜底** (回答"oracle 自己是否最优").
   读法: 主推**不变量** oracle≈kernel (差 ≤2.3pp, init-无关); 绝对档位随 c_init 散布而变 (±30%),
@@ -85,7 +85,7 @@
 * 重复 ≥3 次取中位数 (冒烟可 1 次, 标注 smoke); 跑前 `nvidia-smi` 确认 GPU 无并发任务
 * CPU 后端给满核, 进程/线程数披露
 * 结果 json 记录: hostname, GPU 型号, git sha, 各 binary 路径 + mtime
-* 本机 (5070 Ti laptop) 数字仅 sanity; 论文数字按 `008/RERUN_A100.md` 在 A100 重测
+* 本机 (5070 Ti laptop) 数字仅 sanity; 论文数字按 `archive/kernel/RERUN_A100.md` 在 A100 重测
 
 ## 6. 输出指标 (面板, 每次全算; 写作选 lead 见 §0)
 

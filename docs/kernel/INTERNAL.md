@@ -43,7 +43,7 @@ scipy 一棵一棵串行跑 LM → 1000 棵需要约 15 分钟 (16 CPU worker �
 
 > ⚠️ **2026-06-11 kernel 质量修复** (相对 FD 步长 + xtol=1e-6, 见"已知限制"): 上表是**修复前** A100 的数.
 > 修复后在 RTX 5070 Ti laptop 上的 parity: loss-down 94.0%, 1.05× **92.4%** (修复前 89.9%), 10× 99.8% —
-> 见 [`data/verify_report_5070ti_w0.md`](data/verify_report_5070ti_w0.md). **A100 重测清单见 [`RERUN_A100.md`](RERUN_A100.md)**.
+> 见 [`verify_report_5070ti_w0.md`](../archive/kernel/verify_report_5070ti_w0.md). **A100 重测清单见 [`RERUN_A100.md`](../archive/kernel/RERUN_A100.md)**.
 
 正确性诊断 (跟 scipy 同种群比较):
 

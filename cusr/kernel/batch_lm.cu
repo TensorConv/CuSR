@@ -1,3 +1,12 @@
+// ⚠️⚠️ DEPRECATED / 过时 (2026-06-21) — 禁止再用于任何吞吐量/速度基准测试或对比。⚠️⚠️
+//   本文件 = host-FD 基线: 每个有限差分步都做一次 H<->D 往返 (串行瓶颈, ~1.3–2k trees/s 平,
+//   不随规模上升)。已被取代:
+//     - batch_lm_fusedfd.cu  片上融合 FD Jacobian (tier0: 36k@64k / 50k@256k trees/s)
+//     - batch_lm_ad.cu       前向 AD 精确 Jacobian
+//   历史教训: in-process libcusr_co_fd.so 由 co_lib.cu 共享本文件的 lm_core.cuh 编出 = 这条慢
+//   路径; e5 扫描误把它当部署 kernel 测了 (速度结论作废)。任何速度对比一律用 fusedfd / ad。
+//   本文件仅作 parity 对拍 / 数值参考保留, 不再是 benchmark 目标。
+//
 // batch_lm.cu — GPU batched Levenberg-Marquardt for SR populations.
 //
 // 读 pop.bin (一批 GP 候选表达式树 + 各自 c_init + 共享 (xs, ym)),
