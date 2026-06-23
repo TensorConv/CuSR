@@ -30,8 +30,9 @@ is only **2–5%**. Consequences (these SUPERSEDE §1–§3 below):
 - **The real lever is the Jacobian kernel (60–66% of the loop) → reverse-mode AD (§3.2) is PROMOTED to
   #1**, esp. high-K inner-const (fd_jacobian 1870 of 3111 ms @ M=64k). eval (~15%) + build_jtj (~7–17%)
   are secondary. (Lesson in action: measured, and it refuted my own prior — that's why we measure.)
-- Still pending: §0.2 ncou roofline (compute vs memory bound — likely instruction/SFU-bound per the
-  interpreter). Profiled at N=1000 only; N=100 (smaller kernels) may show higher host% but is the
+- Still pending: §0.2 ncu profiling (SOL + warp-stall; instruction roofline as the figure — the
+  interpreter is issue/SFU-bound, NOT FLOP/BW-bound, so a classic FLOP roofline diagnoses nothing).
+  Profiled at N=1000 only; N=100 (smaller kernels) may show higher host% but is the
   peak-throughput regime anyway.
 
 ---
@@ -59,9 +60,17 @@ end-to-end, needs the demonstrator [deploy].
    `gpu_sum_ms`, per-category: fd_jacobian/build_jtj/solve/eval/residual/loss/memcpy_H2D/D2H) at
    **M=4000 and M=64000, both fusedfd & ad**. Decides: how much is host round-trip vs GPU compute
    at realistic M (→ #1 payoff), and which kernel dominates at large M per variant.
-2. **ncu roofline** [gated: sudo/clock-lock]. Compute-bound vs memory-bound for the hot kernels
-   (Jacobian, build_jtj, eval). Decides: whether memory-layout / double-buffer are relevant at all
-   (prior says NO — see §4), and the realizable compute ceiling.
+2. **ncu profiling — SOL + warp-stall reasons (NOT a classic FLOP roofline)** [gated: sudo/clock-lock].
+   The kernel runs at <1% of BOTH fp32-FLOP and HBM-BW peak (measured 0.18–0.53% FLOP / 0.33–0.96% BW
+   at M=16k–256k), so a classic FLOP roofline only shows a dot far under both roofs and diagnoses
+   nothing — it's issue/latency-bound, not compute- or bandwidth-bound. PRIMARY = ncu Speed-of-Light +
+   warp stall-reason breakdown on the hot kernels (Jacobian, build_jtj, eval): where the cycles go
+   (expect MIO/SFU throttle from transcendentals + execution-dependency from the stack-machine chain +
+   branch divergence). FIGURE = instruction roofline (GIPS vs instruction intensity; Ding & Williams
+   2019), the roofline variant appropriate for an issue-bound kernel. Keep the classic FLOP roofline
+   only as a one-line counter-evidence ("not bandwidth- or compute-bound" → justifies skipping the §4
+   memory-layout work). Decides: whether memory-layout / double-buffer matter at all (prior says NO —
+   see §4) and the realizable issue-rate ceiling.
 3. **per-iteration active-tree histogram** (convergence front-loading) — decides compaction payoff
    (#5). Can be added as an additive diagnostic to the LM loop.
 
@@ -86,7 +95,7 @@ saturation is ~0.1–0.2% of peak → **interpreter/instruction-bound, NOT FLOP-
   Measurable via §0.1. (On GPU you'd instead run large M near the ~64k operating point — see Framing.)
 - **Large-M compute ceiling:** the kernel is at ~0.1% of FP32 FLOP-peak, but that's misleading — it's
   interpreter-bound, not FLOP-bound. Realizable headroom ≈ **few× to ~10×** via algorithm (§3.1, §3.4),
-  exact bound **gated on §0.2 (roofline)**. Do NOT promise raw FLOP-peak ratios.
+  exact bound **gated on §0.2 (ncu profiling)**. Do NOT promise raw FLOP-peak ratios.
 - **End-to-end (deploy):** warm-start (§3.2) can cut iterations **5–10×** in the real loop.
 
 ---
@@ -134,7 +143,7 @@ saturation is ~0.1–0.2% of peak → **interpreter/instruction-bound, NOT FLOP-
    instruction-bound kernel, so **rounding N *up* to a multiple of 32 is a pure no-op** — measured
    AD eval/launch N=100→128 = 0.0976→0.0974 ms (0.0%), jac −5.5% (slightly worse: 28 more real
    points). The only "win" is rounding *down* (100→96 = +20%) which just drops 4% of the data
-   (smaller problem). 128B row alignment of d_J/d_ym is moot (roofline = <1% HBM peak). N is a
+   (smaller problem). 128B row alignment of d_J/d_ym is moot (measured <1% HBM peak). N is a
    dataset property, not a free knob. ⇒ **dead as a kernel opt.** Where the size IS a free choice —
    the subsampled/stochastic Jacobian subset (#5) — pick a multiple of 32 for free warp efficiency.
    (artifacts: data/workload/synth/synth_early-gen_M16000_N{96,100,128,992,1000,1024}_seed0.bin)

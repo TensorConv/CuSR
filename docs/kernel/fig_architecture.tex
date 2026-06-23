@@ -15,8 +15,10 @@
 %   (lambda, delta, loss, status) crosses the H<->D boundary every iteration.
 %   The narrow, true "single launch" claim is per-STAGE: one launch covers all M
 %   heterogeneous trees (warp-per-tree), instead of M per-tree launches. Drawing
-%   the whole solve as one kernel would contradict the roofline finding (sec 5E:
-%   bound by host-orchestration + per-iter H<->D copies, not compute/bandwidth).
+%   the whole solve as one kernel would misrepresent it: the LM loop is multiple per-iter
+%   kernel launches + a host-side accept/reject outer loop. The H<->D boundary is structural
+%   but only ~2-5% of runtime; the loop is GPU-bound (Jacobian ~60-66%, issue/instruction-
+%   bound), NOT host-orchestration-bound (refuted — see OPTIMIZATION_BACKLOG.md MEASURED UPDATE).
 %
 % Compile (no TeX locally yet): `tectonic fig_architecture.tex` (single binary,
 %   no root) or paste into Overleaf. Cross-references Alg.1/2/3 of lm_algorithm.tex.
@@ -133,7 +135,7 @@
 \draw[fl] (k4.east) .. controls ($(k4.east)+(1.5,0)$) and ($(k1.east)+(1.5,0)$) .. (k1.east);
 \node[tag, text=black!60] at ($(k4.east)+(1.55,1.1)$) {$\circlearrowright t$};
 
-% H<->D boundary (the roofline overhead hook)
+% H<->D boundary (per-iter host round-trip; ~2-5% of runtime, not the bottleneck)
 \node[lbl, rotate=90, anchor=south] at ($(k1.west)+(-0.35,-2.0)$)
   {per-iter H$\leftrightarrow$D: \{$\lambda,\mathbf{c}$\}$\to$, $\leftarrow$\{$\boldsymbol\delta$,loss,status\}};
 \draw[dashed, black!45] ($(k1.north west)+(-0.7,0.2)$) -- ($(k4.south west)+(-0.7,-0.2)$);

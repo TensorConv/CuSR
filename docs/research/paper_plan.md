@@ -15,7 +15,7 @@
 | | 贡献 | 是什么 | 重点 |
 |---|---|---|---|
 | **C1** | workload 和 benchmark | 说清楚"哪种 SR 题真的需要在函数内部拟合常数",并证明现有题库里这种题很少 | 判据 + 自己构造的题集 + 题库审计 |
-| **C2** | GPU kernel(主角) | 一个 CUDA kernel,一次给一大批结构不同的树做二阶 LM 常数拟合 | reverse-AD + fp64 兜底检查 + roofline + 同条件对比 |
+| **C2** | GPU kernel(主角) | 一个 CUDA kernel,一次给一大批结构不同的树做二阶 LM 常数拟合 | reverse-AD + fp64 兜底检查 + 性能剖析(ncu SOL+warp-stall 为主, instruction roofline 作图) + 同条件对比 |
 | **C3** | 装进 EvoGP 里用 | 把 kernel 接进 GPU 上跑的 GP 引擎,讲怎么用得省 | 进程内调用免来回搬数据 + warm-start 少迭代几次 + 同样时间下比 |
 
 每个贡献的详细写法见 `contributions.md`。
@@ -29,7 +29,7 @@
 | 开头 + 相关工作 | ~1.25 |
 | C1(判据 + **一张**审计表 + 题集) | ~0.75 |
 | C2 设计(异构批处理 + reverse-AD + fp64 兜底检查) | ~1.5 |
-| C2 评测(roofline + 规模扫描 M/N/K + 同条件对比,带图) | ~1.75 |
+| C2 评测(性能剖析: ncu SOL+stall 为主、instruction roofline 作图 + 规模扫描 M/N/K + 同条件对比,带图) | ~1.75 |
 | C3(进程内调用 + warm-start,**一个**硬数) | ~0.5 |
 | 结论 | ~0.25 |
 | **合计** | **≈6(紧,但放得下)** |
