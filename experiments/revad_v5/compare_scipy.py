@@ -83,23 +83,25 @@ def close(a, b, rtol=2e-2, atol=1e-4):
     if np.isfinite(a) != np.isfinite(b): return False
     return abs(a - b) <= atol + rtol * abs(b)
 
-def main():
-    path = sys.argv[1] if len(sys.argv) > 1 else \
-        "/home/weish/hao/CuSR/experiments/revad_v5/jac_sample.jsonl"
+def classify(path):
+    """Compare dumped forward/reverse-AD gradients against the scipy fp64 oracle.
+
+    Pure: reads the jsonl sample, returns a dict of counters (no printing) so
+    tests can assert on it. Keys: n_trees, agreed_n/agreed_rev_ok/agreed_fwd_ok,
+    n_disputed, rev_matches_scipy, fwd_matches_scipy, neither,
+    rev_right_valfinite, fwd_right_valnan, examples.
+    """
     trees = [json.loads(line) for line in open(path) if line.strip()]
-    print(f"loaded {len(trees)} sample trees from {path}\n")
-
-    # counters over DISPUTED elements (fwd/rev differ in finiteness)
-    rev_right_valfinite = 0   # value finite, scipy finite, rev matches scipy, fwd nonfinite -> reverse correct
-    fwd_right_valnan = 0      # value nonfinite -> function undefined, fwd's NaN defensible
-    rev_matches_scipy = 0     # disputed & rev~scipy
-    fwd_matches_scipy = 0     # disputed & fwd~scipy
-    neither = 0
-    n_disputed = 0
-    # sanity on agreed (both finite) elements
-    agreed_rev_ok = agreed_fwd_ok = agreed_n = 0
-    examples = []
-
+    r = dict(
+        n_trees=len(trees), path=str(path),
+        agreed_n=0, agreed_rev_ok=0, agreed_fwd_ok=0,
+        n_disputed=0, rev_matches_scipy=0, fwd_matches_scipy=0, neither=0,
+        rev_right_valfinite=0,   # value finite, scipy finite, rev=scipy, fwd nonfinite -> reverse correct
+        fwd_right_valnan=0,      # value nonfinite -> function undefined, fwd's NaN defensible
+        disp_fwd_fin_rev_nan=0,  # disputed where FORWARD finite but reverse NaN (reverse worse — should be 0)
+        disp_fwd_nan_rev_fin=0,  # disputed where forward NaN but reverse finite (reverse finite-safe; the v5 win)
+        examples=[],
+    )
     for T in trees:
         nt, nv, ci, c = T["nt"], T["nv"], T["ci"], np.array(T["c"], dtype=np.float64)
         K = T["K"]
@@ -111,47 +113,60 @@ def main():
             ref = scipy_grad(nt, nv, ci, x, c)
             val_finite = np.isfinite(val)
             for k in range(K):
-                f, r, g = fwd[k], rev[k], ref[k]
-                disputed = (np.isfinite(f) != np.isfinite(r))
+                f, rv, g = fwd[k], rev[k], ref[k]
+                disputed = (np.isfinite(f) != np.isfinite(rv))
                 if disputed:
-                    n_disputed += 1
-                    rok, fok = close(r, g), close(f, g)
-                    if rok: rev_matches_scipy += 1
-                    if fok: fwd_matches_scipy += 1
-                    if not rok and not fok: neither += 1
+                    r["n_disputed"] += 1
+                    if np.isfinite(f) and not np.isfinite(rv):
+                        r["disp_fwd_fin_rev_nan"] += 1
+                    else:
+                        r["disp_fwd_nan_rev_fin"] += 1
+                    rok, fok = close(rv, g), close(f, g)
+                    if rok: r["rev_matches_scipy"] += 1
+                    if fok: r["fwd_matches_scipy"] += 1
+                    if not rok and not fok: r["neither"] += 1
                     if val_finite and np.isfinite(g) and rok and not np.isfinite(f):
-                        rev_right_valfinite += 1
+                        r["rev_right_valfinite"] += 1
                     if not val_finite:
-                        fwd_right_valnan += 1
-                    if len(examples) < 14:
-                        examples.append((T["m"], P["i"], k, val, f, r, g, val_finite))
+                        r["fwd_right_valnan"] += 1
+                    if len(r["examples"]) < 14:
+                        r["examples"].append((T["m"], P["i"], k, val, f, rv, g, val_finite))
                 else:
-                    if np.isfinite(f) and np.isfinite(r):
-                        agreed_n += 1
-                        if close(r, g): agreed_rev_ok += 1
-                        if close(f, g): agreed_fwd_ok += 1
+                    if np.isfinite(f) and np.isfinite(rv):
+                        r["agreed_n"] += 1
+                        if close(rv, g): r["agreed_rev_ok"] += 1
+                        if close(f, g): r["agreed_fwd_ok"] += 1
+    return r
+
+
+def main():
+    path = sys.argv[1] if len(sys.argv) > 1 else \
+        "/home/weish/hao/CuSR/experiments/revad_v5/jac_sample.jsonl"
+    r = classify(path)
+    print(f"loaded {r['n_trees']} sample trees from {path}\n")
 
     print("=== AGREED elements (fwd & rev both finite) — sanity vs scipy ===")
-    print(f"  n={agreed_n}  rev~scipy={agreed_rev_ok}  fwd~scipy={agreed_fwd_ok}\n")
+    print(f"  n={r['agreed_n']}  rev~scipy={r['agreed_rev_ok']}  fwd~scipy={r['agreed_fwd_ok']}\n")
 
     print("=== DISPUTED elements (fwd vs rev differ in finiteness) ===")
-    print(f"  n_disputed                 = {n_disputed}")
-    print(f"  rev matches scipy          = {rev_matches_scipy}")
-    print(f"  fwd matches scipy          = {fwd_matches_scipy}")
-    print(f"  neither matches scipy      = {neither}")
-    print(f"  -> value FINITE & rev=scipy & fwd nonfinite (REVERSE correct) = {rev_right_valfinite}")
-    print(f"  -> value NON-finite (function undefined; fwd NaN defensible)  = {fwd_right_valnan}\n")
+    print(f"  n_disputed                 = {r['n_disputed']}")
+    print(f"  rev matches scipy          = {r['rev_matches_scipy']}")
+    print(f"  fwd matches scipy          = {r['fwd_matches_scipy']}")
+    print(f"  neither matches scipy      = {r['neither']}")
+    print(f"  -> value FINITE & rev=scipy & fwd nonfinite (REVERSE correct) = {r['rev_right_valfinite']}")
+    print(f"  -> value NON-finite (function undefined; fwd NaN defensible)  = {r['fwd_right_valnan']}\n")
 
     print("=== sample disputed elements  [m,i,k] value  fwd  rev  scipy  (val_finite) ===")
-    for (m, i, k, val, f, r, g, vf) in examples:
-        print(f"  m={m:<5} i={i:<4} k={k}  val={val:<12.5g} fwd={f:<10.5g} rev={r:<12.5g} scipy={g:<12.5g} valfin={vf}")
+    for (m, i, k, val, f, rv, g, vf) in r["examples"]:
+        print(f"  m={m:<5} i={i:<4} k={k}  val={val:<12.5g} fwd={f:<10.5g} rev={rv:<12.5g} scipy={g:<12.5g} valfin={vf}")
 
     print()
-    if n_disputed == 0:
+    nd = r["n_disputed"]
+    if nd == 0:
         print("VERDICT: no disputed elements in sample.")
-    elif rev_matches_scipy >= fwd_matches_scipy and rev_right_valfinite > 0 and fwd_right_valnan == 0:
+    elif r["rev_matches_scipy"] >= r["fwd_matches_scipy"] and r["rev_right_valfinite"] > 0 and r["fwd_right_valnan"] == 0:
         print("VERDICT: REVERSE-AD matches the scipy fp64 oracle; forward-AD over-NaNs (NaN-contamination). Reverse is MORE correct.")
-    elif fwd_right_valnan == n_disputed:
+    elif r["fwd_right_valnan"] == nd:
         print("VERDICT: all disputes are at NON-finite tree values (function undefined); forward's NaN is defensible -> reverse should replicate (poison fix).")
     else:
         print("VERDICT: MIXED — see breakdown above; decide per-category.")

@@ -98,10 +98,19 @@ def test_throughput_nonpositive_loop_ms_is_nan():
 
 # ====================================================== 3. VARIANT / BINARY PATH
 def test_assert_gpu_binary_accepts_allowlisted_prof_binaries(tmp_path):
-    for name in ("batch_lm_fusedfd_prof", "batch_lm_ad_prof"):
+    for name in ("batch_lm_fusedfd_prof", "batch_lm_ad_prof", "batch_lm_revad_prof"):
         p = tmp_path / name
         p.write_text("x")
         e6.assert_gpu_binary(str(p))  # must not raise
+
+
+def test_revad_variant_registered():
+    """reverse-AD (revad) must be a first-class sweep variant: registered in
+    VARIANT_BINARY -> batch_lm_revad_prof and present in GPU_VARIANTS. Without
+    this the sweep silently measures only forward-AD — the e5 variant trap."""
+    assert "revad" in e6.VARIANT_BINARY
+    assert os.path.basename(str(e6.VARIANT_BINARY["revad"])) == "batch_lm_revad_prof"
+    assert "revad" in e6.GPU_VARIANTS
 
 
 def test_assert_gpu_binary_rejects_host_fd_so(tmp_path):

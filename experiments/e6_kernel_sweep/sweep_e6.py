@@ -41,11 +41,12 @@ import numpy as np
 # CONSTANTS / SPEC AXES
 # ---------------------------------------------------------------------------
 KERNEL_DIR = Path(__file__).resolve().parents[2] / "cusr" / "kernel"
-ALLOWED_BINARIES = {"batch_lm_fusedfd_prof", "batch_lm_ad_prof"}
+ALLOWED_BINARIES = {"batch_lm_fusedfd_prof", "batch_lm_ad_prof", "batch_lm_revad_prof"}
 FORBIDDEN_SUBSTRINGS = ("libcusr_co", "co_fd", "_fd.so")
 VARIANT_BINARY = {
     "fusedfd": KERNEL_DIR / "batch_lm_fusedfd_prof",
     "ad": KERNEL_DIR / "batch_lm_ad_prof",
+    "revad": KERNEL_DIR / "batch_lm_revad_prof",   # reverse-mode AD (v5), drop-in
 }
 
 # THE anti-host-FD guard is STRUCTURAL (assert_device_jacobian below) + the binary
@@ -559,7 +560,7 @@ def smoke(gpu_id: int):
 #   operon: key = (operon, f"N{N}",      preset, M, knob=ncores)     [seed 0 only]
 # This keeps every (variant,preset,M,N) / (preset,M,N,ncores) cell UNIQUE so
 # load_done dedup + save_losses sidecars never collide.
-GPU_VARIANTS = ["fusedfd", "ad"]
+GPU_VARIANTS = ["fusedfd", "ad", "revad"]
 
 
 def _ref_corpus(preset):
