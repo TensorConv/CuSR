@@ -92,6 +92,14 @@ consolidated `out/ncu_summary.md`. Driver+parser `ncu_profile.py` (unit-tested 7
 | ad | early-gen | 35 | 73 | 5.4 | 35 | 7.2 | 0 |
 | revad | early-gen | 52 | 74 | 8.5 | 52 | 10.7 | 0 |
 
+**Instruction roofline (the task-04 FIGURE; `figs/fig_instruction_roofline.png`,
+`out/ncu_instruction_roofline.json`):** clock-independent intensity = warp-inst / DRAM
+byte, GIPS = warp-inst/s. The 6 working-point Jacobian kernels sit at **146–333 GIPS =
+24–55% of the A100 issue roof (≈609 GIPS)** at intensity **0.53–5.2 inst/byte** — i.e. up
+near the *instruction-issue* ceiling while at **<1% of the FLOP/HBM roofs**. That is the
+whole point: on an instruction roofline the kernel is issue-bound; on a classic FLOP
+roofline it is an uninformative dot far below both roofs.
+
 **Conclusion (the §4 counter-evidence):** at the working point the Jacobian kernels run
 at **FMA-pipe ≤11% and fp64 = 0%** (→ NOT FLOP-bound) and **DRAM ≤23%, mostly <10%**
 (→ NOT DRAM-bandwidth-bound); the high *composite* memory SOL (41–77%) is on-chip
@@ -155,15 +163,32 @@ for a one-shot call. Both verified from the records:
 | vs 1 core | 19.3× | 120.3× | **7.96×** | **50.4×** |
 | vs 128 cores | 3.6× | 28.2× | **1.17×** | **14.9×** |
 
-(ad vs 128c in-loop 4.2× [0.7–23.4]; fusedfd vs 128c 2.1× [0.3–28.9].) **The max cells are
-NOT the largest M:** the 120.3× (vs 1c) is at **early-gen M=16000 N=1000**; the 28.2× (vs
-128c) is at **late-gen-bloated M=64000 N=100**. Medians are over all iso cells (incl. small
-M where GPU is less dominant). **Honest reading:** in a GP loop (CUDA context amortized),
-revad's per-generation CO is ~3.6× a 128-core EPYC at median and up to ~28× on the best
-cell; end-to-end per call it only ~matches 128 cores at median (1.17×) and wins big (15×)
-only on specific cells. **These multipliers are ORDER-OF-MAGNITUDE / approximate**, not
-precise — the reused Operon timings carry run-to-run variance (sentinels: median 8.7%, one
-config 43%; see Phase 2).
+⚠️ **CRITICAL caveat — the max is in the NOISY Operon regime, do NOT lead with 28×.**
+Broken out by preset against the sentinel reliability (Phase 2):
+
+| regime | sentinel drift | revad vs 128c MAX (in-loop) | n_iso |
+|---|---|---|---|
+| inner-const-heavy | 1–8.7% (clean) | **3.5×** (M=1000 N=100) | 1 |
+| early-gen | 7–18% (note) | **9.6×** (M=16000 N=1000) | 4 |
+| late-gen-bloated | up to **46%** (NOISY) | 28.2× (M=64000 N=100) | 14 |
+
+The headline-grabbing **28.2× sits entirely in late-gen-bloated — exactly the regime where
+the reused Operon timing is least reliable** (that very config swung 46% then 9.8% across
+the two sentinel runs). So 28× is really ~17–40×; **do not quote it as precise.** Most iso
+cells (14/19) happen to fall in this noisy regime. **Defensible headline:** at iso-quality
+in the *stable* Operon regimes, revad's per-generation (in-loop) CO beats a 128-core EPYC
+by a few× up to **~9.6×** (early-gen M=16k); median over all iso cells 3.6×. The 28× is the
+noisy-regime max, reported with ±40%.
+
+**The max cells are NOT the largest M:** 120.3× (vs 1c) is at early-gen M=16000 N=1000;
+28.2× (vs 128c) is at late-gen-bloated M=64000 N=100. (ad vs 128c in-loop 4.2×; fusedfd
+2.1×.) **In-loop vs e2e (PROTOCOL §5 reconciliation):** PROTOCOL §5 names e2e the primary
+*column*, but for the deployment claim the in-loop `loop_ms` is the right cost — the
+subprocess e2e charges one-time CUDA-context init on *every* call, an artifact the
+in-process C3 path does NOT incur, and the §0.1 PROFILE breakdown measured the genuine host
+round-trip at only **2–5%** of `loop_ms`. So `loop_ms` ≈ the real per-generation deployment
+cost; e2e (1.17× median vs 128c) is the pessimistic one-shot-subprocess bound. Both are
+reported so neither is cherry-picked.
 
 **Ranking equivalence** (task-06; `out/ranking_ad_vs_fd.txt`, inner-const M=4000 K_max=13):
 - **Spearman(ad, fd) = 0.96**; **top-10% selection overlap = 95.5%**, top-25% = 93.7%
@@ -257,11 +282,11 @@ approximate." — all four addressed above.
   faster, not slower → not contention) and chose to **disclose the variance rather than
   re-run all 162** (which on the now-shared machine wouldn't be cleaner). Consequence:
   **crossover speedup multipliers are order-of-magnitude / approximate, not precise.**
-- **ncu instruction-roofline INTENSITY (inst/byte) was not computed** — `dram__bytes.sum`
-  is absent from the collected reps (the InstructionStats section doesn't emit it). I
-  report GIPS + SOL + warp-stalls + FMA/fp64-pipe% instead; the "not-FLOP-bound" claim
-  rests on the **FMA-pipe ≤11% / fp64 = 0%** evidence, not a full instruction-roofline
-  figure. A re-profile adding a memory section would be needed for the inst/byte x-axis.
+- **ncu instruction-roofline intensity** initially missing (`dram__bytes.sum` absent from
+  the first reps) — **now DONE** via a targeted metrics-only re-profile (`--metrics
+  ...dram__bytes.sum`; intensity is clock-independent so contention/unlock didn't matter):
+  `figs/fig_instruction_roofline.png` + `out/ncu_instruction_roofline.json`. The earlier
+  GIPS column also had a 1000× unit bug (codex) — fixed.
 - **ncu warp-stall breakdown only at small M (2000)** — by task-04 design (large M=64000 =
   SOL-only to keep replay cost down). The large-M conclusion rests on SOL + FP-pipe, not
   stalls.

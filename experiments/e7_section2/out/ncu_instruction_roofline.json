@@ -1,0 +1,38 @@
+[
+  {
+    "variant": "ad",
+    "regime": "early-gen",
+    "gips": 170.48729817505293,
+    "inst_per_byte": 1.5410914556476292
+  },
+  {
+    "variant": "ad",
+    "regime": "inner-const-heavy",
+    "gips": 146.33696118866555,
+    "inst_per_byte": 0.7485585819739734
+  },
+  {
+    "variant": "fusedfd",
+    "regime": "early-gen",
+    "gips": 251.59585471331556,
+    "inst_per_byte": 3.0174179973243977
+  },
+  {
+    "variant": "fusedfd",
+    "regime": "inner-const-heavy",
+    "gips": 332.5191779710943,
+    "inst_per_byte": 5.189043173655561
+  },
+  {
+    "variant": "revad",
+    "regime": "early-gen",
+    "gips": 255.56781013921224,
+    "inst_per_byte": 1.4706271054223947
+  },
+  {
+    "variant": "revad",
+    "regime": "inner-const-heavy",
+    "gips": 247.9616174123818,
+    "inst_per_byte": 0.5320275344612942
+  }
+]

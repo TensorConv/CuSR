@@ -10,6 +10,7 @@
 !gpu_phase_a_summary.md
 !iso_quality.json
 !ncu_summary.md
+!ncu_instruction_roofline.json
 !sensitivity_table.md
 !operon_sentinels.json
 !operon_sentinels_4cfg.json
