@@ -264,6 +264,23 @@ precise.** (Decision rule fixed up front: <15% clean / 15–30% note / >30% stop
 **iso-quality crossover** (`out/iso_quality.json`; offline recompute, pop-hash-consistent,
 sidecar medians cross-checked vs records → **0 audit flags**; 441 pairings, 203 iso).
 
+> ⚠️ **BASELINE DECISION (2026-06-25) — the 128-core Operon data is UNUSABLE; the paper uses the
+> 64-core baseline.** Host = dual-socket 2×EPYC 7763 (NUMA node0 = cores 0–63, node1 = 64–127).
+> The heavy *pinned* co-tenants sit on node0, so **128c (both sockets) collides with them by
+> construction**: Phase-6 `out/determinism/cv_operon.json` clocks 128c at **6,711 t/s vs 64c's
+> 10,802 t/s** — a −38% drop ≫ the 5–6% within-session CV, i.e. **contention, not a hardware or
+> Operon-scaling property.** ⇒ **Every `vs 128c` number in this section (3.6× median, 9.6× stable,
+> 28× max; and the Phase-6 9.27×) is SUPERSEDED — do not quote `vs 128 cores` in the paper.** Use
+> **one 64-core EPYC 7763 = one CPU** (the standard one-A100-vs-one-server-CPU comparison; 64c also
+> stays on node1, off the pinned co-tenants → least-contended available). Clean within-session
+> number (`out/determinism/crossover_clean.json`): **revad vs 64c = 5.76× (stable, early-gen M=16k
+> N=1000) / 14.76× (noisy, late-gen M=64k N=100)**, GPU CV 0.17% / Operon CV 5.2%. **Still an UPPER
+> bound** (Operon was contended, tenant_overlap=1.0 → ratio biased *up*); the true idle-box value is
+> ≤ this, so report "≈5.8× (stable)" as approximate-pending-idle-host, not precise.
+>
+> *(The `vs 128c` and `vs 1c` tables below are retained as the audited record of what was measured,
+> but are no longer the paper's baseline — see this box.)*
+
 ⚠️ **Two metrics — report both (codex review):** the speedups below use the protocol's
 PRIMARY **in-loop** throughput (GPU `loop_ms` vs Operon `wall_core`, both setup-excluded
 = the per-generation CO cost amortized across a GP loop). The **e2e** metric (GPU
@@ -442,6 +459,14 @@ order-of-magnitude, ±30% cross-day": two **contention-inflated** measurements (
 9.27×) agree at ~9×, but since the bias points **up**, the true idle-box value likely sits at the
 **low end of the ±30% (possibly <9×)**; the 28× is *confirmed* as the inflated noisy-regime max.
 The short-timing concern is now **empirically closed**.
+
+**Update (2026-06-25) — baseline switched to 64-core; 128-core DROPPED.** Per the C2 framing
+decision, the paper compares against **one 64-core EPYC 7763** (one CPU), not 128 cores: the
+`vs 128c` numbers (the 9.27× here and the 9.6×/28× in Phase 3) are **dropped as contention-confounded**
+(128c spans node0's pinned co-tenants). Headline crossover ⇒ **revad vs 64c ≈ 5.8× (stable) /
+≈14.8× (noisy)** (`out/determinism/crossover_clean.json`), reported as an **upper bound** (Operon
+still contended → ratio biased up; an idle host is needed for a precise number). *This supersedes
+the "none of the C2 headline numbers change" line above — the headline core count changes 128→64.*
 
 ---
 

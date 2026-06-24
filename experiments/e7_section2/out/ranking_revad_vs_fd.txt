@@ -1,0 +1,24 @@
+pop M=4000  K>0 trees=3959
+
+=== ad vs fd ===  both-finite K>0 = 3959
+[RANKING] Spearman(ad_loss, fd_loss) over both-finite K>0 = 0.9597
+  top-10% best: overlap=0.955  jaccard=0.913  (|top|=396)
+  top-25% best: overlap=0.937  jaccard=0.882  (|top|=990)
+  K over both-finite: mean=6.93 median=7 max=13
+[ONE-SIDED] 3949 'material' trees (max loss > 1e-06; dropped 10 near-perfect ties):
+   ad worse than fd (>1.05x): 431 = 10.9%
+   fd worse than ad (>1.05x): 466 = 11.8%
+   [mechanism] K on ad-worse trees: mean=6.99 median=7 max=12 (vs all 6.93)
+
+=== revad vs fd ===  both-finite K>0 = 3959
+[RANKING] Spearman(revad_loss, fd_loss) over both-finite K>0 = 0.9591
+  top-10% best: overlap=0.955  jaccard=0.913  (|top|=396)
+  top-25% best: overlap=0.935  jaccard=0.879  (|top|=990)
+  K over both-finite: mean=6.93 median=7 max=13
+[ONE-SIDED] 3949 'material' trees (max loss > 1e-06; dropped 10 near-perfect ties):
+   revad worse than fd (>1.05x): 435 = 11.0%
+   fd worse than revad (>1.05x): 463 = 11.7%
+   [mechanism] K on revad-worse trees: mean=7.02 median=7 max=11 (vs all 6.93)
+
+[revad vs ad SANITY] Spearman=0.995331  >1%-diff trees=312/3959  max|diff|=5.65e+08
+   K on the divergent trees: mean=7.61 median=8 max=12  (high-K => the singular/NaN-fix trees; near-overall => fp32 path noise)

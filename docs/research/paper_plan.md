@@ -74,6 +74,8 @@
 
 **怎么选:** 最硬的从 c、d 里挑一个(或都做、留好的)。a、b、f 已经有了,垫底保险。要是 c、d 都跑不出干净结果,C3 就只剩"能跑通"这点,那就退回下面的两个贡献。
 
+**warm-start(C3-c)实现可行性已核(2026-06-24):比预想干净,最难的一层 EvoGP 已包掉。** EvoGP 把常数直接存在树节点的 `node_value` 数组里;交叉/变异的 CUDA kernel(`upstream/evogp/src/evogp/cuda/mutation.cu` 的 `_gpTreeReplace`)splice 子树时逐字节复制 value、只改 subtree_size,所以常数自动跟着子树继承——不用我们自己做"代际间常数对齐"那层难活。我们这侧只要加两个钩子(都用 `cusr/kernel/tree_interpreter.py` 已有的 node↔c_vec 映射):① 进 kernel 前把上一代 `node_value` 的常数 gather 成 `c_init`(kernel API 本来就吃 `c_init`,见 `cusr/kernel/co_inproc.py`);② 出 kernel 后把拟合好的常数 scatter 回 `node_value` 的 CONST 位置(现在缺这步——benchmark 只用结果算 fitness、不写回)。所以 warm-start **不是新算法**,工作量 ≈ 写回钩子 + c_init 接上一代 + 跑通"每代调 CO"的闭环;前提是 CO 已进 live loop(进程内调用已通,每代闭环 = 本条要做的事)。
+
 ---
 
 ## 退路:只做两个贡献
