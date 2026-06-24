@@ -1,0 +1,26 @@
+# Concurrent-tenant evidence (captured post-run)
+timestamp_local: 2026-06-24 13:11:40 +0800
+## compute-apps (PID -> GPU memory): luoq holds GPUs 0-6, GPU7 was mine
+gpu_uuid, pid, process_name, used_gpu_memory [MiB]
+GPU-edfcab3f-c13a-a4cc-18d2-e8083ea70160, 3625740, /home/jinyb/anaconda3/envs/ocpred/bin/python, 13306 MiB
+GPU-04d96411-3dd0-1c69-dbc3-341b63ed7393, 3625742, /home/jinyb/anaconda3/envs/ocpred/bin/python, 13306 MiB
+GPU-d637a28c-3587-110f-5d4d-e2d9e2aeebba, 3625739, /home/jinyb/anaconda3/envs/ocpred/bin/python, 13306 MiB
+GPU-ca1ae484-c80a-0cf5-89a0-b438736d6a55, 3625741, /home/jinyb/anaconda3/envs/ocpred/bin/python, 13306 MiB
+GPU-45dfd75a-6503-018e-76ce-67f0fbb04d53, 43316, /home/luoq/miniconda3/envs/ocean_sst/bin/python3.10, 1808 MiB
+GPU-24a378be-bc95-cc5e-454a-ffe89e3d2aee, 43317, /home/luoq/miniconda3/envs/ocean_sst/bin/python3.10, 1952 MiB
+GPU-7c4efa44-6fa9-1921-1a1c-c7b8537e2faa, 43318, /home/luoq/miniconda3/envs/ocean_sst/bin/python3.10, 1808 MiB
+## per-GPU index<->uuid map
+0, GPU-edfcab3f-c13a-a4cc-18d2-e8083ea70160
+1, GPU-04d96411-3dd0-1c69-dbc3-341b63ed7393
+2, GPU-d637a28c-3587-110f-5d4d-e2d9e2aeebba
+3, GPU-ca1ae484-c80a-0cf5-89a0-b438736d6a55
+4, GPU-45dfd75a-6503-018e-76ce-67f0fbb04d53
+5, GPU-24a378be-bc95-cc5e-454a-ffe89e3d2aee
+6, GPU-7c4efa44-6fa9-1921-1a1c-c7b8537e2faa
+7, GPU-ed69f2c8-0e7e-740e-fea0-7b644d73449d
+## NOTE (honesty): this snapshot is POST-run (13:11); it documents that the box is
+## multi-tenant but does NOT prove the exact GPU occupancy during my 11:41-12:07
+## recovery run. The disk-provable facts are: the 4 recovery records carry gpu_id=7,
+## and loop_ms is per-GPU compute time. The "luoq on GPUs 0-6, GPU7 idle" claim is
+## from a live nvidia-smi observed ~11:19 (luoq PIDs 2907732-2907738 across 7 GPUs,
+## GPU7 reading 1 MiB) that was not persisted as a file.

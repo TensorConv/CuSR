@@ -1,0 +1,67 @@
+{
+  "worst_drift_pct": 46.1,
+  "overall": "STOP",
+  "tolerance": "<15 clean / 15-30 note / >30 STOP",
+  "results": [
+    {
+      "config": [
+        "early-gen",
+        4000,
+        1000,
+        16
+      ],
+      "e6_wall_core": 0.4442,
+      "new_wall_core": 0.4157,
+      "e6_throughput": 7979.9,
+      "new_throughput": 8528.3,
+      "drift_wall_core_pct": 6.4,
+      "drift_throughput_pct": 6.9,
+      "verdict": "clean"
+    },
+    {
+      "config": [
+        "late-gen-bloated",
+        4000,
+        1000,
+        64
+      ],
+      "e6_wall_core": 0.422,
+      "new_wall_core": 0.2888,
+      "e6_throughput": 6541.9,
+      "new_throughput": 9560.4,
+      "drift_wall_core_pct": 31.6,
+      "drift_throughput_pct": 46.1,
+      "verdict": "STOP"
+    },
+    {
+      "config": [
+        "inner-const-heavy",
+        4000,
+        1000,
+        16
+      ],
+      "e6_wall_core": 1.1466,
+      "new_wall_core": 1.1834,
+      "e6_throughput": 3452.7,
+      "new_throughput": 3345.4,
+      "drift_wall_core_pct": 3.2,
+      "drift_throughput_pct": 3.1,
+      "verdict": "clean"
+    },
+    {
+      "config": [
+        "early-gen",
+        1000,
+        10000,
+        64
+      ],
+      "e6_wall_core": 0.6584,
+      "new_wall_core": 0.6327,
+      "e6_throughput": 1367.0,
+      "new_throughput": 1422.5,
+      "drift_wall_core_pct": 3.9,
+      "drift_throughput_pct": 4.1,
+      "verdict": "clean"
+    }
+  ]
+}

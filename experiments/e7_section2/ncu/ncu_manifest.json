@@ -1,0 +1,170 @@
+[
+  {
+    "tag": "fusedfd_early-gen_M2000",
+    "variant": "fusedfd",
+    "regime": "early-gen",
+    "M": 2000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/fusedfd_early-gen_M2000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/fusedfd_early-gen_M2000.csv",
+    "kernels": [
+      "eval_kernel_batched",
+      "fd_jacobian_fused_kernel"
+    ]
+  },
+  {
+    "tag": "fusedfd_inner-const-heavy_M2000",
+    "variant": "fusedfd",
+    "regime": "inner-const-heavy",
+    "M": 2000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/fusedfd_inner-const-heavy_M2000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/fusedfd_inner-const-heavy_M2000.csv",
+    "kernels": [
+      "eval_kernel_batched",
+      "fd_jacobian_fused_kernel"
+    ]
+  },
+  {
+    "tag": "fusedfd_early-gen_M64000",
+    "variant": "fusedfd",
+    "regime": "early-gen",
+    "M": 64000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/fusedfd_early-gen_M64000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/fusedfd_early-gen_M64000.csv",
+    "kernels": [
+      "eval_kernel_batched",
+      "fd_jacobian_fused_kernel"
+    ]
+  },
+  {
+    "tag": "fusedfd_inner-const-heavy_M64000",
+    "variant": "fusedfd",
+    "regime": "inner-const-heavy",
+    "M": 64000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/fusedfd_inner-const-heavy_M64000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/fusedfd_inner-const-heavy_M64000.csv",
+    "kernels": [
+      "eval_kernel_batched",
+      "fd_jacobian_fused_kernel"
+    ]
+  },
+  {
+    "tag": "ad_early-gen_M2000",
+    "variant": "ad",
+    "regime": "early-gen",
+    "M": 2000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/ad_early-gen_M2000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/ad_early-gen_M2000.csv",
+    "kernels": [
+      "ad_jacobian_kernel",
+      "eval_kernel_batched"
+    ]
+  },
+  {
+    "tag": "ad_inner-const-heavy_M2000",
+    "variant": "ad",
+    "regime": "inner-const-heavy",
+    "M": 2000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/ad_inner-const-heavy_M2000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/ad_inner-const-heavy_M2000.csv",
+    "kernels": [
+      "ad_jacobian_kernel",
+      "eval_kernel_batched"
+    ]
+  },
+  {
+    "tag": "ad_early-gen_M64000",
+    "variant": "ad",
+    "regime": "early-gen",
+    "M": 64000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/ad_early-gen_M64000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/ad_early-gen_M64000.csv",
+    "kernels": [
+      "ad_jacobian_kernel",
+      "eval_kernel_batched"
+    ]
+  },
+  {
+    "tag": "ad_inner-const-heavy_M64000",
+    "variant": "ad",
+    "regime": "inner-const-heavy",
+    "M": 64000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/ad_inner-const-heavy_M64000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/ad_inner-const-heavy_M64000.csv",
+    "kernels": [
+      "ad_jacobian_kernel",
+      "eval_kernel_batched"
+    ]
+  },
+  {
+    "tag": "revad_early-gen_M2000",
+    "variant": "revad",
+    "regime": "early-gen",
+    "M": 2000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/revad_early-gen_M2000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/revad_early-gen_M2000.csv",
+    "kernels": [
+      "eval_kernel_batched",
+      "rev_jacobian_kernel"
+    ]
+  },
+  {
+    "tag": "revad_inner-const-heavy_M2000",
+    "variant": "revad",
+    "regime": "inner-const-heavy",
+    "M": 2000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/revad_inner-const-heavy_M2000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/revad_inner-const-heavy_M2000.csv",
+    "kernels": [
+      "eval_kernel_batched",
+      "rev_jacobian_kernel"
+    ]
+  },
+  {
+    "tag": "revad_early-gen_M64000",
+    "variant": "revad",
+    "regime": "early-gen",
+    "M": 64000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/revad_early-gen_M64000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/revad_early-gen_M64000.csv",
+    "kernels": [
+      "eval_kernel_batched",
+      "rev_jacobian_kernel"
+    ]
+  },
+  {
+    "tag": "revad_inner-const-heavy_M64000",
+    "variant": "revad",
+    "regime": "inner-const-heavy",
+    "M": 64000,
+    "N": 1000,
+    "status": "ok",
+    "rep": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/revad_inner-const-heavy_M64000.ncu-rep",
+    "csv": "/home/weish/hao/CuSR/experiments/e7_section2/ncu/revad_inner-const-heavy_M64000.csv",
+    "kernels": [
+      "eval_kernel_batched",
+      "rev_jacobian_kernel"
+    ]
+  }
+]

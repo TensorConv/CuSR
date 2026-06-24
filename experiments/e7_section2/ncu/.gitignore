@@ -1,0 +1,5 @@
+# Track parsed ncu summaries + manifest; .ncu-rep (4.4M) + raw .csv stay on disk only.
+*
+!.gitignore
+!*.summary.json
+!ncu_manifest.json

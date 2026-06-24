@@ -1,0 +1,16 @@
+# GPU clock lock — PRE-SWEEP (Phase 0)
+timestamp_utc: 2026-06-23T16:41:37Z
+locked_target_mhz: 1410
+host: ubuntu
+## nvidia-smi -lgc applied to GPUs 0-7
+Field "clocks.gr.boost" is not a valid field to query.
+
+index, name, clocks.applications.graphics [MHz], clocks.current.sm [MHz]
+0, NVIDIA A100-SXM4-80GB, 1140 MHz, 1410 MHz
+1, NVIDIA A100-SXM4-80GB, 1140 MHz, 1410 MHz
+2, NVIDIA A100-SXM4-80GB, 1140 MHz, 1410 MHz
+3, NVIDIA A100-SXM4-80GB, 1140 MHz, 1410 MHz
+4, NVIDIA A100-SXM4-80GB, 1140 MHz, 1410 MHz
+5, NVIDIA A100-SXM4-80GB, 1140 MHz, 1410 MHz
+6, NVIDIA A100-SXM4-80GB, 1140 MHz, 1410 MHz
+7, NVIDIA A100-SXM4-80GB, 1140 MHz, 1410 MHz

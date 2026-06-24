@@ -1,0 +1,12 @@
+[gate] running batch_lm_revad on pop.bin ...
+[gate] [batch-lm] 总耗时 0.579 秒 (1729 trees/s, M_prob=1000)
+[gate] scipy parity check (nproc=8) ...
+[verify] status: both_conv=321 only_gpu=8 only_sc=433 both_fail=78
+[verify] loss-down rate (K>0): 93.3%
+[verify] within scipy envelope: 1.05×=86.6%  2×=90.0%  10×=100.0%
+
+== parity gate (batch_lm_revad) ==
+  [PASS] loss_down    93.3% (>= 93.0%)
+  [FAIL] within_1p05  86.6% (>= 90.0%)
+  [PASS] within_10    100.0% (>= 99.0%)
+result: 2/3 PASS

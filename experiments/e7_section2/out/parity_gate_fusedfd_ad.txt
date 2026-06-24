@@ -1,0 +1,18 @@
+=== batch_lm_fusedfd parity gate (same fixture pop) ===
+[verify] status: both_conv=331 only_gpu=16 only_sc=423 both_fail=70
+[verify] loss-down rate (K>0): 94.0%
+[verify] within scipy envelope: 1.05×=92.1%  2×=94.3%  10×=99.7%
+  [PASS] loss_down    94.0% (>= 93.0%)
+  [PASS] within_1p05  92.1% (>= 90.0%)
+  [PASS] within_10    99.7% (>= 99.0%)
+result: 3/3 PASS
+
+=== batch_lm_ad parity gate (same fixture pop) ===
+[verify] status: both_conv=321 only_gpu=8 only_sc=433 both_fail=78
+[verify] loss-down rate (K>0): 93.3%
+[verify] within scipy envelope: 1.05×=86.6%  2×=90.0%  10×=100.0%
+  [PASS] loss_down    93.3% (>= 93.0%)
+  [FAIL] within_1p05  86.6% (>= 90.0%)
+  [PASS] within_10    100.0% (>= 99.0%)
+result: 2/3 PASS
+

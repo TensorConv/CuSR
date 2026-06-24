@@ -9,12 +9,18 @@ Writes (to out/):
   gpu_phase_a.json         structured: summary stats + per-config list
   gpu_phase_a_summary.md   human-readable tables + conclusions
 """
+import argparse
 import csv
 import json
 import statistics as st
 from pathlib import Path
 
-OUT = Path(__file__).resolve().parent / "out"
+_ap = argparse.ArgumentParser()
+_ap.add_argument("--out", type=str, default=None,
+                 help="dir holding sweep_e6.jsonl (default: <script>/out)")
+_args, _ = _ap.parse_known_args()
+OUT = Path(_args.out).resolve() if _args.out else (
+    Path(__file__).resolve().parent / "out")
 SRC = OUT / "sweep_e6.jsonl"
 
 VAR = ["fusedfd", "ad", "revad"]
@@ -65,27 +71,50 @@ with (OUT / "gpu_phase_a.csv").open("w", newline="") as f:
 
 # ---- summary stats ----
 peak = max(ok, key=lambda r: r["throughput"])
-ratios = []
-for p in PRE:
-    for M in MS:
-        for N in NS:
-            a, fd = tput("ad", p, M, N), tput("fusedfd", p, M, N)
-            if isinstance(a, float) and isinstance(fd, float) and a > 0 and fd > 0:
-                ratios.append(a / fd)
+
+
+def _pair_ratios(num_var, den_var):
+    """Median + range of num_var/den_var throughput over all paired ok cells."""
+    rs = []
+    for p in PRE:
+        for M in MS:
+            for N in NS:
+                a, b = tput(num_var, p, M, N), tput(den_var, p, M, N)
+                if isinstance(a, float) and isinstance(b, float) and a > 0 and b > 0:
+                    rs.append(a / b)
+    return rs
+
+
+ratios = _pair_ratios("ad", "fusedfd")        # legacy field (kept for compat)
+revad_over_ad = _pair_ratios("revad", "ad")    # codex #6 / task-06: the rev-vs-fwd slice
+revad_over_fusedfd = _pair_ratios("revad", "fusedfd")
 summary = dict(
     generated_from=str(SRC), kernel_max_iter=ok[0].get("max_iter") if ok else None,
     n_plan=len(plan), n_ok=len(ok), n_skipped=len(sk), n_missing=len(missing),
     missing=[list(m) for m in missing],
     peak=dict(variant=peak["variant"], preset=peak["preset"], M=peak["M"],
               N=peak["knob"], throughput_tps=round(peak["throughput"], 1)),
-    ad_over_fusedfd_median=round(st.median(ratios), 3),
-    ad_over_fusedfd_range=[round(min(ratios), 3), round(max(ratios), 3)],
+    ad_over_fusedfd_median=round(st.median(ratios), 3) if ratios else None,
+    ad_over_fusedfd_range=([round(min(ratios), 3), round(max(ratios), 3)]
+                           if ratios else None),
+    revad_over_ad_median=round(st.median(revad_over_ad), 3) if revad_over_ad else None,
+    revad_over_ad_range=([round(min(revad_over_ad), 3), round(max(revad_over_ad), 3)]
+                         if revad_over_ad else None),
+    revad_over_fusedfd_median=(round(st.median(revad_over_fusedfd), 3)
+                               if revad_over_fusedfd else None),
+    revad_over_fusedfd_range=([round(min(revad_over_fusedfd), 3),
+                               round(max(revad_over_fusedfd), 3)]
+                              if revad_over_fusedfd else None),
+    locked_clock_mhz=(ok[0].get("locked_clock_mhz") if ok else None),
+    n_revad_ok=sum(1 for r in ok if r["variant"] == "revad"),
     frac_converged_range=[round(min(r["frac_converged"] for r in ok), 3),
                           round(max(r["frac_converged"] for r in ok), 3)],
     note=("throughput = (M - n_K0_dropped)/(loop_ms/1000), loop_ms from PROFILE_JSON "
           "(LM loop only, excludes CUDA init). On-device verified per-config via the "
-          "device-Jacobian PROFILE guard. clocks UNLOCKED -> DRAFT. GPU side only; "
-          "Operon/CPU comparison pending Phase B."),
+          "device-Jacobian PROFILE guard. "
+          + (f"clocks LOCKED @ {ok[0].get('locked_clock_mhz')} MHz (publication-grade)."
+             if ok and ok[0].get("locked_clock_mhz")
+             else "clocks UNLOCKED -> DRAFT.")),
 )
 
 # ---- JSON (structured) ----
@@ -129,10 +158,10 @@ def table(v):
     return "\n".join(lines)
 
 
-md = f"""# e6 Phase-A (GPU) results — DRAFT (clocks unlocked)
+md = f"""# GPU Phase-A results — {('LOCKED @ %d MHz' % summary['locked_clock_mhz']) if summary['locked_clock_mhz'] else 'DRAFT (clocks unlocked)'}
 
-Snapshot of the on-device GPU constant-optimization kernels (fused-FD + forward-AD)
-from `sweep_e6.jsonl`. **GPU side only**; Operon/CPU comparison is Phase B (pending).
+Snapshot of the on-device GPU constant-optimization kernels (fused-FD / forward-AD /
+reverse-AD) from `sweep_e6.jsonl`. **GPU side only**; Operon/CPU comparison is offline.
 Source of truth: `gpu_phase_a.csv` / `gpu_phase_a.json` (this dir).
 
 - **Completeness**: plan={summary['n_plan']}, ok={summary['n_ok']}, skipped={summary['n_skipped']} (memory-ceiling, logged), **missing={summary['n_missing']}** (0 silent drops / 0 subprocess failures).
@@ -143,15 +172,20 @@ Source of truth: `gpu_phase_a.csv` / `gpu_phase_a.json` (this dir).
 
 {table('ad')}
 
+{table('revad')}
+
 ## Conclusions (GPU side)
 
-1. **AD is the faster variant**: median ad/fusedfd = **{summary['ad_over_fusedfd_median']}×** (range {summary['ad_over_fusedfd_range'][0]}–{summary['ad_over_fusedfd_range'][1]}×); AD is also exact-Jacobian (equal/better quality). → lead/deploy variant.
+0. **revad/ad speed ratio (task-06, rev-vs-fwd slice)**: median revad/ad = **{summary['revad_over_ad_median']}×** (range {summary['revad_over_ad_range']}); revad/fusedfd median = **{summary['revad_over_fusedfd_median']}×** ({summary['revad_over_fusedfd_range']}). n_revad_ok={summary['n_revad_ok']}. locked_clock_mhz={summary['locked_clock_mhz']}.
+1. **AD is the faster variant**: median ad/fusedfd = **{summary['ad_over_fusedfd_median']}×** (range {summary['ad_over_fusedfd_range']}); AD is also exact-Jacobian (equal/better quality). → lead/deploy variant.
 2. **Peak**: {summary['peak']['variant']} {summary['peak']['preset']} M={summary['peak']['M']} N={summary['peak']['N']} = **{summary['peak']['throughput_tps']:.0f} t/s**.
 3. **Saturates ~M=64k**: at N=1000, M=64k→256k gains <10% → A100 occupancy fills near M≈64k. CAVEAT: realistic in-loop population (~4000) sits well below saturation, so peak numbers must not be quoted as the in-loop rate.
 4. **N axis = data-parallel headroom**: trees/s falls with N (more points/tree), but points/s RISES with N toward the compute roofline (early-gen ≈1.5e7→5.7e7 pts/s) — high N is where the GPU saturates its FLOPs.
 5. **inner-const-heavy is slowest** (high K = more Jacobian columns); frac_converged {summary['frac_converged_range'][0]}–{summary['frac_converged_range'][1]} across configs. Its quality ceiling (loss) is a separate fp32/damping issue, not throughput.
 
-DRAFT: clocks unlocked → medians, absolute t/s indicative. Locked-clock + ncu roofline later.
+{('LOCKED @ %d MHz → absolute t/s are publication-grade (medians over seeds 0,1,2).'
+  % summary['locked_clock_mhz']) if summary['locked_clock_mhz']
+ else 'DRAFT: clocks unlocked → medians, absolute t/s indicative.'}
 """
 (OUT / "gpu_phase_a_summary.md").write_text(md)
 

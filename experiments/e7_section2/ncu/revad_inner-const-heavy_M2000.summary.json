@@ -1,0 +1,84 @@
+{
+  "eval_kernel_batched": {
+    "sol": {
+      "compute_sol_pct": 41.988478,
+      "memory_sol_pct": 32.088351,
+      "dram_sol_pct": 0.176934,
+      "issue_active_pct": 47.739961,
+      "inst_exec_pct": 41.938323,
+      "fma_pipe_pct": 7.268921,
+      "fp64_pipe_pct": 0.0,
+      "warps_active_per_cycle": 4.16011
+    },
+    "top_stalls": [
+      [
+        "wait",
+        2.994397
+      ],
+      [
+        "long_scoreboard",
+        1.503589
+      ],
+      [
+        "branch_resolving",
+        1.210837
+      ],
+      [
+        "selected",
+        1.0
+      ],
+      [
+        "short_scoreboard",
+        0.783674
+      ]
+    ],
+    "instruction_roofline": {
+      "gips": 206.2536735893417,
+      "inst_per_byte": null,
+      "inst_executed": 67374000.0,
+      "duration_us": 326.656,
+      "dram_bytes": null
+    }
+  },
+  "rev_jacobian_kernel": {
+    "sol": {
+      "compute_sol_pct": 35.728128,
+      "memory_sol_pct": 51.072873,
+      "dram_sol_pct": 6.947046,
+      "issue_active_pct": 46.718039,
+      "inst_exec_pct": 35.691343,
+      "fma_pipe_pct": 6.477723,
+      "fp64_pipe_pct": 0.0,
+      "warps_active_per_cycle": 4.117705
+    },
+    "top_stalls": [
+      [
+        "wait",
+        2.971499
+      ],
+      [
+        "long_scoreboard",
+        2.59001
+      ],
+      [
+        "selected",
+        1.0
+      ],
+      [
+        "branch_resolving",
+        0.801252
+      ],
+      [
+        "not_selected",
+        0.46112
+      ]
+    ],
+    "instruction_roofline": {
+      "gips": 174.85889933628317,
+      "inst_per_byte": null,
+      "inst_executed": 126457956.0,
+      "duration_us": 723.2,
+      "dram_bytes": null
+    }
+  }
+}

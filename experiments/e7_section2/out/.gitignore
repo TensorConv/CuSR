@@ -1,0 +1,24 @@
+# Track only canonical small artifacts. Bulk (sweep_scratch/ pop dirs ~90GB, *.npy
+# loss sidecars, *_scratch) is regenerable from sweep_e6.py and stays on disk only.
+*
+!.gitignore
+!FINDINGS_e6_*.md
+!report.json
+!sweep_e6.jsonl
+!gpu_phase_a.csv
+!gpu_phase_a.json
+!gpu_phase_a_summary.md
+!iso_quality.json
+!ncu_summary.md
+!sensitivity_table.md
+!operon_sentinels.json
+!operon_sentinels_4cfg.json
+!ranking_ad_vs_fd.txt
+!parity_gate_fusedfd_ad.txt
+!parity_gate_revad.txt
+!pop_hash_verify.txt
+!clock_lock_pre.txt
+!clock_lock_post.txt
+!tenant_evidence.txt
+!audit_results.json
+!codex_review.txt

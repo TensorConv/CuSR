@@ -1,0 +1,20 @@
+You are an adversarial reviewer (gpt-5.5, max rigor) auditing the experimental results of section 2 (the C2 / GPU-kernel evaluation) of a CUDA symbolic-regression paper. Working dir: /home/weish/hao/CuSR. The full write-up with per-number artifact paths is experiments/e7_section2/FINDINGS.md. Your ONE job: find fabrication, fraud, statistical sloppiness, instability, or config/units mix-ups. Default to skeptical. Verify against the on-disk artifacts; do not trust the prose.
+
+Anti-fraud invariants this project lives by (verify they actually held):
+1. No invented numbers — every reported number must trace to a disk artifact (jsonl record / .npy loss sidecar / .ncu-rep / .csv). Spot-check several by recomputing from the raw records.
+2. The sweep's anti-fakery guards must not have been bypassed: assert_gpu_binary (binary allowlist), assert_device_jacobian (structural device-Jacobian, N-invariant), fp64 quality gate, pop_sha256 identity. Confirm the e7 kernel records carry locked_clock_mhz=1410 + gpu_id and passed the gate.
+3. fp64 quality independently recomputed (interp.loss_pop), never trusted from the backend.
+4. Clocks locked (1410MHz) and recorded per record.
+5. Variant verified (fusedfd/ad/revad) — note that ad_prof and revad_prof both compile in all 3 Jacobian kernels, so the ncu launched-kernel name (rev_jacobian_kernel vs ad_jacobian_kernel) is the real discriminator. Check ncu/ncu_manifest.json.
+6. Crashes/contention reported honestly: the original sweep hung after measuring 116 clean configs; a separate tenant (luoq) took GPUs 0-6 at 10:13:39, AFTER the 116 were measured (09:02:46) — claim is zero contamination. Verify the 4 recovery configs (gpu_id=7) and that no config was measured during the luoq window.
+7. Operon e6 reuse: 162 records reused; sentinels show median drift 8.7% but one config at 43% (flagged, disclosed). Judge whether disclosing the variance (vs re-running all Operon) is defensible, and whether the crossover multipliers are honestly framed as approximate/order-of-magnitude.
+
+Key claims to stress-test (numbers in FINDINGS.md):
+- revad/ad = 1.17x median (reverse-AD faster than forward-AD); peak revad = 361,334 trees/s.
+- iso-quality crossover: revad up to ~28x vs Operon 128c, ~120x vs 1c (large-M cells).
+- ncu: Jacobian kernels NOT FLOP-bound (FMA<=11%, fp64=0%) NOT DRAM-bound (DRAM<=23%); stalls = wait + long_scoreboard.
+- ranking equivalence: Spearman(ad,fd)=0.96, top-10%=95.5%; revad-vs-ad=0.995; AD-vs-FD symmetric (10.9% vs 11.8%).
+
+Also review experiments/e7_section2/out/audit_results.json (an internal multi-agent adversarial audit) — say whether you agree with its verdicts or think it missed something.
+
+Deliver: (a) anything that looks fabricated/unsupported/mis-framed, with the specific file+number; (b) any statistical or units error; (c) your overall verdict on whether section 2's numbers are trustworthy for the paper. Be concrete and quote what you checked.

@@ -753,19 +753,24 @@ def _gpu_worker(entry, gpu_id, scratch, max_iter, n_rep):
     med_idx = sorted(range(len(tputs)), key=lambda i: tputs[i])[len(tputs) // 2]
     med = per_seed[med_idx]
     q = seed0 if seed0 is not None else med
-    return dict(kind="ok", entry=entry, med=med, seed0=q,
+    return dict(kind="ok", entry=entry, med=med, seed0=q, gpu_id=gpu_id,
                 med_tput=statistics.median(tputs), K_real=K_real, tputs=tputs)
 
 
 def phase_a(gpu_plan, jsonl, loss_dir, scratch, n_gpus, max_iter, n_rep,
-            done_keys):
+            done_keys, locked_mhz=None, gpu_ids=None):
     """Dispatch will_run GPU configs up to n_gpus-way parallel. As each finishes
     (main thread): tripwire (HALT on SystemExit) -> save_losses -> append_record.
     Skips analytically-skipped + already-done configs; logs a skip record for
-    each up-front and late memory skip (never silently dropped)."""
+    each up-front and late memory skip (never silently dropped).
+
+    gpu_ids: explicit PHYSICAL GPU ids to use (e.g. [7] to pin one clean card on a
+    shared box). Defaults to range(n_gpus). Each id is set as CUDA_VISIBLE_DEVICES
+    on the subprocess and recorded as gpu_id, so it must be the real device index."""
     scratch.mkdir(parents=True, exist_ok=True)
+    pool = list(range(n_gpus)) if gpu_ids is None else list(gpu_ids)
     gid_q = queue.Queue()
-    for g in range(n_gpus):
+    for g in pool:
         gid_q.put(g)
 
     # 1) log up-front memory skips (once; skip if already a skip record exists is
@@ -844,7 +849,10 @@ def phase_a(gpu_plan, jsonl, loss_dir, scratch, n_gpus, max_iter, n_rep,
                 frac_converged=med["frac_converged"],
                 frac_failed=med["frac_failed"],
                 pop_sha256=res["seed0"]["pop_sha256"], n_rep=n_rep,
-                n_seeds=len(entry["seeds"]))
+                n_seeds=len(entry["seeds"]),
+                # clock-lock provenance (铁律 #3): which GPU + the locked SM clock
+                # this record was measured under. locked_clock_mhz=None => DRAFT.
+                gpu_id=res.get("gpu_id"), locked_clock_mhz=locked_mhz)
             assert is_complete_record(rec), "phase-a record failed completeness"
             append_record(jsonl, rec)
             results.append(rec)
@@ -1016,7 +1024,7 @@ def finalize(gpu_plan, operon_plan, jsonl, out_dir, meta=None, done_name="DONE")
 # DRIVER — wires plan -> cost -> Phase A -> Phase B -> finalize. --full runs the
 # whole matrix; --dryrun runs a tiny EXECUTABLE subset of the SAME pipeline.
 # ===========================================================================
-def run_sweep(dryrun, n_gpus, n_rep, out_dir):
+def run_sweep(dryrun, n_gpus, n_rep, out_dir, locked_mhz=None, gpu_ids=None):
     out_dir.mkdir(parents=True, exist_ok=True)
     if dryrun:
         jsonl = out_dir / "dryrun_e6.jsonl"
@@ -1072,7 +1080,8 @@ def run_sweep(dryrun, n_gpus, n_rep, out_dir):
 
     # ---- PHASE A (GPU) ----
     phase_a(run_gpu, jsonl, loss_dir, scratch, n_gpus,
-            KERNEL_MAX_ITER, n_rep, done_keys)
+            KERNEL_MAX_ITER, n_rep, done_keys, locked_mhz=locked_mhz,
+            gpu_ids=gpu_ids)
     # ---- PHASE B (Operon, sequential; Phase A fully done) ----
     done_keys = set(load_done(jsonl))     # refresh after Phase A
     phase_b(run_operon_plan, jsonl, loss_dir, n_rep, done_keys)
@@ -1095,6 +1104,7 @@ def run_sweep(dryrun, n_gpus, n_rep, out_dir):
                          time_ceiling_s=OPERON_TIME_CEILING_S),
         seed_protocol="kernel: median throughput over seeds 0,1,2; quality "
                       "(med_loss_fp64) from seed0. operon: seed0 only.",
+        locked_clock_mhz=locked_mhz,
     )
     report, report_path = finalize(run_gpu, run_operon_plan, jsonl, out_dir,
                                    meta=meta, done_name=done_name)
@@ -1120,9 +1130,21 @@ def main():
     ap.add_argument("--n-gpus", type=int, default=8,
                     help="Phase-A parallelism (GPUs 0..n-1)")
     ap.add_argument("--n-rep", type=int, default=3, help="timing reps / config")
+    ap.add_argument("--out", type=str, default=None,
+                    help="output dir (default: <script>/out). Use a fresh dir "
+                         "(e.g. e7_section2/out) when reusing Operon records.")
+    ap.add_argument("--locked-mhz", type=int, default=None,
+                    help="SM clock (MHz) the GPUs are locked to for this run; "
+                         "recorded per kernel record. Omit => records are DRAFT.")
+    ap.add_argument("--gpu-ids", type=str, default=None,
+                    help="comma-sep PHYSICAL GPU ids to use instead of 0..n-1 "
+                         "(e.g. '7' to pin one clean card on a shared machine).")
     args = ap.parse_args()
+    gpu_ids = ([int(x) for x in args.gpu_ids.split(",")]
+               if args.gpu_ids else None)
 
-    OUT = Path(__file__).resolve().parent / "out"
+    OUT = Path(args.out).resolve() if args.out else (
+        Path(__file__).resolve().parent / "out")
     if args.smoke:
         rows, tw = smoke(args.gpu)
         print(f"\nSMOKE rows={len(rows)} tripwire_pass={tw}")
@@ -1132,7 +1154,8 @@ def main():
         # dryrun executes a tiny subset via the SAME 8-way scheduler + Phase B.
         n_gpus = max(1, min(args.n_gpus, 8))
         plan_summary, report, _ = run_sweep(
-            dryrun=True, n_gpus=n_gpus, n_rep=args.n_rep, out_dir=OUT)
+            dryrun=True, n_gpus=n_gpus, n_rep=args.n_rep, out_dir=OUT,
+            locked_mhz=args.locked_mhz)
         print("\n[DRYRUN SUMMARY] full-matrix plan_summary:",
               json.dumps(plan_summary, default=float))
         print("[DRYRUN SUMMARY] dryrun accounting:",
@@ -1141,8 +1164,10 @@ def main():
               f"identity_ok={report['accounting_ok']}")
         return
     if args.full:
-        run_sweep(dryrun=False, n_gpus=max(1, min(args.n_gpus, 8)),
-                  n_rep=args.n_rep, out_dir=OUT)
+        n_gpus = len(gpu_ids) if gpu_ids else max(1, min(args.n_gpus, 8))
+        run_sweep(dryrun=False, n_gpus=n_gpus,
+                  n_rep=args.n_rep, out_dir=OUT, locked_mhz=args.locked_mhz,
+                  gpu_ids=gpu_ids)
         return
     raise SystemExit("Choose a mode: --smoke | --dryrun | --full. "
                      "(--dryrun proves the whole pipeline on a tiny plan; "

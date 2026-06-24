@@ -1,0 +1,26 @@
+verifying 12 small configs (regen seed0 pop -> sha256 vs e6 stored):
+  (拒绝采样: 重抽 1 棵, 占比 0.1%)
+  early-gen            M=  1000 N=   100: MATCH  stored=f627152434c3024d got=f627152434c3024d
+  (拒绝采样: 重抽 5 棵, 占比 0.5%)
+  early-gen            M=  1000 N=  1000: MATCH  stored=968f680d4df41f1d got=968f680d4df41f1d
+  (拒绝采样: 重抽 16 棵, 占比 0.4%)
+  early-gen            M=  4000 N=   100: MATCH  stored=062b0b679778c966 got=062b0b679778c966
+  (拒绝采样: 重抽 17 棵, 占比 0.4%)
+  early-gen            M=  4000 N=  1000: MATCH  stored=81fb80e01a274f9c got=81fb80e01a274f9c
+  (拒绝采样: 重抽 6 棵, 占比 0.6%)
+  inner-const-heavy    M=  1000 N=   100: MATCH  stored=c3d2026ae893c3f4 got=c3d2026ae893c3f4
+  (拒绝采样: 重抽 2 棵, 占比 0.2%)
+  inner-const-heavy    M=  1000 N=  1000: MATCH  stored=711bf705604bab3f got=711bf705604bab3f
+  (拒绝采样: 重抽 22 棵, 占比 0.5%)
+  inner-const-heavy    M=  4000 N=   100: MATCH  stored=312f13937fbb716d got=312f13937fbb716d
+  (拒绝采样: 重抽 18 棵, 占比 0.4%)
+  inner-const-heavy    M=  4000 N=  1000: MATCH  stored=d06d94792f7b0e70 got=d06d94792f7b0e70
+  (拒绝采样: 重抽 42 棵, 占比 4.0%)
+  late-gen-bloated     M=  1000 N=   100: MATCH  stored=aaa18634176959a8 got=aaa18634176959a8
+  (拒绝采样: 重抽 74 棵, 占比 6.9%)
+  late-gen-bloated     M=  1000 N=  1000: MATCH  stored=3d11135004f3617c got=3d11135004f3617c
+  (拒绝采样: 重抽 184 棵, 占比 4.4%)
+  late-gen-bloated     M=  4000 N=   100: MATCH  stored=10e4725bf0fcb7ad got=10e4725bf0fcb7ad
+  (拒绝采样: 重抽 227 棵, 占比 5.4%)
+  late-gen-bloated     M=  4000 N=  1000: MATCH  stored=5e91aeaa63322fbf got=5e91aeaa63322fbf
+ALL MATCH

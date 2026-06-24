@@ -1,0 +1,42 @@
+{
+  "eval_kernel_batched": {
+    "sol": {
+      "compute_sol_pct": 75.912431,
+      "memory_sol_pct": 61.314885,
+      "dram_sol_pct": 5.188344,
+      "issue_active_pct": 75.740616,
+      "inst_exec_pct": 75.740616,
+      "fma_pipe_pct": 14.483543,
+      "fp64_pipe_pct": 0.0,
+      "warps_active_per_cycle": null
+    },
+    "top_stalls": [],
+    "instruction_roofline": {
+      "gips": null,
+      "inst_per_byte": null,
+      "inst_executed": null,
+      "duration_us": 2608.896,
+      "dram_bytes": null
+    }
+  },
+  "rev_jacobian_kernel": {
+    "sol": {
+      "compute_sol_pct": 51.987842,
+      "memory_sol_pct": 73.5846,
+      "dram_sol_pct": 8.480952,
+      "issue_active_pct": 51.925305,
+      "inst_exec_pct": 51.925305,
+      "fma_pipe_pct": 10.689703,
+      "fp64_pipe_pct": 0.0,
+      "warps_active_per_cycle": null
+    },
+    "top_stalls": [],
+    "instruction_roofline": {
+      "gips": null,
+      "inst_per_byte": null,
+      "inst_executed": null,
+      "duration_us": 6735.1359999999995,
+      "dram_bytes": null
+    }
+  }
+}

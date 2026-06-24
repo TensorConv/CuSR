@@ -1,0 +1,474 @@
+{
+  "experiment": "e6_kernel_sweep",
+  "expected": 315,
+  "completed": 282,
+  "n_skipped": 33,
+  "n_missing": 0,
+  "skipped": [
+    {
+      "key": [
+        "kernel",
+        "fusedfd",
+        "early-gen",
+        256000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 152.80 GB > 40 GB (M=256000 N=10000 K_max=12)",
+      "estimated_footprint_gb": 152.8021622300148,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "fusedfd",
+        "late-gen-bloated",
+        256000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 105.05 GB > 40 GB (M=256000 N=10000 K_max=7)",
+      "estimated_footprint_gb": 105.05386173725128,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "fusedfd",
+        "inner-const-heavy",
+        64000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 40.60 GB > 40 GB (M=64000 N=10000 K_max=13)",
+      "estimated_footprint_gb": 40.602515891194344,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "fusedfd",
+        "inner-const-heavy",
+        256000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 162.41 GB > 40 GB (M=256000 N=10000 K_max=13)",
+      "estimated_footprint_gb": 162.40995180606842,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "ad",
+        "early-gen",
+        256000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 152.80 GB > 40 GB (M=256000 N=10000 K_max=12)",
+      "estimated_footprint_gb": 152.8021622300148,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "ad",
+        "late-gen-bloated",
+        256000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 105.05 GB > 40 GB (M=256000 N=10000 K_max=7)",
+      "estimated_footprint_gb": 105.05386173725128,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "ad",
+        "inner-const-heavy",
+        64000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 40.60 GB > 40 GB (M=64000 N=10000 K_max=13)",
+      "estimated_footprint_gb": 40.602515891194344,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "ad",
+        "inner-const-heavy",
+        256000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 162.41 GB > 40 GB (M=256000 N=10000 K_max=13)",
+      "estimated_footprint_gb": 162.40995180606842,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "revad",
+        "early-gen",
+        256000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 152.80 GB > 40 GB (M=256000 N=10000 K_max=12)",
+      "estimated_footprint_gb": 152.8021622300148,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "revad",
+        "late-gen-bloated",
+        256000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 105.05 GB > 40 GB (M=256000 N=10000 K_max=7)",
+      "estimated_footprint_gb": 105.05386173725128,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "revad",
+        "inner-const-heavy",
+        64000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 40.60 GB > 40 GB (M=64000 N=10000 K_max=13)",
+      "estimated_footprint_gb": 40.602515891194344,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "revad",
+        "inner-const-heavy",
+        256000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 162.41 GB > 40 GB (M=256000 N=10000 K_max=13)",
+      "estimated_footprint_gb": 162.40995180606842,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "fusedfd",
+        "early-gen",
+        64000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 40.59 GB > 40 GB (M=64000 N=10000 K_max=13)",
+      "estimated_footprint_gb": 40.59140761196613,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "ad",
+        "early-gen",
+        64000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 40.59 GB > 40 GB (M=64000 N=10000 K_max=13)",
+      "estimated_footprint_gb": 40.59140761196613,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "kernel",
+        "revad",
+        "early-gen",
+        64000,
+        10000
+      ],
+      "reason": "memory_ceiling",
+      "detail": "memory_ceiling: estimated GPU footprint 40.59 GB > 40 GB (M=64000 N=10000 K_max=13)",
+      "estimated_footprint_gb": 40.59140761196613,
+      "estimated_time_s": null
+    },
+    {
+      "key": [
+        "operon",
+        "N100",
+        "early-gen",
+        64000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=64000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 13.429279613494874
+    },
+    {
+      "key": [
+        "operon",
+        "N1000",
+        "early-gen",
+        64000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=64000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 134.29279613494873
+    },
+    {
+      "key": [
+        "operon",
+        "N10000",
+        "early-gen",
+        64000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=64000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 1342.9279613494873
+    },
+    {
+      "key": [
+        "operon",
+        "N100",
+        "early-gen",
+        256000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=256000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 53.717118453979495
+    },
+    {
+      "key": [
+        "operon",
+        "N1000",
+        "early-gen",
+        256000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=256000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 537.1711845397949
+    },
+    {
+      "key": [
+        "operon",
+        "N10000",
+        "early-gen",
+        256000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=256000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 5371.711845397949
+    },
+    {
+      "key": [
+        "operon",
+        "N100",
+        "late-gen-bloated",
+        64000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=64000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 13.429279613494874
+    },
+    {
+      "key": [
+        "operon",
+        "N1000",
+        "late-gen-bloated",
+        64000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=64000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 134.29279613494873
+    },
+    {
+      "key": [
+        "operon",
+        "N10000",
+        "late-gen-bloated",
+        64000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=64000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 1342.9279613494873
+    },
+    {
+      "key": [
+        "operon",
+        "N100",
+        "late-gen-bloated",
+        256000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=256000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 53.717118453979495
+    },
+    {
+      "key": [
+        "operon",
+        "N1000",
+        "late-gen-bloated",
+        256000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=256000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 537.1711845397949
+    },
+    {
+      "key": [
+        "operon",
+        "N10000",
+        "late-gen-bloated",
+        256000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=256000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 5371.711845397949
+    },
+    {
+      "key": [
+        "operon",
+        "N100",
+        "inner-const-heavy",
+        64000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=64000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 13.429279613494874
+    },
+    {
+      "key": [
+        "operon",
+        "N1000",
+        "inner-const-heavy",
+        64000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=64000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 134.29279613494873
+    },
+    {
+      "key": [
+        "operon",
+        "N10000",
+        "inner-const-heavy",
+        64000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=64000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 1342.9279613494873
+    },
+    {
+      "key": [
+        "operon",
+        "N100",
+        "inner-const-heavy",
+        256000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=256000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 53.717118453979495
+    },
+    {
+      "key": [
+        "operon",
+        "N1000",
+        "inner-const-heavy",
+        256000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=256000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 537.1711845397949
+    },
+    {
+      "key": [
+        "operon",
+        "N10000",
+        "inner-const-heavy",
+        256000,
+        1
+      ],
+      "reason": "operon_ncores1_largeM",
+      "detail": "unconditional skip: ncores=1 at M=256000>=64000 (single-core would dominate wall-clock)",
+      "estimated_footprint_gb": null,
+      "estimated_time_s": 5371.711845397949
+    }
+  ],
+  "missing": [],
+  "accounting_ok": true,
+  "n_gpu_configs": 135,
+  "n_operon_configs": 180,
+  "meta": {
+    "report_name": "report.json",
+    "mode": "full",
+    "timing_metric": {
+      "primary": "GPU loop_ms vs Operon wall_core (setup-excluded, in-loop per-generation CO cost)",
+      "e2e": "GPU total_ms (incl CUDA init) vs Operon wall_e2e (incl marshal)",
+      "note": "both recorded per record; primary is 'throughput', e2e is 'throughput_e2e'"
+    },
+    "kernel_max_iter": 50,
+    "operon_max_iter": 200,
+    "n_rep": 3,
+    "n_gpus": 1,
+    "full_matrix_plan_summary": {
+      "n_gpu_configs": 135,
+      "n_operon_configs": 180,
+      "n_skipped_mem": 12,
+      "n_skipped_time": 18,
+      "est_phaseA_min": 16.12,
+      "est_phaseB_min": 234.33
+    },
+    "calibration": {
+      "preset": "early-gen",
+      "M": 1000,
+      "N": 1000,
+      "ncores": 16,
+      "wall_core_s": 0.13114530872553587,
+      "wall_e2e_s": 0.7344066966325045,
+      "time_ceiling_s": 900
+    },
+    "seed_protocol": "kernel: median throughput over seeds 0,1,2; quality (med_loss_fp64) from seed0. operon: seed0 only.",
+    "locked_clock_mhz": 1410
+  }
+}

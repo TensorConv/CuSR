@@ -1,0 +1,21 @@
+# GPU clock readback — POST-SWEEP (still locked, before unlock)
+timestamp_local: 2026-06-24 13:11:40 +0800
+index, clocks.current.sm [MHz], clocks.max.sm [MHz], clocks.applications.graphics [MHz]
+0, 1410 MHz, 1410 MHz, 1140 MHz
+1, 1410 MHz, 1410 MHz, 1140 MHz
+2, 1410 MHz, 1410 MHz, 1140 MHz
+3, 1410 MHz, 1410 MHz, 1140 MHz
+4, 1410 MHz, 1410 MHz, 1140 MHz
+5, 1410 MHz, 1410 MHz, 1140 MHz
+6, 1410 MHz, 1410 MHz, 1140 MHz
+7, 1410 MHz, 1410 MHz, 1140 MHz
+
+## UNLOCKED at 2026-06-24 13:19:22 +0800 — nvidia-smi -rgc on all 8
+0, 1410 MHz
+1, 1410 MHz
+2, 1410 MHz
+3, 1410 MHz
+4, 1140 MHz
+5, 1140 MHz
+6, 1140 MHz
+7, 210 MHz
