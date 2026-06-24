@@ -1,0 +1,18 @@
+# tenant_evidence.txt — co-tenant overlap during the controlled re-measure (gate-2)
+# Generated from per-rep tenant snapshots in cv_operon.json / cv_floor_homogeneous.json.
+# CAVEAT: foreign-thread overlap counts threads by last-CPU (psr) INCLUDING SLEEPING ones,
+# so max_foreign_threads_on_mask OVERCOUNTS active contention (1400 threads cannot run on
+# 64 cores). It proves overlap EXISTED, not its severity. Heavy tenants (luoq SST, jinyb GPU)
+# are PINNED to node0; node1 sees their unpinned roamers. NO run was isolated.
+
+## Operon heterogeneous (phase O)
+stable_64c: overlap 36/36 (frac=1.00) max_foreign_on_mask=1406 affinity_ok=True workers_outside_mask=none
+stable_128c: overlap 46/46 (frac=1.00) max_foreign_on_mask=1845 affinity_ok=True workers_outside_mask=none
+noisy_64c: overlap 55/55 (frac=1.00) max_foreign_on_mask=1405 affinity_ok=False workers_outside_mask=64 cores (likely idle cached 128c-pool parked on node0)
+noisy_128c: overlap 71/71 (frac=1.00) max_foreign_on_mask=1860 affinity_ok=True workers_outside_mask=none
+
+## Operon floor homogeneous (phase F)
+stable_64c: overlap 28/28 (frac=1.00) max_foreign_on_mask=1401 affinity_ok=False workers_outside_mask=64 cores (likely idle cached 128c-pool parked on node0)
+stable_128c: overlap 33/33 (frac=1.00) max_foreign_on_mask=1848 affinity_ok=True workers_outside_mask=none
+noisy_64c: overlap 83/83 (frac=1.00) max_foreign_on_mask=1403 affinity_ok=False workers_outside_mask=64 cores (likely idle cached 128c-pool parked on node0)
+noisy_128c: overlap 108/108 (frac=1.00) max_foreign_on_mask=1851 affinity_ok=True workers_outside_mask=none

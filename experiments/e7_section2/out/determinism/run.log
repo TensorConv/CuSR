@@ -1,0 +1,116 @@
+  (拒绝采样: 重抽 64 棵, 占比 0.4%)
+  (拒绝采样: 重抽 3372 棵, 占比 5.0%)
+  (拒绝采样: 重抽 64 棵, 占比 0.4%)
+  (拒绝采样: 重抽 3372 棵, 占比 5.0%)
+  (拒绝采样: 重抽 64 棵, 占比 0.4%)
+[START] gpu=7 locked=1410MHz reps=20 phases=LGOFRXC
+[START] full affinity at launch: [0, 1, 2, 3, 4, 5, 6, 7]...
+
+=== PHASE L: linearity pre-check (gate-1) ===
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[L] revad stable mi=5: loop_ms=30.548
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[L] revad stable mi=10: loop_ms=53.600
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[L] revad stable mi=20: loop_ms=98.529
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[L] revad stable mi=40: loop_ms=186.424
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[L] revad stable mi=80: loop_ms=359.978
+[L] revad_stable: linear=True top_ratio=0.98 prefix_len=5
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[L] fusedfd stable mi=5: loop_ms=41.205
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[L] fusedfd stable mi=10: loop_ms=79.385
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[L] fusedfd stable mi=20: loop_ms=154.382
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[L] fusedfd stable mi=40: loop_ms=302.279
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[L] fusedfd stable mi=80: loop_ms=594.740
+[L] fusedfd_stable: linear=True top_ratio=0.98 prefix_len=5
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[L] revad noisy mi=5: loop_ms=28.142
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[L] revad noisy mi=10: loop_ms=45.934
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[L] revad noisy mi=20: loop_ms=78.225
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[L] revad noisy mi=40: loop_ms=139.128
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[L] revad noisy mi=80: loop_ms=255.988
+[L] revad_noisy: linear=True top_ratio=0.93 prefix_len=5
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[L] fusedfd noisy mi=5: loop_ms=24.213
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[L] fusedfd noisy mi=10: loop_ms=43.188
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[L] fusedfd noisy mi=20: loop_ms=77.302
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[L] fusedfd noisy mi=40: loop_ms=138.347
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[L] fusedfd noisy mi=80: loop_ms=253.615
+[L] fusedfd_noisy: linear=True top_ratio=0.89 prefix_len=5
+[WROTE] linearity_precheck.json
+
+=== PHASE G: GPU determinism (CV of loop_ms) ===
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[G] revad_stable: median=229.769ms CV=0.17% tput=62189 loss=1.796e-01
+[GPU_BINARY] variant=ad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_ad_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[G] ad_stable: median=260.831ms CV=1.20% tput=54783 loss=1.796e-01
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=62a7859e478a6452
+[G] fusedfd_stable: median=374.554ms CV=0.16% tput=38149 loss=1.812e-01
+[GPU_BINARY] variant=revad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_revad_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[G] revad_noisy: median=167.890ms CV=0.37% tput=264673 loss=3.250e-01
+[GPU_BINARY] variant=ad -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_ad_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[G] ad_noisy: median=158.165ms CV=0.40% tput=280947 loss=3.261e-01
+[GPU_BINARY] variant=fusedfd -> /home/weish/hao/CuSR/cusr/kernel/batch_lm_fusedfd_prof (allowlisted) gpu=7 pop_sha256=92d1cbe53fbeef33
+[G] fusedfd_noisy: median=167.495ms CV=0.46% tput=265297 loss=3.256e-01
+[WROTE] cv_gpu.json
+
+=== PHASE O: Operon determinism + clean baseline ===
+[O] stable nc=64 (mask 64c) warm+20 reps ...
+[O] stable_64c: median=1.323s CV=5.33% tput=10802 loss=1.711e-01 | tenant overlap 36/36 samples, affinity_ok=True
+[O] stable nc=128 (mask 128c) warm+20 reps ...
+  (拒绝采样: 重抽 3372 棵, 占比 5.0%)
+  (拒绝采样: 重抽 64 棵, 占比 0.4%)
+  (拒绝采样: 重抽 3372 棵, 占比 5.0%)
+  (拒绝采样: 重抽 91 棵, 占比 0.6%)
+[O] stable_128c: median=2.129s CV=5.94% tput=6711 loss=1.711e-01 | tenant overlap 46/46 samples, affinity_ok=True
+[O] noisy nc=64 (mask 64c) warm+20 reps ...
+[O] noisy_64c: median=2.477s CV=12.38% tput=17937 loss=3.166e-01 | tenant overlap 55/55 samples, affinity_ok=False
+[O] noisy nc=128 (mask 128c) warm+20 reps ...
+[O] noisy_128c: median=3.046s CV=18.33% tput=14590 loss=3.166e-01 | tenant overlap 71/71 samples, affinity_ok=True
+[WROTE] cv_operon.json
+
+=== PHASE F: IPC-floor control (homogeneous pop) ===
+[F] stable: homogeneous pop from rep_idx=5489 K=3 (all 16000 trees identical)
+[F] stable_64c: floor median=1.309s floor_CV=7.90%
+[F] stable_128c: floor median=1.490s floor_CV=21.83%
+[F] noisy: homogeneous pop from rep_idx=1180 K=2 (all 64000 trees identical)
+[F] noisy_64c: floor median=3.682s floor_CV=15.30%
+[F] noisy_128c: floor median=4.776s floor_CV=20.70%
+[WROTE] cv_floor_homogeneous.json
+
+=== PHASE R: intercept regression (short-timing bias) ===
+[R] revad_stable: intercept=9.874ms slope=4.3852ms/iter r2=0.9999 fixed_frac@50=4.3% [full range linear]
+[R] fusedfd_stable: intercept=5.847ms slope=7.3726ms/iter r2=1.0000 fixed_frac@50=1.6% [full range linear]
+[R] revad_noisy: intercept=15.827ms slope=3.0212ms/iter r2=0.9994 fixed_frac@50=9.5% [full range linear]
+[R] fusedfd_noisy: intercept=13.288ms slope=3.0337ms/iter r2=0.9986 fixed_frac@50=8.1% [full range linear]
+[WROTE] timing_window.json
+
+=== PHASE X: inner-const oversubscription spot-check ===
+[X] uncapped: median=1.713s CV=2.12%
+[X] capped: median=1.758s CV=2.48%
+[X] verdict: capped/uncapped=1.026 oversubscribed=False
+     => capped ~= uncapped => threads idle => baseline not confounded by oversubscription either way
+[WROTE] oversub_innerconst.json
+
+=== PHASE C: clean crossover recompute ===
+[C] stable revad-vs-64c: 5.76x (±5.3% within-session) iso=True isolated=False
+[C] stable revad-vs-128c: 9.27x (±5.9% within-session) iso=True isolated=False
+[C] noisy revad-vs-64c: 14.76x (±12.4% within-session) iso=True isolated=False
+[C] noisy revad-vs-128c: 18.14x (±18.3% within-session) iso=True isolated=False
+[WROTE] crossover_clean.json
+[CLOCK post] 1410 MHz, 1140 MHz, Enabled
+[DONE] determinism_run complete

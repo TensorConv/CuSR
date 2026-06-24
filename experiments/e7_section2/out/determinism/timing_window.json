@@ -1,0 +1,66 @@
+{
+  "revad_stable": {
+    "fittable": true,
+    "note": "full range linear",
+    "used_iters": [
+      5,
+      10,
+      20,
+      40,
+      80
+    ],
+    "intercept": 9.873770833333271,
+    "slope": 4.385225456989248,
+    "r2": 0.9999398896073014,
+    "intercept_frac": 0.04309149170129593,
+    "linear": true
+  },
+  "fusedfd_stable": {
+    "fittable": true,
+    "note": "full range linear",
+    "used_iters": [
+      5,
+      10,
+      20,
+      40,
+      80
+    ],
+    "intercept": 5.846845833333257,
+    "slope": 7.372624327956992,
+    "r2": 0.999967134890995,
+    "intercept_frac": 0.015613320039355802,
+    "linear": true
+  },
+  "revad_noisy": {
+    "fittable": true,
+    "note": "full range linear",
+    "used_iters": [
+      5,
+      10,
+      20,
+      40,
+      80
+    ],
+    "intercept": 15.82684583333332,
+    "slope": 3.021184973118279,
+    "r2": 0.9994092235266911,
+    "intercept_frac": 0.0948362167727106,
+    "linear": true
+  },
+  "fusedfd_noisy": {
+    "fittable": true,
+    "note": "full range linear",
+    "used_iters": [
+      5,
+      10,
+      20,
+      40,
+      80
+    ],
+    "intercept": 13.287675000000004,
+    "slope": 3.0337285483870966,
+    "r2": 0.9985783163754295,
+    "intercept_frac": 0.08054400542349056,
+    "linear": true
+  }
+}

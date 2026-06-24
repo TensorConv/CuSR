@@ -23,3 +23,9 @@
 !tenant_evidence.txt
 !audit_results.json
 !codex_review.txt
+# determinism hardening round (Phase 6): track canonical artifacts, NOT scratch/ (1.5GB)
+!determinism/
+!determinism/*.json
+!determinism/*.jsonl
+!determinism/*.txt
+!determinism/run.log

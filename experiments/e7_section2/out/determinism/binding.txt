@@ -1,0 +1,27 @@
+# Binding decision + gate-2 tenant evidence (captured BEFORE measurement)
+captured_by: weish/claude  date: 2026-06-24T22:35:57+08:00
+
+## NUMA topology
+node0 = CPU 0-63,128-191   |   node1 = CPU 64-127,192-255   (SMT2; physical node1 = 64-127)
+
+## Heavy tenant placement (affinity masks)
+luoq  SST  765635/636/639  -> 14-45,142-173   (node0, PINNED, ~165% each)
+jinyb GPU  4026571-575     -> 0-11,128-139     (node0, PINNED, ~100% each)
+luoq  roamers 3038865,1470337 -> 0-255 (UNPINNED, ~45% each; one seen on psr 120/node1)
+
+## Mask decision
+64c  (clean) : taskset/sched_setaffinity -> 64-127  (node1 physical, no SMT). Heavy pinned tenants are on node0 => isolated modulo 1-2 unpinned roamers (snapshotted per-rep).
+128c (full)  : 0-127 (all physical, both sockets). OVERLAPS node0 tenants BY CONSTRUCTION -> cannot isolate on a shared box. Measured with per-rep contamination disclosure; clean-128c needs an idle machine.
+
+## GPU
+GPU 7 locked @ 1410 MHz (sudo nvidia-smi -lgc 1410,1410; readback SM=1410). No compute proc on GPU7 (1 MiB used).
+
+## nvidia-smi snapshot at lock time
+0, 18 %, 31399 MiB, 1140 MHz
+1, 18 %, 31543 MiB, 1140 MHz
+2, 17 %, 31543 MiB, 1140 MHz
+3, 18 %, 31399 MiB, 1140 MHz
+4, 0 %, 1515 MiB, 1140 MHz
+5, 0 %, 1659 MiB, 1140 MHz
+6, 0 %, 1515 MiB, 1140 MHz
+7, 0 %, 1 MiB, 1410 MHz
