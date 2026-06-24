@@ -1,14 +1,20 @@
 # docs 导航
 
-**开工从这里:** [`research/paper_plan.md`](research/paper_plan.md) —— 论文怎么拼、6 页怎么分、C1/C3 有哪些材料可选。
+**Start Here:** [`research/paper_plan.md`](research/paper_plan.md) —— 论文怎么拼、6 页怎么分、C1/C3 有哪些材料可选。
+
+**写论文随身带(离线事实卡):** [`research/PAPER_FACTS.md`](research/PAPER_FACTS.md) —— 当前正确数字 / 红线 / 引用陷阱 / 诚实边界。记忆(`~/.claude/`)不随 repo 下载,关键事实都固化在这一份里。
 
 ## 现在在用的
 
 **论文**
+- [`PAPER.md`](PAPER.md) —— 待办 + 进度(「现在到哪了」)
+- [`research/PAPER_FACTS.md`](research/PAPER_FACTS.md) —— **离线事实卡**:当前数字 / 红线 / 引用陷阱 / caveat
 - [`research/paper_plan.md`](research/paper_plan.md) —— 入口:6 页怎么分、材料怎么选
+- [`research/C2_draft.md`](research/C2_draft.md) —— C2 正文初稿(设计=完整、评测=骨架)
 - [`research/contributions.md`](research/contributions.md) —— 三个贡献的细节(C1 workload / C2 kernel / C3 deployment)
 - [`research/experiment_plan.md`](research/experiment_plan.md) —— 要跑哪些实验
 - [`OUTLINE.md`](OUTLINE.md) —— 论文叙事 + 骨架(较全;和 paper_plan 有重叠)
+- [`../experiments/e7_section2/FINDINGS.md`](../experiments/e7_section2/FINDINGS.md) —— section-2 每个数的出处 + 审计
 
 **kernel(做 C2 时看)**
 - [`kernel/OPTIMIZATION_BACKLOG.md`](kernel/OPTIMIZATION_BACKLOG.md) —— 优化路线(reverse-AD 是 #1)
