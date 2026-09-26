@@ -10,8 +10,8 @@ symbolic-regression search that a discrete operator/constant pool cannot reach
 on its own: structure search proposes the shape `sin(w*x + b)`, and the solver
 recovers the `w`, `b` that actually fit the data.
 
-This repository is the research code behind an in-progress paper. It also bundles
-an operator-level benchmark that compares the kernel against other constant-
+This repository is the research code for our HPEC 2026 paper (see [Paper](#paper) below).
+It also bundles an operator-level benchmark that compares the kernel against other constant-
 optimization backends (scipy, a Torch LM, Operon's optimizer, PySR's), and a
 demonstrator that plugs the kernel into a GPU GP search as the inner solver.
 
@@ -99,4 +99,25 @@ depend on third-party repositories. They are cloned at pinned revisions:
 
 ```bash
 bash scripts/setup_upstream.sh
+```
+
+## Paper
+
+Hao Mao, Xu Tony Liu, Shuai Lu, Peng Zhao, Wenzheng Jiang, and Yuntian Chen.
+**Efficient Constant Optimization for Symbolic Regression with GPU-Accelerated Tree-Based Genetic Programming.**
+IEEE High Performance Extreme Computing Conference (HPEC 2026).
+[arXiv:2609.03352](https://arxiv.org/abs/2609.03352)
+
+If you use this code, please cite:
+
+```bibtex
+@inproceedings{mao2026efficient,
+  title         = {Efficient Constant Optimization for Symbolic Regression with GPU-Accelerated Tree-Based Genetic Programming},
+  author        = {Mao, Hao and Liu, Xu Tony and Lu, Shuai and Zhao, Peng and Jiang, Wenzheng and Chen, Yuntian},
+  booktitle     = {2026 IEEE High Performance Extreme Computing Conference (HPEC)},
+  year          = {2026},
+  eprint        = {2609.03352},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.NE}
+}
 ```
